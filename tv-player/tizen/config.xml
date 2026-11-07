@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://tvplayer.local/player" version="0.2.0" viewmodes="maximized">
+    <tizen:application id="TvPlyr0001.TvPlayer" package="TvPlyr0001" required_version="6.0"/>
+    <tizen:profile name="tv-samsung"/>
+    <name>TV Player</name>
+    <icon src="icon.png"/>
+    <content src="index.html"/>
+    <access origin="*" subdomains="true"/>
+    <tizen:allow-navigation>*</tizen:allow-navigation>
+    <tizen:content-security-policy>default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;</tizen:content-security-policy>
+    <tizen:setting screen-orientation="auto-rotation" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <tizen:privilege name="http://developer.samsung.com/privilege/productinfo"/>
+    <tizen:metadata key="http://samsung.com/tv/metadata/prelaunch.support" value="true"/>
+    <!-- TVs montadas em pe: o app acompanha a orientacao da TV e recebe a tela inteira em pe (1080x1920). -->
+    <tizen:metadata key="http://samsung.com/tv/metadata/screen/orientation" value="all"/>
+</widget>

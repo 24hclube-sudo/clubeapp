@@ -1,0 +1,11 @@
+{
+  "_como_usar": "Copie para madmapper.json e ajuste. host = IP do PC do MadMapper; porta = porta OSC de entrada nas Preferências do MadMapper. cenas: id da cena (public/cenas.json) -> endereço OSC disparado junto (copie com botão direito > Copy OSC Address no MadMapper).",
+  "host": "127.0.0.1",
+  "porta": 8010,
+  "enderecoBrilho": "/master/master_level",
+  "cenas": {
+    "tudo": "/media/clube-tudo/assign",
+    "logo": "/media/clube-logo/assign",
+    "apagar": "/media/Black/assign"
+  }
+}

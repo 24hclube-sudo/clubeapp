@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caixas CLUBE</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100dvh; display: grid; place-content: center; gap: 8px; padding: 16px; box-sizing: border-box; background: #000; color: #fff; font: 15px system-ui, sans-serif; text-align: center; }
+  strong { font-size: 22px; }
+  small { color: #9a9a9f; }
+</style>
+</head>
+<body>
+<small>Som das caixas deste PC. Deixe esta janela aberta; quem controla é o app.</small>
+<strong id="titulo">Conectando…</strong>
+<small id="detalhe"></small>
+<audio id="radio" preload="none"></audio>
+<audio id="arquivo" preload="auto"></audio>
+<script>
+const parametros = new URLSearchParams(location.search);
+const RADIO = parametros.get('radio') || `http://${location.hostname}:7900/stream.mp3`;
+const radio = document.getElementById('radio');
+const arquivo = document.getElementById('arquivo');
+radio.muted = arquivo.muted = parametros.has('mudo');
+
+let e = null;
+let versaoCarregada = null;
+let posicaoPendente = 0;
+let querRadio = false;
+let tentativas = 0;
+let timerRadio = null;
+let ultimoTempo = -1;
+let segundosParado = 0;
+
+function relatar(evento, posicao) {
+  if (!e) return;
+  fetch('api/caixa/relato', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ versao: e.versao, evento, posicao }),
+  }).catch(() => {});
+}
+
+function bloqueado(erro) {
+  if (erro && erro.name === 'NotAllowedError') {
+    document.getElementById('titulo').textContent = 'Clique aqui para liberar o som';
+  }
+}
+
+// ---------- rádio ----------
+
+function conectarRadio() {
+  clearTimeout(timerRadio);
+  segundosParado = 0;
+  // Endereço novo a cada entrada: sempre o ponto mais recente da transmissão.
+  radio.src = `${RADIO}?t=${Date.now()}`;
+  radio.play().catch(bloqueado);
+}
+
+function ligarRadio() {
+  if (querRadio) return;
+  querRadio = true;
+  conectarRadio();
+}
+
+function pararRadio() {
+  querRadio = false;
+  clearTimeout(timerRadio);
+  radio.pause();
+  radio.removeAttribute('src');
+  radio.load();
+}
+
+function reconectarRadio() {
+  if (!querRadio) return;
+  clearTimeout(timerRadio);
+  const espera = Math.min(5000, 500 * 2 ** tentativas);
+  tentativas += 1;
+  timerRadio = setTimeout(() => { if (querRadio) conectarRadio(); }, espera);
+}
+
+radio.addEventListener('playing', () => { tentativas = 0; });
+radio.addEventListener('error', reconectarRadio);
+radio.addEventListener('ended', reconectarRadio);
+
+// A transmissão pode travar sem dar erro quando a rádio reinicia.
+setInterval(() => {
+  if (!querRadio) return;
+  segundosParado = radio.currentTime === ultimoTempo ? segundosParado + 2 : 0;
+  ultimoTempo = radio.currentTime;
+  if (segundosParado >= 6) conectarRadio();
+}, 2000);
+
+// ---------- player ----------
+
+function pararArquivo() {
+  versaoCarregada = null;
+  arquivo.pause();
+  arquivo.removeAttribute('src');
+  arquivo.load();
+}
+
+arquivo.addEventListener('loadedmetadata', () => {
+  if (posicaoPendente > 0 && posicaoPendente < arquivo.duration) arquivo.currentTime = posicaoPendente;
+  posicaoPendente = 0;
+});
+arquivo.addEventListener('playing', () => relatar('tocando'));
+arquivo.addEventListener('ended', () => relatar('fim'));
+arquivo.addEventListener('error', () => {
+  if (!arquivo.getAttribute('src')) return;
+  // Sem servidor agora: recarrega a mesma música quando ele voltar.
+  versaoCarregada = null;
+  relatar('erro');
+});
+
+setInterval(() => {
+  if (e && e.modo === 'player' && !e.pausado && !arquivo.paused) relatar('posicao', arquivo.currentTime);
+}, 2000);
+
+// ---------- comandos do app ----------
+
+function mostrar() {
+  const titulo = document.getElementById('titulo');
+  const detalhe = document.getElementById('detalhe');
+  if (e.modo === 'radio') {
+    titulo.textContent = e.pausado ? 'Rádio pausada' : 'Rádio';
+    detalhe.textContent = '';
+  } else {
+    titulo.textContent = e.faixa ? e.faixa.titulo : 'Player';
+    detalhe.textContent = e.pausado ? 'Player pausado' : (e.faixa ? e.faixa.artista : '');
+  }
+}
+
+function aplicar(novo) {
+  e = novo;
+  mostrar();
+  if (e.modo === 'radio') {
+    pararArquivo();
+    if (e.pausado) pararRadio(); else ligarRadio();
+    return;
+  }
+  pararRadio();
+  if (!e.faixa) { pararArquivo(); return; }
+  if (versaoCarregada !== e.versao) {
+    versaoCarregada = e.versao;
+    posicaoPendente = e.posicao || 0;
+    arquivo.src = `api/caixa/audio/${encodeURIComponent(e.faixa.id)}`;
+  }
+  if (e.pausado) arquivo.pause();
+  else arquivo.play().catch(bloqueado);
+}
+
+document.addEventListener('click', () => { if (e) { mostrar(); aplicar(e); } });
+
+const canal = new EventSource('api/caixa/eventos');
+canal.onmessage = ev => aplicar(JSON.parse(ev.data));
+canal.addEventListener('substituida', () => {
+  canal.close();
+  pararRadio();
+  pararArquivo();
+  e = null;
+  document.getElementById('titulo').textContent = 'O som passou para outra janela';
+  document.getElementById('detalhe').textContent = 'Pode fechar esta.';
+});
+</script>
+</body>
+</html>

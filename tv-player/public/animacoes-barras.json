@@ -1,0 +1,1815 @@
+[
+  {
+    "id": "c-mare-vertical",
+    "nome": "Maré quente",
+    "duracao": 60,
+    "balcao": {
+      "efeito": "mareVertical"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-mare-vertical.png",
+    "preview": "cenas/anim-c-mare-vertical.mp4"
+  },
+  {
+    "id": "c-mare-vertical-oceano",
+    "nome": "Maré oceano",
+    "duracao": 60,
+    "balcao": {
+      "efeito": "mareVertical",
+      "cores": [
+        "#001020",
+        "#006faf",
+        "#00bae3",
+        "#003a5c",
+        "#001020"
+      ]
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-mare-vertical-oceano.png",
+    "preview": "cenas/anim-c-mare-vertical-oceano.mp4"
+  },
+  {
+    "id": "c-vela",
+    "nome": "Velas",
+    "duracao": 40,
+    "balcao": {
+      "efeito": "vela"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-vela.png",
+    "preview": "cenas/anim-c-vela.mp4"
+  },
+  {
+    "id": "c-respira-alternado",
+    "nome": "Respiração alternada",
+    "duracao": 32,
+    "balcao": {
+      "efeito": "respiraAlternado",
+      "cor": "#ffc465",
+      "n": 4
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-respira-alternado.png",
+    "preview": "cenas/anim-c-respira-alternado.mp4"
+  },
+  {
+    "id": "c-aurora-barras",
+    "nome": "Aurora",
+    "duracao": 90,
+    "balcao": {
+      "efeito": "aurora"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-aurora-barras.png",
+    "preview": "cenas/anim-c-aurora-barras.mp4"
+  },
+  {
+    "id": "c-constelacao-barras",
+    "nome": "Constelação",
+    "duracao": 60,
+    "balcao": {
+      "efeito": "constelacao",
+      "n": 5,
+      "densidade": 0.18
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-constelacao-barras.png",
+    "preview": "cenas/anim-c-constelacao-barras.mp4"
+  },
+  {
+    "id": "p-equalizador",
+    "nome": "Equalizador",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "equalizador"
+    },
+    "thumb": "cenas/anim-p-equalizador.png",
+    "preview": "cenas/anim-p-equalizador.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-subir-azul",
+    "nome": "Subindo azul",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "subir",
+      "cor": "azul",
+      "n": 2
+    },
+    "thumb": "cenas/anim-p-subir-azul.png",
+    "preview": "cenas/anim-p-subir-azul.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-subir-quente",
+    "nome": "Subindo quente",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "subir",
+      "cor": "#ffc465",
+      "n": 2
+    },
+    "thumb": "cenas/anim-p-subir-quente.png",
+    "preview": "cenas/anim-p-subir-quente.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-chuva-azul",
+    "nome": "Chuva azul",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "chuva",
+      "cor": "azul",
+      "n": 3
+    },
+    "thumb": "cenas/anim-p-chuva-azul.png",
+    "preview": "cenas/anim-p-chuva-azul.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-chuva-branca",
+    "nome": "Chuva branca",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "chuva",
+      "cor": "branco",
+      "n": 3
+    },
+    "thumb": "cenas/anim-p-chuva-branca.png",
+    "preview": "cenas/anim-p-chuva-branca.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-cometas-prata",
+    "nome": "Cometas subindo",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "cometaSobe",
+      "cor": "metal",
+      "k": 1.5,
+      "n": 3
+    },
+    "thumb": "cenas/anim-p-cometas-prata.png",
+    "preview": "cenas/anim-p-cometas-prata.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-cometas-vermelho",
+    "nome": "Cometas vermelhos",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "cometaSobe",
+      "cor": "vermelho",
+      "k": 1.5,
+      "n": 3
+    },
+    "thumb": "cenas/anim-p-cometas-vermelho.png",
+    "preview": "cenas/anim-p-cometas-vermelho.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-passagem",
+    "nome": "Passagem",
+    "duracao": 5,
+    "balcao": {
+      "efeito": "passagem",
+      "cor": "metal",
+      "n": 2
+    },
+    "thumb": "cenas/anim-p-passagem.png",
+    "preview": "cenas/anim-p-passagem.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-passagem-quente",
+    "nome": "Passagem quente",
+    "duracao": 5,
+    "balcao": {
+      "efeito": "passagem",
+      "cor": "#ffc465",
+      "n": 2
+    },
+    "thumb": "cenas/anim-p-passagem-quente.png",
+    "preview": "cenas/anim-p-passagem-quente.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-arcoiris",
+    "nome": "Arco-íris",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "arcoirisVertical",
+      "k": 1,
+      "n": 1
+    },
+    "thumb": "cenas/anim-p-arcoiris.png",
+    "preview": "cenas/anim-p-arcoiris.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-brilhos",
+    "nome": "Brilhos",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "brilhos",
+      "cor": "branco",
+      "n": 3
+    },
+    "thumb": "cenas/anim-p-brilhos.png",
+    "preview": "cenas/anim-p-brilhos.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "p-degrade",
+    "nome": "Degradê da marca",
+    "duracao": 10,
+    "balcao": {
+      "efeito": "degrade"
+    },
+    "thumb": "cenas/anim-p-degrade.png",
+    "preview": "cenas/anim-p-degrade.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "x-bate-estaca",
+    "nome": "Bate-estaca",
+    "batidas": 2,
+    "balcao": {
+      "efeito": "bateEstaca",
+      "cores": [
+        "branco",
+        "vermelho"
+      ]
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-bate-estaca.png",
+    "preview": "cenas/anim-x-bate-estaca.mp4"
+  },
+  {
+    "id": "x-barra-batida",
+    "nome": "Barra por batida",
+    "batidas": 8,
+    "balcao": {
+      "efeito": "barraPorBatida",
+      "cor": "metal"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-barra-batida.png",
+    "preview": "cenas/anim-x-barra-batida.mp4"
+  },
+  {
+    "id": "x-subida",
+    "nome": "Subida no beat",
+    "batidas": 4,
+    "balcao": {
+      "efeito": "subidaBeat"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-subida.png",
+    "preview": "cenas/anim-x-subida.mp4"
+  },
+  {
+    "id": "x-equalizador",
+    "nome": "Equalizador no beat",
+    "batidas": 8,
+    "balcao": {
+      "efeito": "equalizadorBeat"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-equalizador.png",
+    "preview": "cenas/anim-x-equalizador.mp4"
+  },
+  {
+    "id": "x-alternado",
+    "nome": "Alternado no beat",
+    "batidas": 2,
+    "balcao": {
+      "efeito": "alternadoBeat",
+      "cor": "metal"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-alternado.png",
+    "preview": "cenas/anim-x-alternado.mp4"
+  },
+  {
+    "id": "x-flash-barras",
+    "nome": "Flash colorido",
+    "batidas": 4,
+    "balcao": {
+      "efeito": "flashBeat",
+      "cores": [
+        "vermelho",
+        "azul",
+        "verde",
+        "branco"
+      ]
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-flash-barras.png",
+    "preview": "cenas/anim-x-flash-barras.mp4"
+  },
+  {
+    "id": "x-flash",
+    "nome": "Flash no beat",
+    "batidas": 4,
+    "balcao": {
+      "efeito": "flashBeat",
+      "cores": [
+        "branco",
+        "branco",
+        "branco",
+        "vermelho"
+      ]
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-flash.png",
+    "preview": "cenas/anim-x-flash.mp4"
+  },
+  {
+    "id": "x-strobo",
+    "nome": "Strobo branco",
+    "batidas": 1,
+    "balcao": {
+      "partes": [
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        },
+        {
+          "duracao": 0.071,
+          "efeito": "preto"
+        },
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        },
+        {
+          "duracao": 0.071,
+          "efeito": "preto"
+        },
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        },
+        {
+          "duracao": 0.071,
+          "efeito": "preto"
+        },
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        }
+      ]
+    },
+    "categoria": "pista"
+  },
+  {
+    "id": "apagar",
+    "nome": "Apagar",
+    "apagar": true
+  },
+  {
+    "id": "a-auto",
+    "nome": "Automático",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAuto"
+    },
+    "categoria": "audio",
+    "grupo": "auto",
+    "thumb": "cenas/anim-a-auto.png",
+    "preview": "cenas/anim-a-auto.mp4"
+  },
+  {
+    "id": "a-auto-aceso",
+    "nome": "Automático aceso",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAutoAceso"
+    },
+    "categoria": "audio",
+    "grupo": "auto",
+    "thumb": "cenas/anim-a-auto-aceso.png",
+    "preview": "cenas/anim-a-auto-aceso.mp4"
+  },
+  {
+    "id": "a-auto-calmo",
+    "nome": "Automático calmo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAutoCalmo"
+    },
+    "categoria": "audio",
+    "grupo": "auto",
+    "thumb": "cenas/anim-a-auto-calmo.png",
+    "preview": "cenas/anim-a-auto-calmo.mp4"
+  },
+  {
+    "id": "a-aceso-bumbo",
+    "nome": "Pulso no bumbo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "bumbo"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-bumbo.png",
+    "preview": "cenas/anim-a-aceso-bumbo.mp4"
+  },
+  {
+    "id": "a-aceso-grave",
+    "nome": "Sobe com o grave",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "grave"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-grave.png",
+    "preview": "cenas/anim-a-aceso-grave.mp4"
+  },
+  {
+    "id": "a-aceso-volume",
+    "nome": "Sobe com o volume",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "volume"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-volume.png",
+    "preview": "cenas/anim-a-aceso-volume.mp4"
+  },
+  {
+    "id": "a-aceso-agudo",
+    "nome": "Brilho no agudo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "agudo"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-agudo.png",
+    "preview": "cenas/anim-a-aceso-agudo.mp4"
+  },
+  {
+    "id": "a-aceso-banda",
+    "nome": "Uma banda por barra",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "banda"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-banda.png",
+    "preview": "cenas/anim-a-aceso-banda.mp4"
+  },
+  {
+    "id": "a-aceso-faixa",
+    "nome": "Uma faixa por par",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "faixa"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-faixa.png",
+    "preview": "cenas/anim-a-aceso-faixa.mp4"
+  },
+  {
+    "id": "a-aceso-medidor",
+    "nome": "Medidor aceso",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioMedidorAceso"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-medidor.png",
+    "preview": "cenas/anim-a-aceso-medidor.mp4"
+  },
+  {
+    "id": "a-aceso-ambar",
+    "nome": "Âmbar aceso",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAceso",
+      "fonte": "grave",
+      "cor": "#ffc465"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-ambar.png",
+    "preview": "cenas/anim-a-aceso-ambar.mp4"
+  },
+  {
+    "id": "a-aceso-sobe",
+    "nome": "Intensidade sobe",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "sobe"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-sobe.png",
+    "preview": "cenas/anim-a-aceso-sobe.mp4"
+  },
+  {
+    "id": "a-aceso-desce",
+    "nome": "Intensidade desce",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "desce"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-desce.png",
+    "preview": "cenas/anim-a-aceso-desce.mp4"
+  },
+  {
+    "id": "a-aceso-direita",
+    "nome": "Intensidade para a direita",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "direita"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-direita.png",
+    "preview": "cenas/anim-a-aceso-direita.mp4"
+  },
+  {
+    "id": "a-aceso-esquerda",
+    "nome": "Intensidade para a esquerda",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "esquerda"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-esquerda.png",
+    "preview": "cenas/anim-a-aceso-esquerda.mp4"
+  },
+  {
+    "id": "a-aceso-abre",
+    "nome": "Intensidade abre",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "abre"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-abre.png",
+    "preview": "cenas/anim-a-aceso-abre.mp4"
+  },
+  {
+    "id": "a-aceso-fecha",
+    "nome": "Intensidade fecha",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "fecha"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-fecha.png",
+    "preview": "cenas/anim-a-aceso-fecha.mp4"
+  },
+  {
+    "id": "a-aceso-diagonal",
+    "nome": "Intensidade na diagonal",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "diagonal"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-diagonal.png",
+    "preview": "cenas/anim-a-aceso-diagonal.mp4"
+  },
+  {
+    "id": "a-aceso-varia",
+    "nome": "Intensidade variada",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastroAceso",
+      "dir": "varia"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-varia.png",
+    "preview": "cenas/anim-a-aceso-varia.mp4"
+  },
+  {
+    "id": "a-aceso-golpe-varia",
+    "nome": "Golpe variado",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrenteAcesa",
+      "dir": "varia"
+    },
+    "categoria": "audio",
+    "grupo": "aceso",
+    "thumb": "cenas/anim-a-aceso-golpe-varia.png",
+    "preview": "cenas/anim-a-aceso-golpe-varia.mp4"
+  },
+  {
+    "id": "a-dir-sobe",
+    "nome": "Bumbo sobe",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "sobe"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-sobe.png",
+    "preview": "cenas/anim-a-dir-sobe.mp4"
+  },
+  {
+    "id": "a-dir-desce",
+    "nome": "Bumbo desce",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "desce"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-desce.png",
+    "preview": "cenas/anim-a-dir-desce.mp4"
+  },
+  {
+    "id": "a-dir-direita",
+    "nome": "Bumbo para a direita",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "direita"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-direita.png",
+    "preview": "cenas/anim-a-dir-direita.mp4"
+  },
+  {
+    "id": "a-dir-esquerda",
+    "nome": "Bumbo para a esquerda",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "esquerda"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-esquerda.png",
+    "preview": "cenas/anim-a-dir-esquerda.mp4"
+  },
+  {
+    "id": "a-dir-abre",
+    "nome": "Bumbo abre",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "abre",
+      "cauda": 0.4
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-abre.png",
+    "preview": "cenas/anim-a-dir-abre.mp4"
+  },
+  {
+    "id": "a-dir-fecha",
+    "nome": "Bumbo fecha",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "fecha",
+      "cauda": 0.4
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-fecha.png",
+    "preview": "cenas/anim-a-dir-fecha.mp4"
+  },
+  {
+    "id": "a-dir-diagonal",
+    "nome": "Diagonal",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "diagonal"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-diagonal.png",
+    "preview": "cenas/anim-a-dir-diagonal.mp4"
+  },
+  {
+    "id": "a-dir-inversa",
+    "nome": "Diagonal inversa",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "inversa"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-inversa.png",
+    "preview": "cenas/anim-a-dir-inversa.mp4"
+  },
+  {
+    "id": "a-dir-alterna",
+    "nome": "Uma sobe, outra desce",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "alterna"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-alterna.png",
+    "preview": "cenas/anim-a-dir-alterna.mp4"
+  },
+  {
+    "id": "a-dir-centro",
+    "nome": "Do centro da barra",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "centro"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-centro.png",
+    "preview": "cenas/anim-a-dir-centro.mp4"
+  },
+  {
+    "id": "a-dir-vaivem",
+    "nome": "Vai e volta",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "vaivem"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-vaivem.png",
+    "preview": "cenas/anim-a-dir-vaivem.mp4"
+  },
+  {
+    "id": "a-dir-sobedesce",
+    "nome": "Sobe e desce",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "sobedesce"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-sobedesce.png",
+    "preview": "cenas/anim-a-dir-sobedesce.mp4"
+  },
+  {
+    "id": "a-dir-varia",
+    "nome": "Direção variada",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "varia"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-varia.png",
+    "preview": "cenas/anim-a-dir-varia.mp4"
+  },
+  {
+    "id": "a-dir-medio",
+    "nome": "Médio desce",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "desce",
+      "faixa": 2,
+      "cor": "#00c44a"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-medio.png",
+    "preview": "cenas/anim-a-dir-medio.mp4"
+  },
+  {
+    "id": "a-dir-agudo",
+    "nome": "Chimbal para a direita",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFrente",
+      "dir": "direita",
+      "faixa": 3,
+      "cor": "#00a0e6",
+      "vel": 3.4
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-agudo.png",
+    "preview": "cenas/anim-a-dir-agudo.mp4"
+  },
+  {
+    "id": "a-dir-rastro-desce",
+    "nome": "Rastro desce",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastro",
+      "dir": "desce"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-rastro-desce.png",
+    "preview": "cenas/anim-a-dir-rastro-desce.mp4"
+  },
+  {
+    "id": "a-dir-rastro-lado",
+    "nome": "Rastro para o lado",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastro",
+      "dir": "direita"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-rastro-lado.png",
+    "preview": "cenas/anim-a-dir-rastro-lado.mp4"
+  },
+  {
+    "id": "a-dir-rastro-varia",
+    "nome": "Rastro variado",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRastro",
+      "dir": "varia"
+    },
+    "categoria": "audio",
+    "grupo": "direcao",
+    "thumb": "cenas/anim-a-dir-rastro-varia.png",
+    "preview": "cenas/anim-a-dir-rastro-varia.mp4"
+  },
+  {
+    "id": "a-faixas",
+    "nome": "Faixas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFaixas"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-faixas.png",
+    "preview": "cenas/anim-a-faixas.mp4"
+  },
+  {
+    "id": "a-espectro",
+    "nome": "Espectro",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioEspectro"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-espectro.png",
+    "preview": "cenas/anim-a-espectro.mp4"
+  },
+  {
+    "id": "a-camadas",
+    "nome": "Camadas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioCamadas"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-camadas.png",
+    "preview": "cenas/anim-a-camadas.mp4"
+  },
+  {
+    "id": "a-espelho",
+    "nome": "Espelho",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioEspelho"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-espelho.png",
+    "preview": "cenas/anim-a-espelho.mp4"
+  },
+  {
+    "id": "a-teto",
+    "nome": "Do teto",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioTeto"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-teto.png",
+    "preview": "cenas/anim-a-teto.mp4"
+  },
+  {
+    "id": "a-cascata",
+    "nome": "Cascata",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioCascata"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-cascata.png",
+    "preview": "cenas/anim-a-cascata.mp4"
+  },
+  {
+    "id": "a-trilha",
+    "nome": "Trilha do bumbo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioTrilha"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-trilha.png",
+    "preview": "cenas/anim-a-trilha.mp4"
+  },
+  {
+    "id": "a-temperatura",
+    "nome": "Temperatura",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioTemperatura"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-temperatura.png",
+    "preview": "cenas/anim-a-temperatura.mp4"
+  },
+  {
+    "id": "a-cortina",
+    "nome": "Cortina",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioCortina"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-cortina.png",
+    "preview": "cenas/anim-a-cortina.mp4"
+  },
+  {
+    "id": "a-duelo",
+    "nome": "Grave x agudo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioDuelo"
+    },
+    "categoria": "audio",
+    "grupo": "faixa",
+    "thumb": "cenas/anim-a-duelo.png",
+    "preview": "cenas/anim-a-duelo.mp4"
+  },
+  {
+    "id": "a-bumbo",
+    "nome": "Bumbo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioBumbo"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-bumbo.png",
+    "preview": "cenas/anim-a-bumbo.mp4"
+  },
+  {
+    "id": "a-flash",
+    "nome": "Flash seco",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFlash"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-flash.png",
+    "preview": "cenas/anim-a-flash.mp4"
+  },
+  {
+    "id": "a-onda",
+    "nome": "Onda do bumbo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioOnda"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-onda.png",
+    "preview": "cenas/anim-a-onda.mp4"
+  },
+  {
+    "id": "a-foguetes",
+    "nome": "Foguetes",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFoguetes"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-foguetes.png",
+    "preview": "cenas/anim-a-foguetes.mp4"
+  },
+  {
+    "id": "a-chuva",
+    "nome": "Chuva de chimbal",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioChuva"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-chuva.png",
+    "preview": "cenas/anim-a-chuva.mp4"
+  },
+  {
+    "id": "a-encontro",
+    "nome": "Encontro",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioEncontro"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-encontro.png",
+    "preview": "cenas/anim-a-encontro.mp4"
+  },
+  {
+    "id": "a-sorteio",
+    "nome": "Barra sorteada",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioSorteio"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-sorteio.png",
+    "preview": "cenas/anim-a-sorteio.mp4"
+  },
+  {
+    "id": "a-alternado",
+    "nome": "Alternado",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAlternado"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-alternado.png",
+    "preview": "cenas/anim-a-alternado.mp4"
+  },
+  {
+    "id": "a-troca-cor",
+    "nome": "Cor no bumbo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioTrocaCor"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-troca-cor.png",
+    "preview": "cenas/anim-a-troca-cor.mp4"
+  },
+  {
+    "id": "a-acumula",
+    "nome": "Acumula",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioAcumula"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-acumula.png",
+    "preview": "cenas/anim-a-acumula.mp4"
+  },
+  {
+    "id": "a-faisca",
+    "nome": "Faíscas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFaisca"
+    },
+    "categoria": "audio",
+    "grupo": "golpe",
+    "thumb": "cenas/anim-a-faisca.png",
+    "preview": "cenas/anim-a-faisca.mp4"
+  },
+  {
+    "id": "a-passo",
+    "nome": "Passo na batida",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioPasso"
+    },
+    "categoria": "audio",
+    "grupo": "batida",
+    "thumb": "cenas/anim-a-passo.png",
+    "preview": "cenas/anim-a-passo.mp4"
+  },
+  {
+    "id": "a-varredura",
+    "nome": "Varredura",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVarredura"
+    },
+    "categoria": "audio",
+    "grupo": "batida",
+    "thumb": "cenas/anim-a-varredura.png",
+    "preview": "cenas/anim-a-varredura.mp4"
+  },
+  {
+    "id": "a-escada",
+    "nome": "Escada",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioEscada"
+    },
+    "categoria": "audio",
+    "grupo": "batida",
+    "thumb": "cenas/anim-a-escada.png",
+    "preview": "cenas/anim-a-escada.mp4"
+  },
+  {
+    "id": "a-serpente",
+    "nome": "Serpente",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioSerpente"
+    },
+    "categoria": "audio",
+    "grupo": "batida",
+    "thumb": "cenas/anim-a-serpente.png",
+    "preview": "cenas/anim-a-serpente.mp4"
+  },
+  {
+    "id": "a-quatro",
+    "nome": "Quatro por quatro",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioQuatro"
+    },
+    "categoria": "audio",
+    "grupo": "batida",
+    "thumb": "cenas/anim-a-quatro.png",
+    "preview": "cenas/anim-a-quatro.mp4"
+  },
+  {
+    "id": "a-respira",
+    "nome": "Respiração",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioRespira"
+    },
+    "categoria": "audio",
+    "grupo": "calma",
+    "thumb": "cenas/anim-a-respira.png",
+    "preview": "cenas/anim-a-respira.mp4"
+  },
+  {
+    "id": "a-nivel",
+    "nome": "Nível d'água",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioNivel"
+    },
+    "categoria": "audio",
+    "grupo": "calma",
+    "thumb": "cenas/anim-a-nivel.png",
+    "preview": "cenas/anim-a-nivel.mp4"
+  },
+  {
+    "id": "a-chama",
+    "nome": "Chama",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioChama"
+    },
+    "categoria": "audio",
+    "grupo": "calma",
+    "thumb": "cenas/anim-a-chama.png",
+    "preview": "cenas/anim-a-chama.mp4"
+  },
+  {
+    "id": "a-brasa-viva",
+    "nome": "Brasa viva",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioBrasaViva"
+    },
+    "categoria": "audio",
+    "grupo": "calma",
+    "thumb": "cenas/anim-a-brasa-viva.png",
+    "preview": "cenas/anim-a-brasa-viva.mp4"
+  },
+  {
+    "id": "a-constelacao",
+    "nome": "Constelação viva",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioConstelacao"
+    },
+    "categoria": "audio",
+    "grupo": "calma",
+    "thumb": "cenas/anim-a-constelacao.png",
+    "preview": "cenas/anim-a-constelacao.mp4"
+  },
+  {
+    "id": "f-velas",
+    "nome": "Velas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "vela"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas.png",
+    "preview": "cenas/anim-f-velas.mp4"
+  },
+  {
+    "id": "f-velas-ambar",
+    "nome": "Velas âmbar",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "ambar"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-ambar.png",
+    "preview": "cenas/anim-f-velas-ambar.mp4"
+  },
+  {
+    "id": "f-velas-cera",
+    "nome": "Velas com cera",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "vela",
+      "cera": 0.24,
+      "alt": 0.45
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-cera.png",
+    "preview": "cenas/anim-f-velas-cera.mp4"
+  },
+  {
+    "id": "f-velas-altas",
+    "nome": "Velas altas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "vela",
+      "alt": 0.82,
+      "audio": 0.2
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-altas.png",
+    "preview": "cenas/anim-f-velas-altas.mp4"
+  },
+  {
+    "id": "f-velas-gas",
+    "nome": "Velas de gás",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "gas"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-gas.png",
+    "preview": "cenas/anim-f-velas-gas.mp4"
+  },
+  {
+    "id": "f-velas-verde",
+    "nome": "Velas esmeralda",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "esmeralda"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-verde.png",
+    "preview": "cenas/anim-f-velas-verde.mp4"
+  },
+  {
+    "id": "f-velas-roxa",
+    "nome": "Velas ametista",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioVelas",
+      "paleta": "ametista"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-roxa.png",
+    "preview": "cenas/anim-f-velas-roxa.mp4"
+  },
+  {
+    "id": "f-fogueira",
+    "nome": "Fogueira",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFogueira",
+      "paleta": "fogo"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira.png",
+    "preview": "cenas/anim-f-fogueira.mp4"
+  },
+  {
+    "id": "f-fogueira-alta",
+    "nome": "Fogueira alta",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFogueira",
+      "paleta": "fogo",
+      "frio": 0.34
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira-alta.png",
+    "preview": "cenas/anim-f-fogueira-alta.mp4"
+  },
+  {
+    "id": "f-fogueira-baixa",
+    "nome": "Fogueira baixa",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFogueira",
+      "paleta": "brasa",
+      "frio": 0.95
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira-baixa.png",
+    "preview": "cenas/anim-f-fogueira-baixa.mp4"
+  },
+  {
+    "id": "f-fogueira-gas",
+    "nome": "Fogueira de gás",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFogueira",
+      "paleta": "gas"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira-gas.png",
+    "preview": "cenas/anim-f-fogueira-gas.mp4"
+  },
+  {
+    "id": "f-fogueira-verde",
+    "nome": "Fogueira esmeralda",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFogueira",
+      "paleta": "esmeralda"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira-verde.png",
+    "preview": "cenas/anim-f-fogueira-verde.mp4"
+  },
+  {
+    "id": "f-fogueira-roxa",
+    "nome": "Fogueira ametista",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioFogueira",
+      "paleta": "ametista"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira-roxa.png",
+    "preview": "cenas/anim-f-fogueira-roxa.mp4"
+  },
+  {
+    "id": "f-brasas",
+    "nome": "Brasas subindo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "audioBrasas",
+      "paleta": "brasa"
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-brasas.png",
+    "preview": "cenas/anim-f-brasas.mp4"
+  },
+  {
+    "id": "f-fogueira-duck",
+    "nome": "Fogueira com duck",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "brasas",
+        "k": 0.5,
+        "duck": true,
+        "paleta": "brasa"
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira",
+          "cena": "",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": true,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": true,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.55,
+        "soltura": 0.3,
+        "limiar": 0.4,
+        "inverso": false
+      }
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-fogueira-duck.png",
+    "preview": "cenas/anim-f-fogueira-duck.mp4"
+  },
+  {
+    "id": "f-velas-faiscas",
+    "nome": "Velas e brasas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "vertical",
+        "k": 0.8,
+        "duck": true,
+        "c1": "#3a1000",
+        "c2": "#000000"
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas",
+          "cena": "",
+          "p": {
+            "paleta": "vela"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "audioBrasas",
+          "nome": "Brasas",
+          "cena": "",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "somar",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": false,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.7,
+        "soltura": 0.25,
+        "limiar": 0.4,
+        "inverso": false
+      }
+    },
+    "categoria": "audio",
+    "grupo": "fogo",
+    "thumb": "cenas/anim-f-velas-faiscas.png",
+    "preview": "cenas/anim-f-velas-faiscas.mp4"
+  },
+  {
+    "id": "g-bolinhas",
+    "nome": "Bolinhas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisBolinhas",
+      "paleta": "prata"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-bolinhas.png",
+    "preview": "cenas/anim-g-bolinhas.mp4"
+  },
+  {
+    "id": "g-molas",
+    "nome": "Molas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisMolas",
+      "paleta": "gelo"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-molas.png",
+    "preview": "cenas/anim-g-molas.mp4"
+  },
+  {
+    "id": "g-corda",
+    "nome": "Corda",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisCorda",
+      "paleta": "prata"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-corda.png",
+    "preview": "cenas/anim-g-corda.mp4"
+  },
+  {
+    "id": "g-agua",
+    "nome": "Água",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisAgua",
+      "paleta": "gas"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-agua.png",
+    "preview": "cenas/anim-g-agua.mp4"
+  },
+  {
+    "id": "g-pendulo",
+    "nome": "Pêndulo",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisPendulo",
+      "paleta": "ambar"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-pendulo.png",
+    "preview": "cenas/anim-g-pendulo.mp4"
+  },
+  {
+    "id": "g-fogos",
+    "nome": "Fogos",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisFogos",
+      "paleta": "marca"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-fogos.png",
+    "preview": "cenas/anim-g-fogos.mp4"
+  },
+  {
+    "id": "g-bolhas",
+    "nome": "Bolhas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisBolhas",
+      "paleta": "gelo"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-bolhas.png",
+    "preview": "cenas/anim-g-bolhas.mp4"
+  },
+  {
+    "id": "g-areia",
+    "nome": "Areia",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "fisAreia",
+      "paleta": "ambar"
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-areia.png",
+    "preview": "cenas/anim-g-areia.mp4"
+  },
+  {
+    "id": "g-agua-bolhas",
+    "nome": "Água com bolhas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "preto",
+        "k": 0.3,
+        "duck": true
+      },
+      "camadas": [
+        {
+          "efeito": "fisAgua",
+          "nome": "Água",
+          "cena": "",
+          "p": {
+            "paleta": "gas"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "fisBolhas",
+          "nome": "Bolhas",
+          "cena": "",
+          "p": {
+            "paleta": "gelo"
+          },
+          "duracao": 8,
+          "mistura": "somar",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": false,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.7,
+        "soltura": 0.25,
+        "limiar": 0.4,
+        "inverso": false
+      }
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-agua-bolhas.png",
+    "preview": "cenas/anim-g-agua-bolhas.mp4"
+  },
+  {
+    "id": "g-fogos-velas",
+    "nome": "Fogos sobre velas",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "preto",
+        "k": 0.3,
+        "duck": true
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas",
+          "cena": "",
+          "p": {
+            "paleta": "ambar",
+            "alt": 0.4
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 0.7,
+          "duck": true,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "fisFogos",
+          "nome": "Fogos",
+          "cena": "",
+          "p": {
+            "paleta": "marca"
+          },
+          "duracao": 8,
+          "mistura": "tela",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": true,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.5,
+        "soltura": 0.35,
+        "limiar": 0.4,
+        "inverso": false
+      }
+    },
+    "categoria": "audio",
+    "grupo": "fisica",
+    "thumb": "cenas/anim-g-fogos-velas.png",
+    "preview": "cenas/anim-g-fogos-velas.mp4"
+  },
+  {
+    "id": "m-mw5sjn2g",
+    "nome": "antonio 1",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "lateral",
+        "c1": "#000000",
+        "c2": "#000000",
+        "paleta": "brasa",
+        "k": 0.46,
+        "duck": true
+      },
+      "camadas": [
+        {
+          "efeito": "fisFogos",
+          "nome": "Fogos",
+          "cena": "g-fogos",
+          "p": {
+            "paleta": "marca"
+          },
+          "duracao": 8,
+          "mistura": "maximo",
+          "opacidade": 1,
+          "paleta": "ambar",
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "audioFaixas",
+          "nome": "Faixas",
+          "cena": "a-faixas",
+          "p": {},
+          "duracao": 8,
+          "mistura": "somar",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": false,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.7,
+        "soltura": 0.25,
+        "limiar": 0.4,
+        "inverso": false
+      },
+      "paletaPropria": [
+        "#3a0058",
+        "#ff3388",
+        "#ffe2a8"
+      ]
+    },
+    "categoria": "audio",
+    "grupo": "minhas",
+    "criada": true,
+    "thumb": "cenas/anim-m-mw5sjn2g.png?v=mw5sjn2g",
+    "preview": "cenas/anim-m-mw5sjn2g.mp4?v=mw5sjn2g"
+  }
+]

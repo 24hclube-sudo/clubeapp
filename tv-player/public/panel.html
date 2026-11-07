@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel das TVs</title>
+<style>
+  :root { --bg:#f5f5f4; --card:#fff; --ink:#1c1917; --muted:#78716c; --line:#e7e5e4; --accent:#2563eb; --ok:#16a34a; --off:#a8a29e; --danger:#dc2626; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#141414; --card:#1f1f1f; --ink:#f5f5f4; --muted:#a8a29e; --line:#333; --accent:#60a5fa; --ok:#4ade80; --off:#57534e; --danger:#f87171; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.4 system-ui, sans-serif; }
+  header { padding: 14px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); background: var(--card); position: sticky; top: 0; z-index: 5; }
+  header h1 { font-size: 17px; margin: 0; flex: 1; }
+  #conn { font-size: 12px; color: var(--muted); }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { main { grid-template-columns: 1fr 1fr; } }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  h2 .sp { flex: 1; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.danger { color: var(--danger); }
+  button:disabled { opacity: .5; cursor: default; }
+  .tvs { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .tv { border: 2px solid var(--line); border-radius: 10px; padding: 10px; cursor: pointer; user-select: none; position: relative; }
+  .tv.sel { border-color: var(--accent); }
+  .tv .name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--off); flex: none; }
+  .tv.online .dot { background: var(--ok); }
+  .tv small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tv .tools { display: flex; gap: 4px; margin-top: 8px; }
+  .tv .tools button { padding: 2px 6px; font-size: 12px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+  .media { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); max-height: 420px; overflow: auto; }
+  .m { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #000; position: relative; }
+  .m img, .m video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .m .cap { background: var(--card); padding: 4px 6px; font-size: 12px; display: flex; gap: 4px; align-items: center; }
+  .m .cap span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .m .cap button { padding: 1px 6px; font-size: 12px; }
+  .badge { position: absolute; top: 4px; left: 4px; background: rgba(0,0,0,.7); color: #fff; font-size: 11px; padding: 1px 5px; border-radius: 4px; }
+  #drop { border: 2px dashed var(--line); border-radius: 10px; padding: 14px; text-align: center; color: var(--muted); margin-bottom: 10px; }
+  #drop.over { border-color: var(--accent); color: var(--accent); }
+  input[type=text], input[type=url], input[type=number] { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
+  input[type=url] { flex: 1; min-width: 180px; }
+  .pl { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .pl li { display: flex; gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+  .pl li span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .pl li input { width: 64px; }
+  .empty { color: var(--muted); font-size: 13px; }
+  .full { grid-column: 1 / -1; }
+  #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  #toast.on { opacity: 1; }
+</style>
+</head>
+<body>
+<header><h1>Painel das TVs</h1><span id="conn">conectando…</span></header>
+<main>
+  <section class="full">
+    <h2>TVs <span class="sp"></span>
+      <button id="selAll">Selecionar todas</button>
+      <button id="identify">Identificar</button>
+      <button id="stop" class="danger">Parar</button>
+    </h2>
+    <div id="tvs" class="tvs"></div>
+  </section>
+
+  <section>
+    <h2>Biblioteca <span class="sp"></span><label><button id="pick">Enviar arquivos</button></label></h2>
+    <input type="file" id="file" multiple accept="image/*,video/*" hidden>
+    <div id="drop">Arraste imagens ou vídeos aqui</div>
+    <div id="media" class="media"></div>
+    <div class="row">
+      <input type="url" id="url" placeholder="https://… (página web)">
+      <button id="addUrl">+ Playlist</button>
+      <button id="sendUrl" class="primary">Mostrar agora</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Playlist <span class="sp"></span><label style="font-size:13px;text-transform:none;letter-spacing:0"><input type="checkbox" id="mute"> sem som</label><button id="clearPl">Limpar</button></h2>
+    <ul id="pl" class="pl"></ul>
+    <div class="row"><button id="sendPl" class="primary">Enviar playlist para as TVs selecionadas</button></div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+var $ = function (s) { return document.getElementById(s); };
+var ws, tvs = [], media = [], selected = new Set(), playlist = [];
+try { playlist = JSON.parse(localStorage.getItem('tvp-playlist') || '[]'); } catch (e) {}
+
+function toast(t) { var el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove('on'); }, 2200); }
+function send(m) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(m)); else toast('Sem conexão com o servidor'); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+function connect() {
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
+  ws.onopen = function () { $('conn').textContent = 'conectado'; send({ type: 'hello-panel' }); };
+  ws.onclose = function () { $('conn').textContent = 'reconectando…'; setTimeout(connect, 2000); };
+  ws.onmessage = function (e) {
+    var m = JSON.parse(e.data);
+    if (m.type === 'tvs') { tvs = m.tvs; renderTvs(); }
+    if (m.type === 'media') { media = m.media; renderMedia(); }
+  };
+}
+
+function describe(c) {
+  if (!c) return 'parada';
+  if (c.kind === 'playlist') return 'playlist · ' + c.items.length + ' itens';
+  var i = c.items[0]; return (i.kind === 'url' ? 'página: ' : '') + decodeURIComponent(i.src.split('/').pop());
+}
+
+function renderTvs() {
+  var el = $('tvs');
+  if (!tvs.length) { el.innerHTML = '<div class="empty">Nenhuma TV conectou ainda. Abra o app player nas TVs.</div>'; return; }
+  el.innerHTML = tvs.map(function (t) {
+    return '<div class="tv ' + (t.online ? 'online ' : '') + (selected.has(t.id) ? 'sel' : '') + '" data-id="' + esc(t.id) + '">' +
+      '<div class="name"><span class="dot"></span>' + esc(t.name) + '</div>' +
+      '<small>' + esc(t.online ? (t.info && t.info.ip || 'online') : 'offline') + '</small>' +
+      '<small>' + esc(describe(t.content)) + '</small>' +
+      '<div class="tools"><button data-act="rename">Renomear</button>' + (t.online ? '<button data-act="reload">Recarregar</button>' : '<button data-act="forget">Remover</button>') + '</div></div>';
+  }).join('');
+}
+
+$('tvs').addEventListener('click', function (e) {
+  var card = e.target.closest('.tv'); if (!card) return;
+  var id = card.dataset.id, act = e.target.dataset.act;
+  if (act === 'rename') { var t = tvs.find(function (x) { return x.id === id; }); var n = prompt('Nome da TV', t.name); if (n) send({ type: 'rename', id: id, name: n }); return; }
+  if (act === 'reload') return send({ type: 'reload', targets: [id] });
+  if (act === 'forget') return send({ type: 'forget', id: id });
+  selected.has(id) ? selected.delete(id) : selected.add(id); renderTvs();
+});
+$('selAll').onclick = function () {
+  if (selected.size === tvs.length) selected.clear(); else tvs.forEach(function (t) { selected.add(t.id); });
+  renderTvs();
+};
+function targets() { if (!selected.size) { toast('Selecione pelo menos uma TV'); return null; } return Array.from(selected); }
+$('identify').onclick = function () { send({ type: 'identify', targets: selected.size ? Array.from(selected) : 'all' }); };
+$('stop').onclick = function () { var t = targets(); if (t) { send({ type: 'stop', targets: t }); toast('Parado'); } };
+
+function renderMedia() {
+  var el = $('media');
+  if (!media.length) { el.innerHTML = '<div class="empty">Biblioteca vazia.</div>'; return; }
+  el.innerHTML = media.map(function (m, i) {
+    var thumb = m.kind === 'video' ? '<video src="' + m.src + '#t=1" muted preload="metadata"></video>' : '<img src="' + m.src + '" loading="lazy">';
+    return '<div class="m" data-i="' + i + '">' + (m.kind === 'video' ? '<span class="badge">vídeo</span>' : '') + thumb +
+      '<div class="cap"><span title="' + esc(m.name) + '">' + esc(m.name) + '</span>' +
+      '<button data-act="now" title="Mostrar agora">▶</button><button data-act="add" title="Adicionar à playlist">+</button><button data-act="del" title="Apagar">✕</button></div></div>';
+  }).join('');
+}
+
+$('media').addEventListener('click', function (e) {
+  var act = e.target.dataset.act; if (!act) return;
+  var m = media[e.target.closest('.m').dataset.i];
+  if (act === 'now') { var t = targets(); if (t) { send({ type: 'play', targets: t, items: [itemFrom(m)] }); toast('Enviado'); } }
+  if (act === 'add') addToPlaylist(m);
+  if (act === 'del' && confirm('Apagar ' + m.name + '?')) fetch('/api/media/' + encodeURIComponent(m.name), { method: 'DELETE' });
+});
+
+function itemFrom(m) { return { kind: m.kind, src: m.src, name: m.name, muted: $('mute').checked }; }
+
+function addToPlaylist(m) {
+  var it = { kind: m.kind, src: m.src, name: m.name, duration: 10 };
+  playlist.push(it); renderPl();
+  if (m.kind === 'video') { // lê a duração real do vídeo
+    var v = document.createElement('video'); v.preload = 'metadata'; v.src = m.src;
+    v.onloadedmetadata = function () { it.duration = Math.round(v.duration * 10) / 10; renderPl(); };
+  }
+}
+
+function renderPl() {
+  try { localStorage.setItem('tvp-playlist', JSON.stringify(playlist)); } catch (e) {}
+  var el = $('pl');
+  if (!playlist.length) { el.innerHTML = '<li class="empty" style="border:0">Use “+” na biblioteca para montar a sequência.</li>'; return; }
+  el.innerHTML = playlist.map(function (it, i) {
+    return '<li data-i="' + i + '"><span>' + (i + 1) + '. ' + esc(it.name || it.src) + '</span>' +
+      '<input type="number" min="1" step="1" value="' + it.duration + '" title="segundos"> s' +
+      '<button data-act="up">↑</button><button data-act="rm">✕</button></li>';
+  }).join('');
+}
+$('pl').addEventListener('input', function (e) { var li = e.target.closest('li'); if (li) playlist[li.dataset.i].duration = Math.max(1, +e.target.value || 10); try { localStorage.setItem('tvp-playlist', JSON.stringify(playlist)); } catch (x) {} });
+$('pl').addEventListener('click', function (e) {
+  var li = e.target.closest('li'); if (!li || !e.target.dataset.act) return; var i = +li.dataset.i;
+  if (e.target.dataset.act === 'rm') playlist.splice(i, 1);
+  if (e.target.dataset.act === 'up' && i > 0) playlist.splice(i - 1, 0, playlist.splice(i, 1)[0]);
+  renderPl();
+});
+$('clearPl').onclick = function () { playlist = []; renderPl(); };
+$('sendPl').onclick = function () {
+  var t = targets(); if (!t) return; if (!playlist.length) return toast('Playlist vazia');
+  var mute = $('mute').checked;
+  send({ type: 'play', targets: t, loop: true, items: playlist.map(function (i) { return { kind: i.kind, src: i.src, name: i.name, duration: i.duration, muted: mute }; }) });
+  toast('Playlist enviada');
+};
+
+function urlItem() { var u = $('url').value.trim(); if (!/^https?:\/\//.test(u)) { toast('Informe uma URL começando com http'); return null; } return { kind: 'url', src: u, name: u }; }
+$('sendUrl').onclick = function () { var it = urlItem(), t = it && targets(); if (t) { send({ type: 'play', targets: t, items: [it] }); toast('Enviado'); } };
+$('addUrl').onclick = function () { var it = urlItem(); if (it) { it.duration = 30; playlist.push(it); renderPl(); } };
+
+// upload
+function upload(files) {
+  Array.from(files).forEach(function (f) {
+    toast('Enviando ' + f.name + '…');
+    fetch('/api/media?name=' + encodeURIComponent(f.name), { method: 'POST', body: f })
+      .then(function (r) { return r.json(); }).then(function (r) { toast(r.ok ? 'Enviado: ' + f.name : 'Erro: ' + r.error); });
+  });
+}
+$('pick').onclick = function () { $('file').click(); };
+$('file').onchange = function () { upload(this.files); this.value = ''; };
+var drop = $('drop');
+['dragenter', 'dragover'].forEach(function (ev) { document.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { document.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+document.addEventListener('drop', function (e) { if (e.dataTransfer.files.length) upload(e.dataTransfer.files); });
+
+renderPl();
+connect();
+</script>
+</body>
+</html>

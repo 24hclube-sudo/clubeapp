@@ -1,0 +1,7 @@
+﻿{
+  "name": "visual-pista-saida",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Visual da pista (Three.js) renderizado fora da tela e publicado por Spout para o MadMapper / LED Pista. Usa o Electron e o Python do C:\\apps\\radio-saida.",
+  "main": "main.js"
+}

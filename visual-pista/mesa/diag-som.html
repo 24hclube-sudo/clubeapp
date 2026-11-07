@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Diagnóstico do som</title></head>
+<body style="background:#000;color:#eee;font:14px monospace">
+<pre id="s"></pre>
+<script type="module">
+// Só mede: abre a entrada de som com a mesma análise dos visuais e guarda os números em window.__diag.
+import { A, ligarAudio, analisarAudio, audioVivo, audioNoComando } from '../js/audio.js';
+const pedido = new URLSearchParams(location.search).get('audio') ?? 'microfone';
+let bumbos = 0;
+A.aoBumbo = () => { bumbos++; };
+await ligarAudio(pedido);
+const dispositivos = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audioinput').map(d => d.label);
+const janela = { soma: 0, n: 0, pico: 0, g: [], m: [], a: [] };
+let ultimo = performance.now();
+function quadro(t) {
+  const dt = Math.min((t - ultimo) / 1000, 0.05); ultimo = t;
+  analisarAudio(dt);
+  if (A.ctx && A.ctx.state === 'suspended') A.ctx.resume().catch(() => {});
+  if (A.an) {
+    const b = new Float32Array(A.an.fftSize);
+    A.an.getFloatTimeDomainData(b);
+    for (const x of b) { janela.soma += x * x; janela.n++; janela.pico = Math.max(janela.pico, Math.abs(x)); }
+    janela.g.push(A.grave); janela.m.push(A.medio); janela.a.push(A.agudo);
+  }
+  requestAnimationFrame(quadro);
+}
+requestAnimationFrame(quadro);
+const resumo = v => v.length ? { min: +Math.min(...v).toFixed(2), max: +Math.max(...v).toFixed(2), media: +(v.reduce((s, x) => s + x, 0) / v.length).toFixed(2) } : null;
+window.__diag = () => {
+  const r = {
+    entrada: A.an ? A.entrada : A.estado, contexto: A.ctx && A.ctx.state, taxa: A.ctx && A.ctx.sampleRate, dispositivos,
+    rmsDb: janela.n ? +(10 * Math.log10(janela.soma / janela.n + 1e-12)).toFixed(1) : null, picoDb: janela.pico ? +(20 * Math.log10(janela.pico)).toFixed(1) : null,
+    grave: resumo(janela.g), medio: resumo(janela.m), agudo: resumo(janela.a), bumbos, bpm: +A.bpm.toFixed(1), musica: A.musica, faixaG: +A.faixaG.toFixed(1), faixaM: +A.faixaM.toFixed(1), previstos: A.previstos, confianca: +A.confianca.toFixed(2), vivo: audioVivo(), comando: audioNoComando(),
+  };
+  janela.soma = 0; janela.n = 0; janela.pico = 0; janela.g = []; janela.m = []; janela.a = []; bumbos = 0;
+  return r;
+};
+</script>
+</body>
+</html>

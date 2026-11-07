@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visuais da pista</title>
+<style>
+  :root { --fundo: #0b0b0c; --painel: #17171a; --linha: #2c2c31; --texto: #f4f4f4; --apagado: #a4a4ab; --vermelho: #ed1c24; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--texto); font: 14px/1.4 Archivo, system-ui, -apple-system, 'Segoe UI', sans-serif; overflow: hidden; }
+  @font-face { font-family: Archivo; src: url('../assets/Archivo-Regular.ttf'); }
+  #app { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr; }
+  header { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; background: var(--painel); border-bottom: 1px solid var(--linha); }
+  .seta { width: 56px; height: 56px; border-radius: 10px; border: 1px solid var(--linha); background: #222226; color: var(--texto); font-size: 26px; line-height: 1; cursor: pointer; }
+  .seta:hover { background: #2d2d33; }
+  .seta:active { background: var(--vermelho); border-color: var(--vermelho); }
+  #meio { min-width: 0; }
+  #nome { font-size: 20px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #cont { color: var(--apagado); font-size: 13px; margin-left: 8px; }
+  #selo { display: inline-block; font-size: 11px; line-height: 16px; padding: 0 6px; border-radius: 4px; background: var(--vermelho); color: #fff; margin-left: 8px; vertical-align: 3px; }
+  #selo:empty { display: none; }
+  #abrindo { color: var(--apagado); font-size: 12px; margin-left: 8px; }
+  #medidor { display: grid; grid-template-columns: auto 90px 12px minmax(0, 1fr); gap: 8px; align-items: center; padding: 6px 12px; background: #111113; border-bottom: 1px solid var(--linha); font-size: 12px; color: var(--apagado); }
+  #barras { display: grid; gap: 2px; }
+  #barras div { height: 3px; background: #2a2a2f; border-radius: 2px; overflow: hidden; }
+  #barras i { display: block; height: 100%; width: 0; background: #e8e8ec; }
+  #m-bumbo { width: 12px; height: 12px; border-radius: 50%; background: var(--vermelho); opacity: .1; }
+  #m-texto { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #desc { color: var(--apagado); font-size: 13px; }
+  #acoes { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; padding: 8px 12px; background: #111113; border-bottom: 1px solid var(--linha); }
+  #estado { color: var(--apagado); font-size: 12px; margin-right: auto; min-width: 0; }
+  button.acao { height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--linha); background: #222226; color: var(--texto); font: inherit; font-size: 13px; cursor: pointer; }
+  button.acao:hover:not(:disabled) { background: #2d2d33; }
+  button.principal { background: var(--vermelho); border-color: var(--vermelho); color: #fff; }
+  button.principal:hover:not(:disabled) { background: #ff2e36; }
+  button.acao:disabled { opacity: .45; cursor: default; }
+  main { position: relative; min-height: 0; }
+  #tela { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* a página do visual roda aqui atrás; o que aparece é a imagem dela desenhada na sala e no painel */
+  .palco { position: fixed; left: 0; top: 0; width: 516px; height: 2838px; border: 0; opacity: .01; pointer-events: none; z-index: -1; }
+  #aviso { position: absolute; left: 12px; bottom: 12px; right: 12px; color: var(--apagado); font-size: 13px; pointer-events: none; }
+  #pontos { display: flex; gap: 5px; margin-top: 3px; }
+  #pontos i { width: 16px; height: 4px; border-radius: 2px; background: #3a3a40; }
+  #pontos i.ligado { background: var(--vermelho); }
+  #pontos i.no-led { background: #fff; }
+  @media (max-width: 560px) {
+    .seta { width: 46px; height: 46px; }
+    #nome { font-size: 17px; }
+    #desc { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div>
+    <header>
+      <button class="seta" id="antes" aria-label="Visual anterior" title="Visual anterior (seta para a esquerda)">◀</button>
+      <div id="meio">
+        <div id="nome"></div>
+        <div id="desc"></div>
+        <div id="pontos"></div>
+      </div>
+      <button class="seta" id="depois" aria-label="Próximo visual" title="Próximo visual (seta para a direita)">▶</button>
+    </header>
+    <div id="acoes">
+      <span id="estado"></span>
+      <button class="acao" id="som" title="Trocar a fonte do som da prévia">Usar batida de teste</button>
+      <button class="acao principal" id="mandar">Mandar para o LED</button>
+      <button class="acao" id="tirar">Tirar do LED</button>
+    </div>
+    <div id="medidor">
+      <span>Som</span>
+      <div id="barras" title="Grave, médio e agudo"><div><i id="m-grave"></i></div><div><i id="m-medio"></i></div><div><i id="m-agudo"></i></div></div>
+      <span id="m-bumbo" title="Pisca no bumbo"></span>
+      <span id="m-texto"></span>
+    </div>
+  </div>
+  <main>
+    <canvas id="tela"></canvas>
+    <div id="aviso"></div>
+  </main>
+</div>
+<iframe class="palco" id="palcoA" title="Visual em execução" allow="autoplay"></iframe>
+<iframe class="palco" id="palcoB" title="Próximo visual, carregando" allow="autoplay"></iframe>
+<script type="module" src="mesa.js"></script>
+</body>
+</html>

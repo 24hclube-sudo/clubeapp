@@ -1,0 +1,2553 @@
+{
+ "versao": 1,
+ "momentos": [
+  {
+   "id": "manha",
+   "nome": "Manhã",
+   "inicio": 6,
+   "fim": 11,
+   "cor": "#00bae3",
+   "cor2": "#006faf",
+   "capa": "capas/manha.jpg",
+   "descricao": "Abrindo a casa sem pressa: violão, voz e sol entrando. MPB, afro-sambas, jazz e soul de manhã cedo.",
+   "faixas": [
+    {
+     "id": "1zl7uw0zdJTkaQCKbBLizF",
+     "titulo": "Canto de Xangô",
+     "artista": "Baden Powell & Vinicius de Moraes",
+     "album": "Os Afro-Sambas de Baden e Vinicius",
+     "ano": 1966,
+     "duracao": 390
+    },
+    {
+     "id": "6k746uByxsXORBv8F1BxSk",
+     "titulo": "Depois que o Ilê passar",
+     "artista": "Caetano Veloso",
+     "album": "Caetano",
+     "ano": 1987,
+     "duracao": 183
+    },
+    {
+     "id": "3VeIgavxERwPSyTrvVcMbV",
+     "titulo": "You Don't Know Me",
+     "artista": "Caetano Veloso",
+     "album": "Transa",
+     "ano": 2012,
+     "duracao": 229
+    },
+    {
+     "id": "2LO9bM0IHiQ4sTI7kaPViF",
+     "titulo": "It's Too late",
+     "artista": "Carole King",
+     "album": "Tapestry (1999 Remaster)",
+     "ano": 1971,
+     "duracao": 233
+    },
+    {
+     "id": "79KRHlLH2enjYBNn00IiN3",
+     "titulo": "Old Devil Moon",
+     "artista": "Chet Baker",
+     "album": "Blue Room - The 1979 VARA Studio Sessions in Holland",
+     "ano": 2023,
+     "duracao": 314
+    },
+    {
+     "id": "3ZzBWjK87CvmUIgF5EDX2g",
+     "titulo": "Fancy Man",
+     "artista": "Devendra Banhart",
+     "album": "Ape in Pink Marble",
+     "ano": 2016,
+     "duracao": 179
+    },
+    {
+     "id": "2e8QkR3FMMJ9U0q8rAkD0L",
+     "titulo": "Jolene",
+     "artista": "Dolly Parton",
+     "album": "Back to Mine - Liam Prodigy",
+     "ano": 2006,
+     "duracao": 157
+    },
+    {
+     "id": "5KpQwroAGxNH2JmeludSCH",
+     "titulo": "La Vie va",
+     "artista": "Domenique Dumont",
+     "album": "Deux paradis",
+     "ano": 2025,
+     "duracao": 191
+    },
+    {
+     "id": "4sZLBCzHpZHrBJdvCbs5cV",
+     "titulo": "Manhã de carnaval",
+     "artista": "Elizeth Cardoso",
+     "album": "Melancholy (Enjoy Cloudy Weather and Solitude)",
+     "ano": 2015,
+     "duracao": 177
+    },
+    {
+     "id": "6d1x3FAQn4SekdyTpgUzdy",
+     "titulo": "Tiny Dancer",
+     "artista": "Elton John",
+     "album": "Madman Across the Water",
+     "ano": 1996,
+     "duracao": 377
+    },
+    {
+     "id": "4hMnlj7pAk6DEN1Bpq02h6",
+     "titulo": "Esperar Pra ver",
+     "artista": "Evinha",
+     "album": "Mr Bongo Record Club Volume One",
+     "ano": 2016,
+     "duracao": 128
+    },
+    {
+     "id": "6YqrOCVkTQkPy4O6c7ZqrM",
+     "titulo": "Wililé (feat. Toumani Diabaté)",
+     "artista": "Fatoumata Diawara",
+     "album": "Fatou",
+     "ano": 2011,
+     "duracao": 290
+    },
+    {
+     "id": "5OjzonlqGGzatZbbecVV52",
+     "titulo": "Never Going Back Again (2004 Remaster)",
+     "artista": "Fleetwood Mac",
+     "album": "Fleetwood Mac 1975 to 1987",
+     "ano": 2019,
+     "duracao": 134
+    },
+    {
+     "id": "2CSaMw23maQqXSJz0azWpF",
+     "titulo": "Laisse Tomber Les Filles",
+     "artista": "France Gall",
+     "album": "Francegall-Longbox-1",
+     "ano": 2001,
+     "duracao": 134
+    },
+    {
+     "id": "5b8cOrB8Por3jMd4dzDFdh",
+     "titulo": "Le temps de l'amour - Stereo Mix",
+     "artista": "Françoise Hardy",
+     "album": "Tous les garçons et les filles",
+     "ano": 2003,
+     "duracao": 146
+    },
+    {
+     "id": "6OzkZY31GFRMX6vyHTceen",
+     "titulo": "Right Down The Line",
+     "artista": "Gerry Rafferty",
+     "album": "City To City",
+     "ano": 1978,
+     "duracao": 271
+    },
+    {
+     "id": "59G6uZFQQMZ2SIwUaS35go",
+     "titulo": "Lillies Of The Valley",
+     "artista": "Jun Miyake",
+     "album": "PINA (Original Soundtrack)",
+     "ano": 2011,
+     "duracao": 330
+    },
+    {
+     "id": "0s4icNbjjJdG5iQpO123mZ",
+     "titulo": "Babooshka #1 (Piano & Vocal Overdubs)",
+     "artista": "Kate Bush",
+     "album": "Alone at My Piano",
+     "ano": 1988,
+     "duracao": 118
+    },
+    {
+     "id": "3ByWgSEM4BFFInv7Ss74yA",
+     "titulo": "Miles, Miles, Miles",
+     "artista": "Kevin Morby",
+     "album": "Harlem River",
+     "ano": 2013,
+     "duracao": 289
+    },
+    {
+     "id": "5naSvH6dZlDq6jO7zSFMwC",
+     "titulo": "Sidi Sma Ya Boulandi",
+     "artista": "Maalem Mahmoud Gania",
+     "album": "Colours of the Night",
+     "ano": 2017,
+     "duracao": 486
+    },
+    {
+     "id": "1id6nNEVKYD7256JUaTPrI",
+     "titulo": "Tudo que você podia ser",
+     "artista": "Milton Nascimento",
+     "album": "LateNightTales: Belle and Sebastian, Volume 2",
+     "ano": 2012,
+     "duracao": 176
+    },
+    {
+     "id": "2v6mB4VfvGWqhJ59hofxw5",
+     "titulo": "Bird's Lament - Original Mix",
+     "artista": "Moondog",
+     "album": "The Viking of Sixth Avenue",
+     "ano": 2005,
+     "duracao": 104
+    },
+    {
+     "id": "7JwwmglUW7anOtbf6If6Ev",
+     "titulo": "I Wish I Knew How It Would Feel to Be Free",
+     "artista": "Nina Simone",
+     "album": "Silk & Soul",
+     "ano": 1967,
+     "duracao": 189
+    },
+    {
+     "id": "02u4k31U0dgpWcFGKRJLKf",
+     "titulo": "Banho de lua (Tintarella di luna)",
+     "artista": "Os Mutantes",
+     "album": "Mutantes",
+     "ano": 1969,
+     "duracao": 221
+    },
+    {
+     "id": "66EeKTv1DVMbpKNEUpuNHB",
+     "titulo": "Deixa a Gira Girar",
+     "artista": "Os Tincoãs",
+     "album": "Nova La Nuit",
+     "ano": 2018,
+     "duracao": 190
+    },
+    {
+     "id": "1RNY9U37rzFpI144DGZQCj",
+     "titulo": "Manhã de Carnaval",
+     "artista": "Paco de Lucía, Al Di Meola & John McLaughlin",
+     "album": "The Guitar Trio",
+     "ano": 1996,
+     "duracao": 375
+    },
+    {
+     "id": "4HxokIRJbJWtdPvII7hh6y",
+     "titulo": "Solsbury Hill",
+     "artista": "Peter Gabriel",
+     "album": "Peter Gabriel 1: Car  (Remastered Version)",
+     "ano": 1977,
+     "duracao": 261
+    },
+    {
+     "id": "6zaKSXrz8uEdrXOudsBEk9",
+     "titulo": "Love Is Everywhere",
+     "artista": "Pharoah Sanders",
+     "album": "Love in Us All",
+     "ano": 1974,
+     "duracao": 1195
+    },
+    {
+     "id": "5usiJUIPTDicbu0fmMHcFw",
+     "titulo": "Plage isolée (soleil levant)",
+     "artista": "Polo & Pan",
+     "album": "Caravelle (Deluxe)",
+     "ano": 2018,
+     "duracao": 232
+    },
+    {
+     "id": "50ScaMQdsjdZuZjU8QXCfa",
+     "titulo": "Manha de carnaval (Morning of the Carnival)",
+     "artista": "Quincy Jones",
+     "album": "Big Band Bossa Nova",
+     "ano": 1962,
+     "duracao": 178
+    },
+    {
+     "id": "4ZwWPWJSl0PKHF65JECLOV",
+     "titulo": "Cavaleiro De Aruanda",
+     "artista": "Ronnie Von",
+     "album": "Welcome To The ORISHAS HOMELAND - In The Rhythm Of Nature And Faith",
+     "ano": 2013,
+     "duracao": 192
+    },
+    {
+     "id": "3fE74Vi1COfb9ngFZ0itCV",
+     "titulo": "By Your Side (Remastered Version)",
+     "artista": "Sade",
+     "album": "The Ultimate Collection",
+     "ano": 2014,
+     "duracao": 280
+    },
+    {
+     "id": "3mDnkIAl0ebKzLB4htaJMe",
+     "titulo": "Omaca",
+     "artista": "Sestetto Dino Piana E Oscar Valdambrini",
+     "album": "10 Situazioni",
+     "ano": 1973,
+     "duracao": 168
+    },
+    {
+     "id": "4kQeU4lUEVo9Fs50nzQjoY",
+     "titulo": "Make 1,2",
+     "artista": "Taken by Trees",
+     "album": "Four Songs by Arthur Russell",
+     "ano": null,
+     "duracao": 208
+    },
+    {
+     "id": "4dYL05iOeuaP7u2CEoqE9v",
+     "titulo": "This Must Be the Place (Naive Melody) [2005 Remaster]",
+     "artista": "Talking Heads",
+     "album": "Speaking in Tongues (Deluxe Version)",
+     "ano": 1983,
+     "duracao": 296
+    },
+    {
+     "id": "5Wx84rL7qcFqvsxZtgh6cd",
+     "titulo": "Agua Fria",
+     "artista": "The Bongo Hop",
+     "album": "Satingarona pt 2",
+     "ano": 2019,
+     "duracao": 295
+    },
+    {
+     "id": "48yBZyiw6HUFK8cyX7qsF3",
+     "titulo": "Golden Clouds",
+     "artista": "The Orb feat. Lee Scratch Perry",
+     "album": "The Observer in the Starhouse",
+     "ano": 2012,
+     "duracao": 345
+    },
+    {
+     "id": "1I0MOMjTVTAnxNaqcO7Pxd",
+     "titulo": "Heaven (Remastered)",
+     "artista": "The Rolling Stones",
+     "album": "Tattoo You (2009 Re-Mastered)",
+     "ano": 1981,
+     "duracao": 262
+    },
+    {
+     "id": "2Y81xidpiUfggq36j6ibOV",
+     "titulo": "O Canto de Oxum",
+     "artista": "Toquinho & Vinicius",
+     "album": "P",
+     "ano": 2000,
+     "duracao": 170
+    },
+    {
+     "id": "5mxm3Ugy5QcJCPKtXX1GPY",
+     "titulo": "Napule Canta E More",
+     "artista": "Donatella Viggiano",
+     "album": "Napoli Segreta Volume 1",
+     "ano": 2018,
+     "duracao": 174
+    },
+    {
+     "id": "5zFtAjQn2biaT0ebt539Uy",
+     "titulo": "Wonderwall (Remastered)",
+     "artista": "Oasis",
+     "album": "Hi-Res Masters Indie Rock Hits",
+     "ano": 2014,
+     "duracao": 259
+    },
+    {
+     "id": "7JswPbnFlOplz7VWU0IYQr",
+     "titulo": "Babydoll",
+     "artista": "Dominic Fike",
+     "album": "Don't Forget About Me, Demos",
+     "ano": 2018,
+     "duracao": 98
+    },
+    {
+     "id": "7cV8e5M5bkGSrjBD0CLPgI",
+     "titulo": "Earrings",
+     "artista": "Malcolm Todd",
+     "album": "Sweet Boy",
+     "ano": 2024,
+     "duracao": 152
+    },
+    {
+     "id": "28AGHxOMuKdLvYM0pFIZuB",
+     "titulo": "Dreams",
+     "artista": "Fleetwood Mac",
+     "album": "Rumours",
+     "ano": 1977,
+     "duracao": 335
+    },
+    {
+     "id": "4FoidqpGofw5nU2SKmX6iU",
+     "titulo": "Get It Up for Love",
+     "artista": "Ned Doheny",
+     "album": "Hard Candy",
+     "ano": 1976,
+     "duracao": 282
+    },
+    {
+     "id": "2gXsRWUiFXnhY2o7kIAZah",
+     "titulo": "Dove",
+     "artista": "Cymande",
+     "album": "Cymande",
+     "ano": 1972,
+     "duracao": 655
+    },
+    {
+     "id": "30XO5Mk7409EaQJbpXLvJk",
+     "titulo": "Çayelinden Öteye/Yali Yali",
+     "artista": "Neşe Karaböcek",
+     "album": "Dost Bahçesi",
+     "ano": 1979,
+     "duracao": 162
+    },
+    {
+     "id": "4fErI8igZTmTvcdHQNSCwP",
+     "titulo": "Vumani Makhosi",
+     "artista": "Letta Mbulu",
+     "album": "In The Music The Village Never Ends",
+     "ano": 2015,
+     "duracao": 297
+    },
+    {
+     "id": "7DOSh2mRfgaGrDsDBhc9FV",
+     "titulo": "Don’t Go",
+     "artista": "Sanullim",
+     "album": "LateNightTales: Khruangbin",
+     "ano": 2020,
+     "duracao": 244
+    },
+    {
+     "id": "76RrCqlub4H9fsUEMYg2Qq",
+     "titulo": "Here I Am (Come and Take Me)",
+     "artista": "Al Green",
+     "album": "Call Me",
+     "ano": 2004,
+     "duracao": 257
+    },
+    {
+     "id": "6BdQolhCdGq4Z8BpwX2geq",
+     "titulo": "Amor en Milano",
+     "artista": "Brazil XXI",
+     "album": "Vintage Café: Lounge and Jazz Blends (Special Selection), Vol. 12",
+     "ano": 2018,
+     "duracao": 165
+    },
+    {
+     "id": "574CHRSbVZQDZQDqhB4vic",
+     "titulo": "Take Life Easy",
+     "artista": "Christy Essien Igbokwe",
+     "album": "One Understanding",
+     "ano": 2018,
+     "duracao": 243
+    },
+    {
+     "id": "5qzojd91wpAOULuoFbUrCY",
+     "titulo": "Hei! Você",
+     "artista": "Dom Salvador & Abolição",
+     "album": "Ultimate Brazil",
+     "ano": 2016,
+     "duracao": 151
+    },
+    {
+     "id": "5EuSIQ4w97WcMvoHOjNt6P",
+     "titulo": "What Is Life",
+     "artista": "Ebo Taylor & Uhuru-Yenzu",
+     "album": "Ebo Taylor - Life Stories CD2 ",
+     "ano": 2011,
+     "duracao": 278
+    },
+    {
+     "id": "2gE7BfTFaTVYdCmMbsD5Iv",
+     "titulo": "Bissau",
+     "artista": "Francis Bebey",
+     "album": "Akwaaba",
+     "ano": 1985,
+     "duracao": 222
+    },
+    {
+     "id": "36hTRKatEim16hX5YnSoZI",
+     "titulo": "Ive Brussell (feat. Caetano Veloso)",
+     "artista": "Jorge Ben Jor, Caetano Veloso",
+     "album": "Salve Simpatia",
+     "ano": 1979,
+     "duracao": 282
+    },
+    {
+     "id": "0SFk2pjXiHCswugPNOQGbC",
+     "titulo": "Gypsy Woman",
+     "artista": "Joe Bataan",
+     "album": "Gypsy Woman",
+     "ano": 1972,
+     "duracao": 152
+    },
+    {
+     "id": "37Ymq5qOJqfL3Bo3ReMiz7",
+     "titulo": "Cloudbusting",
+     "artista": "Kate Bush",
+     "album": "Hounds of Love",
+     "ano": 1985,
+     "duracao": 309
+    },
+    {
+     "id": "4A2ydnYdp6OKXVV8681NVE",
+     "titulo": "Only You",
+     "artista": "Steve Monite",
+     "album": "Doing It in Lagos (Boogie, Pop & Disco in 1980s Nigeria)",
+     "ano": 2016,
+     "duracao": 381
+    },
+    {
+     "id": "7GTStiB6LiTuvj62xDzklB",
+     "titulo": "(Nothing But) Flowers [2005 Remaster]",
+     "artista": "Talking Heads",
+     "album": "Naked",
+     "ano": 1988,
+     "duracao": 332
+    },
+    {
+     "id": "55ZpLSFz9hYB4TzQ9TD9Bl",
+     "titulo": "Golden Brown",
+     "artista": "The Stranglers",
+     "album": "Back to Mine - Audio Bullys",
+     "ano": 2003,
+     "duracao": 205
+    },
+    {
+     "id": "7BNZtiUYs89h7rQKVyY1Bc",
+     "titulo": "Ulla Dulla",
+     "artista": "Traffik Island",
+     "album": "Sweat Kollecta’s Peanut Butter Traffik Jam",
+     "ano": 2020,
+     "duracao": 154
+    }
+   ]
+  },
+  {
+   "id": "almoco",
+   "nome": "Almoço",
+   "inicio": 11,
+   "fim": 15,
+   "cor": "#00c44a",
+   "cor2": "#007000",
+   "capa": "capas/almoco.jpg",
+   "descricao": "Mesa cheia e conversa solta: groove leve, afro, soul e Brasil, sempre abaixo da voz de quem está à mesa.",
+   "faixas": [
+    {
+     "id": "76RrCqlub4H9fsUEMYg2Qq",
+     "titulo": "Here I Am (Come and Take Me)",
+     "artista": "Al Green",
+     "album": "Call Me",
+     "ano": 2004,
+     "duracao": 257
+    },
+    {
+     "id": "19vv5oceGFsgvfB1vcQ8DT",
+     "titulo": "Duvan",
+     "artista": "Amason",
+     "album": "Sky City",
+     "ano": 2015,
+     "duracao": 235
+    },
+    {
+     "id": "1rkGivPR6mOszZybIH8jUZ",
+     "titulo": "Lights Out, Words Gone",
+     "artista": "Bombay Bicycle Club",
+     "album": "A Different Kind of Fix",
+     "ano": 2011,
+     "duracao": 301
+    },
+    {
+     "id": "6BdQolhCdGq4Z8BpwX2geq",
+     "titulo": "Amor en Milano",
+     "artista": "Brazil XXI",
+     "album": "Vintage Café: Lounge and Jazz Blends (Special Selection), Vol. 12",
+     "ano": 2018,
+     "duracao": 165
+    },
+    {
+     "id": "574CHRSbVZQDZQDqhB4vic",
+     "titulo": "Take Life Easy",
+     "artista": "Christy Essien Igbokwe",
+     "album": "One Understanding",
+     "ano": 2018,
+     "duracao": 243
+    },
+    {
+     "id": "3w7YpxxmnWQfi9xZmSQIOo",
+     "titulo": "I Dig You",
+     "artista": "Demis Roussos",
+     "album": "Magic",
+     "ano": 1977,
+     "duracao": 243
+    },
+    {
+     "id": "5qzojd91wpAOULuoFbUrCY",
+     "titulo": "Hei! Você",
+     "artista": "Dom Salvador & Abolição",
+     "album": "Ultimate Brazil",
+     "ano": 2016,
+     "duracao": 151
+    },
+    {
+     "id": "5EuSIQ4w97WcMvoHOjNt6P",
+     "titulo": "What Is Life",
+     "artista": "Ebo Taylor & Uhuru-Yenzu",
+     "album": "Ebo Taylor - Life Stories CD2 ",
+     "ano": 2011,
+     "duracao": 278
+    },
+    {
+     "id": "2gE7BfTFaTVYdCmMbsD5Iv",
+     "titulo": "Bissau",
+     "artista": "Francis Bebey",
+     "album": "Akwaaba",
+     "ano": 1985,
+     "duracao": 222
+    },
+    {
+     "id": "7qCjLcUKk1mauQA2iqn95H",
+     "titulo": "Mopedbart",
+     "artista": "Hubbabubbaklubb",
+     "album": "After Dark: Nightshift",
+     "ano": 2014,
+     "duracao": 265
+    },
+    {
+     "id": "19YpdH9o9XSmzVhD8uehGb",
+     "titulo": "Kalan Nege",
+     "artista": "Issa Bagayogo",
+     "album": "Putumayo Presents: African Beat",
+     "ano": 2011,
+     "duracao": 246
+    },
+    {
+     "id": "0SFk2pjXiHCswugPNOQGbC",
+     "titulo": "Gypsy Woman",
+     "artista": "Joe Bataan",
+     "album": "Gypsy Woman",
+     "ano": 1972,
+     "duracao": 152
+    },
+    {
+     "id": "7AGgSglT8vtE1Z1Gy3bh6j",
+     "titulo": "iYongwe",
+     "artista": "John Wizards",
+     "album": "Bleep: The Top 100 Tracks of 2013",
+     "ano": 2013,
+     "duracao": 169
+    },
+    {
+     "id": "36hTRKatEim16hX5YnSoZI",
+     "titulo": "Ive Brussell (feat. Caetano Veloso)",
+     "artista": "Jorge Ben Jor, Caetano Veloso",
+     "album": "Salve Simpatia",
+     "ano": 1979,
+     "duracao": 282
+    },
+    {
+     "id": "37Ymq5qOJqfL3Bo3ReMiz7",
+     "titulo": "Cloudbusting",
+     "artista": "Kate Bush",
+     "album": "Hounds of Love",
+     "ano": 1985,
+     "duracao": 309
+    },
+    {
+     "id": "2yFCzskSTwZu1XmDG59N7g",
+     "titulo": "Ja Funmi",
+     "artista": "King Sunny Adé",
+     "album": "Juju Music",
+     "ano": 1982,
+     "duracao": 429
+    },
+    {
+     "id": "5ep0HY094CVlS4LKr7Zbhu",
+     "titulo": "Agitations tropicales",
+     "artista": "L'Impératrice ♕",
+     "album": "Odyssée EP",
+     "ano": 2015,
+     "duracao": 249
+    },
+    {
+     "id": "16NSsBdmKZyd2KUv2Rfgbs",
+     "titulo": "Soñando De Ti",
+     "artista": "Part Time",
+     "album": "PDA",
+     "ano": 2013,
+     "duracao": 193
+    },
+    {
+     "id": "73qBG4qnotKlXpegNhS59u",
+     "titulo": "Rivolta",
+     "artista": "Polo & Pan",
+     "album": "Rivolta",
+     "ano": 2013,
+     "duracao": 312
+    },
+    {
+     "id": "0qkwyZNU5jWNh8s1i0Vz8M",
+     "titulo": "Cool Cat (Remastered 2011)",
+     "artista": "Queen",
+     "album": "Hot Space (Deluxe Remastered Version)",
+     "ano": 1982,
+     "duracao": 209
+    },
+    {
+     "id": "0sfxKYxAyqgttt1hdjfp1Z",
+     "titulo": "By Your Side (Cottonbelly's Fola Mix Edit)",
+     "artista": "Sade",
+     "album": "Red Hot + Riot (Deluxe Reissue)",
+     "ano": 2022,
+     "duracao": 280
+    },
+    {
+     "id": "7nlZN4FzrkxV36L4iUaW5f",
+     "titulo": "Ain't No Stopping Nancy",
+     "artista": "Sister Nancy",
+     "album": "One, Two",
+     "ano": 1982,
+     "duracao": 199
+    },
+    {
+     "id": "4pj1jykbpCVk2RLapoSDU5",
+     "titulo": "Pretty Baby",
+     "artista": "Sister Sledge",
+     "album": "Love Somebody Today",
+     "ano": 1980,
+     "duracao": 242
+    },
+    {
+     "id": "0BmMFpItgPutL9laZ2xoa6",
+     "titulo": "Do It Again",
+     "artista": "Steely Dan",
+     "album": "Can’t Buy a Thrill",
+     "ano": 1972,
+     "duracao": 357
+    },
+    {
+     "id": "6hFK9SU2ZrCBHBc8Ojh2Wc",
+     "titulo": "Lo Boob Oscillator",
+     "artista": "Stereolab",
+     "album": "ABC Music - Radio 1 Sessions",
+     "ano": 2002,
+     "duracao": 274
+    },
+    {
+     "id": "4A2ydnYdp6OKXVV8681NVE",
+     "titulo": "Only You",
+     "artista": "Steve Monite",
+     "album": "Doing It in Lagos (Boogie, Pop & Disco in 1980s Nigeria)",
+     "ano": 2016,
+     "duracao": 381
+    },
+    {
+     "id": "1VqZNPMYDFQLeNbqTqi4te",
+     "titulo": "Goodbye Stranger (Remastered 2026)",
+     "artista": "Supertramp",
+     "album": "Breakfast In America",
+     "ano": 2026,
+     "duracao": 351
+    },
+    {
+     "id": "3NKVx1pjNj4gBL5huZoqEx",
+     "titulo": "Noude Ma Gnin Tche de Me",
+     "artista": "T.P. Orchestre Poly-Rythmo De Cotonou",
+     "album": "Volume Two - Echos Hypnotiques - From the vaults of Albarika Store 1969-1979",
+     "ano": 2009,
+     "duracao": 314
+    },
+    {
+     "id": "0RcQ9MeqO6msb4HPeRJlSI",
+     "titulo": "Don't Worry About the Government (2005 Remaster)",
+     "artista": "Talking Heads",
+     "album": "Talking Heads '77 (Deluxe Version)",
+     "ano": 1977,
+     "duracao": 182
+    },
+    {
+     "id": "1A7mE0hsLFdKJjRS2WNSin",
+     "titulo": "Love → Building on Fire (2005 Remaster)",
+     "artista": "Talking Heads",
+     "album": "Talking Heads '77 (Deluxe Version)",
+     "ano": 1977,
+     "duracao": 178
+    },
+    {
+     "id": "7GTStiB6LiTuvj62xDzklB",
+     "titulo": "(Nothing But) Flowers [2005 Remaster]",
+     "artista": "Talking Heads",
+     "album": "Naked",
+     "ano": 1988,
+     "duracao": 332
+    },
+    {
+     "id": "39dI8jCg7NtBHkyy5BW3gX",
+     "titulo": "Everybody Wants to Rule the World",
+     "artista": "Tears for Fears",
+     "album": "Songs From the Big Chair",
+     "ano": 1985,
+     "duracao": 252
+    },
+    {
+     "id": "0RguHDuZq507BXdtXVJV9W",
+     "titulo": "Wherever You Will Go",
+     "artista": "The Calling",
+     "album": "100 Hits: 2000s",
+     "ano": 2008,
+     "duracao": 205
+    },
+    {
+     "id": "5PHV6Lvkt0zKNQQ7V180eO",
+     "titulo": "Long Train Runnin’",
+     "artista": "The Doobie Brothers",
+     "album": "The Captain and Me",
+     "ano": 1973,
+     "duracao": 208
+    },
+    {
+     "id": "55ZpLSFz9hYB4TzQ9TD9Bl",
+     "titulo": "Golden Brown",
+     "artista": "The Stranglers",
+     "album": "Back to Mine - Audio Bullys",
+     "ano": 2003,
+     "duracao": 205
+    },
+    {
+     "id": "7BNZtiUYs89h7rQKVyY1Bc",
+     "titulo": "Ulla Dulla",
+     "artista": "Traffik Island",
+     "album": "Sweat Kollecta’s Peanut Butter Traffik Jam",
+     "ano": 2020,
+     "duracao": 154
+    },
+    {
+     "id": "1ZaZZ79rWIvkrVMMNydscz",
+     "titulo": "The Russians Are Coming",
+     "artista": "Val Bennet",
+     "album": "Val Bennet EP",
+     "ano": 2011,
+     "duracao": 214
+    },
+    {
+     "id": "2cBNi8JJ5TFWTkQGzATHAm",
+     "titulo": "Ordinary World",
+     "artista": "Duran Duran",
+     "album": "Duran Duran (The Wedding Album)",
+     "ano": 1993,
+     "duracao": 340
+    },
+    {
+     "id": "4YFOW0kFrUshXj0rJaXa18",
+     "titulo": "Tamanqueiro (Selvagem Edit)",
+     "artista": "Elizio De Buzios",
+     "album": "Le Freak",
+     "ano": 2008,
+     "duracao": 228
+    },
+    {
+     "id": "0rOyF0PCwV2aPR3PtGhB4N",
+     "titulo": "Be Thankful for What You’ve Got",
+     "artista": "Massive Attack",
+     "album": "Blue Lines",
+     "ano": 2012,
+     "duracao": 250
+    },
+    {
+     "id": "5Wx84rL7qcFqvsxZtgh6cd",
+     "titulo": "Agua Fria",
+     "artista": "The Bongo Hop",
+     "album": "Satingarona pt 2",
+     "ano": 2019,
+     "duracao": 295
+    },
+    {
+     "id": "5usiJUIPTDicbu0fmMHcFw",
+     "titulo": "Plage isolée (soleil levant)",
+     "artista": "Polo & Pan",
+     "album": "Caravelle (Deluxe)",
+     "ano": 2018,
+     "duracao": 232
+    },
+    {
+     "id": "2gXsRWUiFXnhY2o7kIAZah",
+     "titulo": "Dove",
+     "artista": "Cymande",
+     "album": "Cymande",
+     "ano": 1972,
+     "duracao": 655
+    },
+    {
+     "id": "4FoidqpGofw5nU2SKmX6iU",
+     "titulo": "Get It Up for Love",
+     "artista": "Ned Doheny",
+     "album": "Hard Candy",
+     "ano": 1976,
+     "duracao": 282
+    },
+    {
+     "id": "28AGHxOMuKdLvYM0pFIZuB",
+     "titulo": "Dreams",
+     "artista": "Fleetwood Mac",
+     "album": "Rumours",
+     "ano": 1977,
+     "duracao": 335
+    },
+    {
+     "id": "7cV8e5M5bkGSrjBD0CLPgI",
+     "titulo": "Earrings",
+     "artista": "Malcolm Todd",
+     "album": "Sweet Boy",
+     "ano": 2024,
+     "duracao": 152
+    },
+    {
+     "id": "7JswPbnFlOplz7VWU0IYQr",
+     "titulo": "Babydoll",
+     "artista": "Dominic Fike",
+     "album": "Don't Forget About Me, Demos",
+     "ano": 2018,
+     "duracao": 98
+    },
+    {
+     "id": "4fErI8igZTmTvcdHQNSCwP",
+     "titulo": "Vumani Makhosi",
+     "artista": "Letta Mbulu",
+     "album": "In The Music The Village Never Ends",
+     "ano": 2015,
+     "duracao": 297
+    },
+    {
+     "id": "30XO5Mk7409EaQJbpXLvJk",
+     "titulo": "Çayelinden Öteye/Yali Yali",
+     "artista": "Neşe Karaböcek",
+     "album": "Dost Bahçesi",
+     "ano": 1979,
+     "duracao": 162
+    },
+    {
+     "id": "7DOSh2mRfgaGrDsDBhc9FV",
+     "titulo": "Don’t Go",
+     "artista": "Sanullim",
+     "album": "LateNightTales: Khruangbin",
+     "ano": 2020,
+     "duracao": 244
+    },
+    {
+     "id": "2LO9bM0IHiQ4sTI7kaPViF",
+     "titulo": "It's Too late",
+     "artista": "Carole King",
+     "album": "Tapestry (1999 Remaster)",
+     "ano": 1971,
+     "duracao": 233
+    },
+    {
+     "id": "3VeIgavxERwPSyTrvVcMbV",
+     "titulo": "You Don't Know Me",
+     "artista": "Caetano Veloso",
+     "album": "Transa",
+     "ano": 2012,
+     "duracao": 229
+    },
+    {
+     "id": "6OzkZY31GFRMX6vyHTceen",
+     "titulo": "Right Down The Line",
+     "artista": "Gerry Rafferty",
+     "album": "City To City",
+     "ano": 1978,
+     "duracao": 271
+    },
+    {
+     "id": "02u4k31U0dgpWcFGKRJLKf",
+     "titulo": "Banho de lua (Tintarella di luna)",
+     "artista": "Os Mutantes",
+     "album": "Mutantes",
+     "ano": 1969,
+     "duracao": 221
+    },
+    {
+     "id": "4dYL05iOeuaP7u2CEoqE9v",
+     "titulo": "This Must Be the Place (Naive Melody) [2005 Remaster]",
+     "artista": "Talking Heads",
+     "album": "Speaking in Tongues (Deluxe Version)",
+     "ano": 1983,
+     "duracao": 296
+    },
+    {
+     "id": "2wsIJ66NPIKpLbSPhdWHLI",
+     "titulo": "Crazy",
+     "artista": "Seal",
+     "album": "Mr Music Hits 1991 Vol. 3",
+     "ano": 1991,
+     "duracao": 249
+    },
+    {
+     "id": "0pRAbiqPBFbjL3rWOeiVPy",
+     "titulo": "Sasà",
+     "artista": "Oro",
+     "album": "Napoli segreta, Volume 1",
+     "ano": 2018,
+     "duracao": 222
+    }
+   ]
+  },
+  {
+   "id": "tarde",
+   "nome": "Tarde",
+   "inicio": 15,
+   "fim": 19,
+   "cor": "#ff7452",
+   "cor2": "#ff3308",
+   "capa": "capas/tarde.jpg",
+   "descricao": "O dia pega embalo: disco, funk e new wave para a casa ir enchendo até o começo da noite.",
+   "faixas": [
+    {
+     "id": "5mfyHA4bWVTq6DdAKp0TIN",
+     "titulo": "Bofou Safou (Lully remix)",
+     "artista": "Amadou & Mariam",
+     "album": "Bofou Safou",
+     "ano": 2017,
+     "duracao": 230
+    },
+    {
+     "id": "3WywC2JEvZRhaOgDoHrPxa",
+     "titulo": "Yes Sir, I Can Boogie",
+     "artista": "Baccara",
+     "album": "Now That's What I Call Pride",
+     "ano": 2022,
+     "duracao": 272
+    },
+    {
+     "id": "10wQtvziyyjammoTfRlMKt",
+     "titulo": "Daddy Cool",
+     "artista": "Boney M.",
+     "album": "Take the Heat Off Me",
+     "ano": 1976,
+     "duracao": 209
+    },
+    {
+     "id": "51IFFStioG74MomjGCzoF4",
+     "titulo": "She Can't Love You (12'' Version)",
+     "artista": "Chemise",
+     "album": "Various Artists - Grand 12-Inches 2 / CD2",
+     "ano": null,
+     "duracao": 308
+    },
+    {
+     "id": "2gEySLfjL2d72TbxBSv1Ph",
+     "titulo": "I'm Coming Out",
+     "artista": "Diana Ross",
+     "album": "Diana",
+     "ano": 1980,
+     "duracao": 324
+    },
+    {
+     "id": "2YGI0wPRIvygpzh8jVgGAE",
+     "titulo": "Walk Of Life",
+     "artista": "Dire Straits",
+     "album": "Brothers In Arms",
+     "ano": 1985,
+     "duracao": 247
+    },
+    {
+     "id": "6HUslLRvNQjH3QKB41PSMe",
+     "titulo": "September",
+     "artista": "Earth, Wind & Fire",
+     "album": "Now, Then & Forever",
+     "ano": 2013,
+     "duracao": 217
+    },
+    {
+     "id": "09JQzg7sCVQhs1jchYFljv",
+     "titulo": "Last Train To London",
+     "artista": "Electric Light Orchestra",
+     "album": "Discovery",
+     "ano": 1979,
+     "duracao": 273
+    },
+    {
+     "id": "30WJbpnk5jONnhwu03Muak",
+     "titulo": "White Rabbit (mono single version)",
+     "artista": "Jefferson Airplane",
+     "album": "Surrealistic Pillow",
+     "ano": 1967,
+     "duracao": 321
+    },
+    {
+     "id": "2MGRSVUshgeflsM2ADQr0r",
+     "titulo": "Running Up That Hill",
+     "artista": "Kate Bush",
+     "album": "Hounds of Love",
+     "ano": 1985,
+     "duracao": 302
+    },
+    {
+     "id": "55nBAb9zb29oFNi77RMcjz",
+     "titulo": "Wuthering Heights",
+     "artista": "Kate Bush",
+     "album": "The Kick Inside",
+     "ano": 1978,
+     "duracao": 269
+    },
+    {
+     "id": "0gT0ZKrQCbu88qNE50DE45",
+     "titulo": "Naked Eye",
+     "artista": "Luscious Jackson",
+     "album": "Naked Eye",
+     "ano": 1996,
+     "duracao": 280
+    },
+    {
+     "id": "5tKKxItxczKJ3mRo6rrtZK",
+     "titulo": "Reach For Love (New York Remix) (Unmixed)",
+     "artista": "Marcel King",
+     "album": "Horse Meat Disco III (Unmixed)",
+     "ano": 2011,
+     "duracao": 328
+    },
+    {
+     "id": "6V6AAglMsO1fDAzdcRuOmY",
+     "titulo": "Oya Oya Oya (prod. Maurice Fulton)",
+     "artista": "Mim Suleiman",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 380
+    },
+    {
+     "id": "0mRfezegfJFEygeBtKnyLx",
+     "titulo": "People",
+     "artista": "MLiR",
+     "album": "Swedish Lo-Life EP",
+     "ano": 2016,
+     "duracao": 367
+    },
+    {
+     "id": "7IBqpYIwduUX03iW0INyiH",
+     "titulo": "Words Of Love",
+     "artista": "Mystic Jungle",
+     "album": "Words Of Love",
+     "ano": 2024,
+     "duracao": 246
+    },
+    {
+     "id": "5D60yLAdiv0V4H3ClcchU9",
+     "titulo": "Sweet Caroline",
+     "artista": "Neil Diamond",
+     "album": "Sweet Caroline 21 Greatest Hits",
+     "ano": 2000,
+     "duracao": 203
+    },
+    {
+     "id": "2hFhep3cXxukzWFp8JK0ma",
+     "titulo": "Age of Consent - 2015 Remaster",
+     "artista": "New Order",
+     "album": "Power Corruption and Lies",
+     "ano": 1983,
+     "duracao": 315
+    },
+    {
+     "id": "1Vfatd6jrHN5CQXWEMKd6T",
+     "titulo": "Enjoy Your Life",
+     "artista": "Oby Onyioha",
+     "album": "Doing It in Lagos: Boogie, Pop & Disco in 1980s Nigeria",
+     "ano": 2016,
+     "duracao": 377
+    },
+    {
+     "id": "0pRAbiqPBFbjL3rWOeiVPy",
+     "titulo": "Sasà",
+     "artista": "Oro",
+     "album": "Napoli segreta, Volume 1",
+     "ano": 2018,
+     "duracao": 222
+    },
+    {
+     "id": "3gj4QLc9QTSVIBvBOdodyl",
+     "titulo": "Okay Okay",
+     "artista": "Pino D'Angiò",
+     "album": "Ma quale idea",
+     "ano": 1988,
+     "duracao": 258
+    },
+    {
+     "id": "0ue4qpvkhGgUUlFaSVF554",
+     "titulo": "Melody",
+     "artista": "Plustwo",
+     "album": "Melody",
+     "ano": null,
+     "duracao": 441
+    },
+    {
+     "id": "7c7lo2hvy7jdvT4mi2qBNh",
+     "titulo": "I Need You Tonight",
+     "artista": "Punkin Machine",
+     "album": "Fabriclive 36 - James Murphy & Pat Mahoney",
+     "ano": 2007,
+     "duracao": 278
+    },
+    {
+     "id": "5DvHUtUgWtLDiQWkNl25hE",
+     "titulo": "Disco Fantasy",
+     "artista": "Rahaan",
+     "album": "Chicago Service",
+     "ano": 2014,
+     "duracao": 329
+    },
+    {
+     "id": "2wsIJ66NPIKpLbSPhdWHLI",
+     "titulo": "Crazy",
+     "artista": "Seal",
+     "album": "Mr Music Hits 1991 Vol. 3",
+     "ano": 1991,
+     "duracao": 249
+    },
+    {
+     "id": "4gZ2TRpUIJgANEhHaj0w6B",
+     "titulo": "Dalkavuk (Baris K Edit) (Bonus Track)",
+     "artista": "Senay",
+     "album": "İstanbul 70: Psych, Disco, Folk Classics Compiled By Barıs K",
+     "ano": 2011,
+     "duracao": 328
+    },
+    {
+     "id": "50M9n4NMymJQvBaGLvqnCE",
+     "titulo": "La Tortura (Invitado Alejandro Sanz)",
+     "artista": "Shakira",
+     "album": "Unplugged",
+     "ano": null,
+     "duracao": 201
+    },
+    {
+     "id": "2ldADIkt7Gm9OKQCKL7Tjg",
+     "titulo": "Thinking Of You (Dimitri From Paris Remix)",
+     "artista": "Sister Sledge",
+     "album": "Grand 12 Inches Vol. 17 - Compiled By Ben Liebrand",
+     "ano": 2020,
+     "duracao": 391
+    },
+    {
+     "id": "7D7peKJTDWXvG7LBxvo3dD",
+     "titulo": "The Logical Song (Remastered 2026)",
+     "artista": "Supertramp",
+     "album": "Breakfast In America (Remastered 2026)",
+     "ano": 1979,
+     "duracao": 252
+    },
+    {
+     "id": "587wDPeoTxzSCBKCaqUnV3",
+     "titulo": "Take Me to the River (2005 Remaster)",
+     "artista": "Talking Heads",
+     "album": "More Songs About Buildings and Food (Deluxe Version)",
+     "ano": 1978,
+     "duracao": 303
+    },
+    {
+     "id": "47ZGYkMnEHxchdRihbvzws",
+     "titulo": "Who Is It? (2005 Remaster)",
+     "artista": "Talking Heads",
+     "album": "Talking Heads '77 (Deluxe Version)",
+     "ano": 1977,
+     "duracao": 104
+    },
+    {
+     "id": "7joyzD84vFVXyiUVHXhd0s",
+     "titulo": "Sugar on My Tongue (2003 Remaster)",
+     "artista": "Talking Heads",
+     "album": "Once in a Lifetime: The Talking Heads Box (2003 Remaster)",
+     "ano": 2003,
+     "duracao": 155
+    },
+    {
+     "id": "0E5hBQJKLwwl0PFyoErs9J",
+     "titulo": "Heaven Must Be Missing An Angel (Pt. 1)",
+     "artista": "Tavares",
+     "album": "The Best 70s Album In The World...Ever!",
+     "ano": 2023,
+     "duracao": 415
+    },
+    {
+     "id": "4EU6WY2aupqOTnIPinUqC5",
+     "titulo": "Head Over Heels (Dave Bascombe 7″ N.mix)",
+     "artista": "Tears for Fears",
+     "album": "Songs From the Big Chair",
+     "ano": 2015,
+     "duracao": 257
+    },
+    {
+     "id": "4aWeAHgT0xVDdBZoz4u17v",
+     "titulo": "Sowing the Seeds of Love",
+     "artista": "Tears for Fears",
+     "album": "The Seeds Of Love",
+     "ano": 1989,
+     "duracao": 379
+    },
+    {
+     "id": "1bGPS6Hxrk9XEJ1Ob6GwPq",
+     "titulo": "don't huzzle for love",
+     "artista": "the apostles",
+     "album": "black is beautiful",
+     "ano": 2019,
+     "duracao": 212
+    },
+    {
+     "id": "0b5ipvEGNGThS2GCQ0Z0If",
+     "titulo": "Just Like Heaven",
+     "artista": "The Cure",
+     "album": "Kiss Me Kiss Me Kiss Me",
+     "ano": 1987,
+     "duracao": 212
+    },
+    {
+     "id": "6k15XLj7tGWKVauVme4DPN",
+     "titulo": "Don't You Want Me",
+     "artista": "The Human League",
+     "album": "Dare/Fascination! (2012 - Remaster)",
+     "ano": null,
+     "duracao": 240
+    },
+    {
+     "id": "4Rn3KmAQMXQnLlwZnM63dN",
+     "titulo": "Repeating Night",
+     "artista": "The Mauskoviç Dance Band",
+     "album": "Repeating Night / Weather [7\" Single]",
+     "ano": 2017,
+     "duracao": 230
+    },
+    {
+     "id": "4iwlAN1l90kOXxtHQJEDkL",
+     "titulo": "Dance, Part 1",
+     "artista": "The Rolling Stones",
+     "album": "Emotional Rescue",
+     "ano": 1980,
+     "duracao": 264
+    },
+    {
+     "id": "1fYKy8R3Ei9bREuxyAc4Fg",
+     "titulo": "Too Easy",
+     "artista": "The Wiseguys",
+     "album": "Athletico - A Compilation",
+     "ano": 1995,
+     "duracao": 344
+    },
+    {
+     "id": "6SIg85aMUHVpgma3ifE8Kr",
+     "titulo": "Don't Leave Me This Way (Single Version)",
+     "artista": "Thelma Houston",
+     "album": "Disco Classics",
+     "ano": 2018,
+     "duracao": 217
+    },
+    {
+     "id": "7pRgZgywHJLTW1790krUll",
+     "titulo": "Hold the Line (Album Version)",
+     "artista": "Toto",
+     "album": "Toto",
+     "ano": 1978,
+     "duracao": 236
+    },
+    {
+     "id": "6cCVLZSUMyrRz7gZoi1w4s",
+     "titulo": "Niarela",
+     "artista": "Voilaaa",
+     "album": "On te l'avait dit",
+     "ano": null,
+     "duracao": 239
+    },
+    {
+     "id": "23zY1tcpUx1tR5FCE3KT3d",
+     "titulo": "Low Rider",
+     "artista": "War",
+     "album": "Why Can't We Be Friends?",
+     "ano": 1975,
+     "duracao": 191
+    },
+    {
+     "id": "6SCHGRnjSFOOOm1jdHAEbs",
+     "titulo": "Goodnight Tonight",
+     "artista": "Wings",
+     "album": "Wingspan: Hits and History",
+     "ano": 2001,
+     "duracao": 261
+    },
+    {
+     "id": "0lcVBS5gRfBOe1t5udAAFY",
+     "titulo": "Hot Stuff (Original 12'')",
+     "artista": "Donna Summer",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 402
+    },
+    {
+     "id": "6T8Z1EzgZz5WaFGm4LZQTb",
+     "titulo": "Smalltown Boy",
+     "artista": "Bronski Beat",
+     "album": "The Age of Consent",
+     "ano": 1984,
+     "duracao": 303
+    },
+    {
+     "id": "2JAYGLLf7Coz80rBOzDsko",
+     "titulo": "Situation (US 12'' Remix by Francois Kevorkian)",
+     "artista": "Yazoo",
+     "album": "Upstairs At Eric's",
+     "ano": 1982,
+     "duracao": 346
+    },
+    {
+     "id": "4pj1jykbpCVk2RLapoSDU5",
+     "titulo": "Pretty Baby",
+     "artista": "Sister Sledge",
+     "album": "Love Somebody Today",
+     "ano": 1980,
+     "duracao": 242
+    },
+    {
+     "id": "0BmMFpItgPutL9laZ2xoa6",
+     "titulo": "Do It Again",
+     "artista": "Steely Dan",
+     "album": "Can’t Buy a Thrill",
+     "ano": 1972,
+     "duracao": 357
+    },
+    {
+     "id": "2eyXqvInjwFBxCQ3XovE5D",
+     "titulo": "Lost in Music",
+     "artista": "Gay Marvine",
+     "album": "Bath House Etiquette Vol. 1",
+     "ano": 2010,
+     "duracao": 314
+    },
+    {
+     "id": "6jBL5UoVbY3Q3bAMdoesHN",
+     "titulo": "Lovely Day (Original Mix)",
+     "artista": "Ministry Of Funk",
+     "album": "[Unknown Album]",
+     "ano": 2025,
+     "duracao": 164
+    }
+   ]
+  },
+  {
+   "id": "janta",
+   "nome": "Janta",
+   "inicio": 19,
+   "fim": 23,
+   "cor": "#ff3308",
+   "cor2": "#7a0f00",
+   "capa": "capas/janta.jpg",
+   "descricao": "Luz baixa e prato na mesa: Sade, soul, trip hop e house lento, esquentando sem atropelar a conversa.",
+   "faixas": [
+    {
+     "id": "7HdclxYjjrH9ByOuIGlUmn",
+     "titulo": "Nana (Vinyl Version)",
+     "artista": "Acid Pauli",
+     "album": "Pampa Records Vol. 1",
+     "ano": 2016,
+     "duracao": 562
+    },
+    {
+     "id": "2LBY0yBbKzaNjKtGVMNAmt",
+     "titulo": "Anchor Point",
+     "artista": "Ahmed Spins & Stevo Atambire",
+     "album": "Anchor Point EP",
+     "ano": 2022,
+     "duracao": 359
+    },
+    {
+     "id": "5JaB9cuIpA1xXu18zNio85",
+     "titulo": "Universe",
+     "artista": "Aquarius Heaven",
+     "album": "Tsugi #40 - Ellen Allien",
+     "ano": 2011,
+     "duracao": 281
+    },
+    {
+     "id": "5MzEnUPjPwfIq1NMyFu9OK",
+     "titulo": "Rotation! Rotation! (Red Axes Remix)",
+     "artista": "Autarkic",
+     "album": "Select 10: Music For Our Friends (By Claude Challe And Jean-Marc Challe)",
+     "ano": 2017,
+     "duracao": 433
+    },
+    {
+     "id": "50pt5GzM7ItyZuqaFl42Fa",
+     "titulo": "Opal (Four Tet Remix)",
+     "artista": "Bicep",
+     "album": "Opal (Four Tet Remix)",
+     "ano": 2018,
+     "duracao": 494
+    },
+    {
+     "id": "3O7vnAmH3b5PYLWBwuA9qR",
+     "titulo": "Wizard of Love",
+     "artista": "Blond:ish",
+     "album": "Rebirth Essentials Volume Twelve",
+     "ano": 2014,
+     "duracao": 608
+    },
+    {
+     "id": "2wryVDZKjpDbxRsOzTKkAr",
+     "titulo": "Más Profundo",
+     "artista": "Bruxas",
+     "album": "Más Profundo",
+     "ano": 2017,
+     "duracao": 372
+    },
+    {
+     "id": "0nd5pCIZoeV37GG31chfWh",
+     "titulo": "Forever Monna",
+     "artista": "Chez Damier & Stacy Pullen",
+     "album": "Timeless",
+     "ano": 2011,
+     "duracao": 206
+    },
+    {
+     "id": "5kKvGPY0B5XaH4DJ6LK9k2",
+     "titulo": "Wicked Game",
+     "artista": "Chris Isaak",
+     "album": "Best of Chris Isaak",
+     "ano": 2006,
+     "duracao": 287
+    },
+    {
+     "id": "0O5AC5VabL1I0PzbygyDU7",
+     "titulo": "Make Love",
+     "artista": "Daft Punk",
+     "album": "Human After All",
+     "ano": 2005,
+     "duracao": 290
+    },
+    {
+     "id": "4Zbc9IsgODbPIXND14ZIWe",
+     "titulo": "Help Me Lose My Mind (feat. London Grammar)",
+     "artista": "Disclosure",
+     "album": "Settle (Special Edition)",
+     "ano": 2013,
+     "duracao": 244
+    },
+    {
+     "id": "5IkGgz4p6gvd5ZipBm9VtC",
+     "titulo": "Get It Together",
+     "artista": "Drake feat. Black Coffee & Jorja Smith",
+     "album": "More Life",
+     "ano": 2017,
+     "duracao": 250
+    },
+    {
+     "id": "1PoasP3B6iwNBYTptTXMOk",
+     "titulo": "Too Good",
+     "artista": "Drake feat. Rihanna",
+     "album": "Views",
+     "ano": 2016,
+     "duracao": 263
+    },
+    {
+     "id": "4piEsk7PjPSrhufFopA0rP",
+     "titulo": "Ocean Drive (extended mix)",
+     "artista": "Duke Dumont",
+     "album": "Ocean Drive",
+     "ano": 2015,
+     "duracao": 280
+    },
+    {
+     "id": "1KOUBiOSUPSd4q8r44r71o",
+     "titulo": "Love Invaders",
+     "artista": "Fatima Yamaha",
+     "album": "[Unknown Album]",
+     "ano": 2015,
+     "duracao": 410
+    },
+    {
+     "id": "4eThDaIOIjca0ZANlPxhcr",
+     "titulo": "Sooty Shearwater, King of Migration",
+     "artista": "Fatima Yamaha",
+     "album": "Imaginary Lines",
+     "ano": 2015,
+     "duracao": 292
+    },
+    {
+     "id": "5ozdMdSEdtebYBHdbK53r7",
+     "titulo": "Saku",
+     "artista": "Fort Romeau",
+     "album": "Fairlights",
+     "ano": 2015,
+     "duracao": 404
+    },
+    {
+     "id": "0QZbT5X4vLeQ7hCPQHPttT",
+     "titulo": "My Friend",
+     "artista": "Groove Armada",
+     "album": "Goodbye Country (Hello Nightclub) (Hybrid SACD)",
+     "ano": 2001,
+     "duracao": 301
+    },
+    {
+     "id": "6Khvav8gUnkPPXiWNMjbNI",
+     "titulo": "Yogalates",
+     "artista": "HNNY",
+     "album": "Carefree",
+     "ano": 2015,
+     "duracao": 354
+    },
+    {
+     "id": "02yzmQ5gQgYjGIxpX6kH7m",
+     "titulo": "Never Tear Us Apart",
+     "artista": "INXS",
+     "album": "Donnie Darko - Original Soundtrack",
+     "ano": 2004,
+     "duracao": 185
+    },
+    {
+     "id": "4s22QjFuOxqSAjR5ara1HM",
+     "titulo": "Quicksand",
+     "artista": "Jacques Greene",
+     "album": "Bleep: The Top 100 Tracks of 2013",
+     "ano": 2013,
+     "duracao": 300
+    },
+    {
+     "id": "44l6oa9qhCdIpzEajtAmaU",
+     "titulo": "Born In Blue (Original Mix)",
+     "artista": "Jaguar Jaguar & Chambord",
+     "album": "Born In Blue",
+     "ano": 2024,
+     "duracao": 512
+    },
+    {
+     "id": "3ednbiUSsHCzwDkrvLCuoq",
+     "titulo": "Come Save Me (The Pachanga Boys' Jagwar Pawar Version)",
+     "artista": "Jagwar Ma",
+     "album": "Live In Argentina",
+     "ano": 2013,
+     "duracao": 753
+    },
+    {
+     "id": "6jrXSOIkJPdPaVEbh4fN8l",
+     "titulo": "Forever Young (Discodeine Remix)",
+     "artista": "Joakim",
+     "album": "Trax 3 - Lascivious Summer",
+     "ano": 2012,
+     "duracao": 346
+    },
+    {
+     "id": "0B3PKvOBF84FwfiRevyN5p",
+     "titulo": "Nothing Gold (Todd Terje Remix)",
+     "artista": "Joakim",
+     "album": "Disco 2.0 Fever's Risin' Again",
+     "ano": 2016,
+     "duracao": 544
+    },
+    {
+     "id": "6JPofeFii2ZMhV3CkYd7M6",
+     "titulo": "Walls of Silence",
+     "artista": "John Maus",
+     "album": "Screen Memories",
+     "ano": 2017,
+     "duracao": 143
+    },
+    {
+     "id": "3tVglHsVoiily1qeCPLqt6",
+     "titulo": "So Weit Wie Noch Nie",
+     "artista": "Jurgen Paape",
+     "album": "Kompilation",
+     "ano": 2010,
+     "duracao": 349
+    },
+    {
+     "id": "516DiAQrQ7v7K0NCfVOJD4",
+     "titulo": "Hershel",
+     "artista": "Lauer",
+     "album": "Permanent Vacation Safari 4",
+     "ano": 2017,
+     "duracao": 445
+    },
+    {
+     "id": "0rOyF0PCwV2aPR3PtGhB4N",
+     "titulo": "Be Thankful for What You’ve Got",
+     "artista": "Massive Attack",
+     "album": "Blue Lines",
+     "ano": 2012,
+     "duracao": 250
+    },
+    {
+     "id": "3kKW4SEq8PZAKCohd3MLA9",
+     "titulo": "Paradise Circus",
+     "artista": "Massive Attack",
+     "album": "Heligoland",
+     "ano": 2010,
+     "duracao": 298
+    },
+    {
+     "id": "0X43Qne86fuOF7IU6zLjDp",
+     "titulo": "Tzantza",
+     "artista": "Nicola Cruz",
+     "album": "Cantos de Visiòn",
+     "ano": 2017,
+     "duracao": 351
+    },
+    {
+     "id": "5Nw71iDXGB4X4wRdNhGVqw",
+     "titulo": "Variations",
+     "artista": "Nicolas Jaar",
+     "album": "Space Is Only Noise",
+     "ano": 2011,
+     "duracao": 201
+    },
+    {
+     "id": "0l1Wrs33wnG1s5bednXR8l",
+     "titulo": "No One Is Looking at U",
+     "artista": "Nicolas Jaar feat. Lorraine",
+     "album": "Nymphs II",
+     "ano": 2015,
+     "duracao": 469
+    },
+    {
+     "id": "16TrA04kIngjWRAwTeIBma",
+     "titulo": "This Must Be Home (Original Mix)",
+     "artista": "P-Sol",
+     "album": "Mixed Bag, Vol. 2",
+     "ano": 2015,
+     "duracao": 457
+    },
+    {
+     "id": "13BTUpjD53GQhjS2KuwovN",
+     "titulo": "Being Boring",
+     "artista": "Pet Shop Boys",
+     "album": "Behaviour",
+     "ano": 2009,
+     "duracao": 409
+    },
+    {
+     "id": "65Jqxnblwu7RwkaFQwBKl5",
+     "titulo": "A New Dawn",
+     "artista": "Pional",
+     "album": "Invisible / Amenaza",
+     "ano": 2013,
+     "duracao": 220
+    },
+    {
+     "id": "26DkhDqFWbndeZYgNUAIKW",
+     "titulo": "Rivolta (Get a Room! remix)",
+     "artista": "Polo & Pan",
+     "album": "Rivolta",
+     "ano": 2013,
+     "duracao": 361
+    },
+    {
+     "id": "3zviPojneVes01JsjKk4qv",
+     "titulo": "Sabor Feat. Arbao (Original Mix)",
+     "artista": "Red Axes",
+     "album": "Sabor",
+     "ano": 2015,
+     "duracao": 421
+    },
+    {
+     "id": "7IhLXJmXL36SNQpJ3Tqgbv",
+     "titulo": "The Drug",
+     "artista": "Röyksopp",
+     "album": "Senior",
+     "ano": 2010,
+     "duracao": 358
+    },
+    {
+     "id": "0K2ufFMVs6GrB4oEgbxLGR",
+     "titulo": "Innerbloom",
+     "artista": "RÜFÜS DU SOL",
+     "album": "Bloom",
+     "ano": 2016,
+     "duracao": 576
+    },
+    {
+     "id": "7wEFdXFm8NllDeRSuIu9cG",
+     "titulo": "Hang on to Your Love (Remastered Version)",
+     "artista": "Sade",
+     "album": "The Ultimate Collection",
+     "ano": 2014,
+     "duracao": 269
+    },
+    {
+     "id": "3fE74Vi1COfb9ngFZ0itCV",
+     "titulo": "By Your Side (Remastered Version)",
+     "artista": "Sade",
+     "album": "The Ultimate Collection",
+     "ano": 2014,
+     "duracao": 280
+    },
+    {
+     "id": "38ZKQUW3pbU1V5zN2aBsmL",
+     "titulo": "Hessingen",
+     "artista": "Shakarchi & Stranéus",
+     "album": "Steal Chickens From Men And the Future From God",
+     "ano": 2018,
+     "duracao": 387
+    },
+    {
+     "id": "09w9Rv1f5ZEtJhdTVZxl8k",
+     "titulo": "Fade Out Lines (The Avener Rework)",
+     "artista": "The Avener & Phoebe Killdeer",
+     "album": "The Wanderings Of The Avener",
+     "ano": 2015,
+     "duracao": 276
+    },
+    {
+     "id": "0iFLDy1byJMgN7xDKLlCjt",
+     "titulo": "Let's Stay Together (Single Version)",
+     "artista": "Tina Turner",
+     "album": "Sublime Soul Top 1000",
+     "ano": 1983,
+     "duracao": 222
+    },
+    {
+     "id": "4WeLo3xYM5DM3SovFaRp02",
+     "titulo": "Human Animal",
+     "artista": "Total Giovanni",
+     "album": "[Unknown Album]",
+     "ano": 2014,
+     "duracao": 356
+    },
+    {
+     "id": "2H4sLqj1c7jBxvPqaUUlSs",
+     "titulo": "Mashisa (Dub)",
+     "artista": "V.O.",
+     "album": "Mashisa",
+     "ano": 2016,
+     "duracao": 294
+    },
+    {
+     "id": "1vOuSoRoBDM3IvGXEPkbA7",
+     "titulo": "The Best I Could Do (With What I Had)",
+     "artista": "Young Marco",
+     "album": "DKMNTL x PATTA Compilation",
+     "ano": 2015,
+     "duracao": 568
+    }
+   ]
+  },
+  {
+   "id": "madrugada-festa",
+   "nome": "Madrugada Festa",
+   "inicio": 23,
+   "fim": 6,
+   "cor": "#00a0e6",
+   "cor2": "#ff3308",
+   "capa": "capas/madrugada-festa.jpg",
+   "descricao": "A pista manda: house, disco e clássicos de clube até o sol nascer, do bar ao rooftop.",
+   "faixas": [
+    {
+     "id": "5wiUNgD99ct3Q8UM2XvbMe",
+     "titulo": "If You (Radio Mix)",
+     "artista": "Magic Box",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 206
+    },
+    {
+     "id": "2wolHfYFtP2ktgjoyeAsWx",
+     "titulo": "Walk And Talk",
+     "artista": "Benoit & Sergio",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 173
+    },
+    {
+     "id": "3zf16vAqHDpSezTNqyFFoD",
+     "titulo": "Can't Get Over (Radio Edit)",
+     "artista": "Kasino",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 203
+    },
+    {
+     "id": "0lcVBS5gRfBOe1t5udAAFY",
+     "titulo": "Hot Stuff (Original 12'')",
+     "artista": "Donna Summer",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 402
+    },
+    {
+     "id": "6Ed3eUAQ2mS33bN68OaCOW",
+     "titulo": "The Rapture Pt.III",
+     "artista": "&ME, Black Coffee & Keinemusik",
+     "album": "The Rapture Pt.III",
+     "ano": 2023,
+     "duracao": 418
+    },
+    {
+     "id": "4TER4OKNIZFnY3eCCNCvrO",
+     "titulo": "Pasilda (Knee Deep club mix) (Mixed)",
+     "artista": "Afro Medusa",
+     "album": "XX Twenty Years",
+     "ano": 2011,
+     "duracao": 165
+    },
+    {
+     "id": "61FA7fTL78wXz2PiAzQSPO",
+     "titulo": "Destination Calabria (feat. Crystal Waters) [Radio Edit]",
+     "artista": "Alex Gaudino feat. Crystal Waters",
+     "album": "Destination Calabria (feat. Crystal Waters)",
+     "ano": null,
+     "duracao": 221
+    },
+    {
+     "id": "2yEnyleYoh8B4svupA2dZG",
+     "titulo": "Megamix",
+     "artista": "Alice Deejay",
+     "album": "DMC presents DJ Only #23",
+     "ano": 2001,
+     "duracao": 397
+    },
+    {
+     "id": "7Eyivql6vaUg2sZU2MCgFB",
+     "titulo": "You Don’t Know Me",
+     "artista": "Armand van Helden feat. Duane Harden",
+     "album": "Cream Classics",
+     "ano": 2004,
+     "duracao": 316
+    },
+    {
+     "id": "7FDGFnlPs3K7TvWf77XkYJ",
+     "titulo": "Get Better (Sfaction Version)",
+     "artista": "Benassi Bros. Feat. Sandy Chambers",
+     "album": "Get Better (Sfaction Remix)",
+     "ano": 2021,
+     "duracao": 317
+    },
+    {
+     "id": "3HF5JJWozKqLfjtNVWzDqm",
+     "titulo": "Big Time Sensuality (The Fluke Minimix)",
+     "artista": "Björk",
+     "album": "Greatest Hits",
+     "ano": 2002,
+     "duracao": 296
+    },
+    {
+     "id": "6T8Z1EzgZz5WaFGm4LZQTb",
+     "titulo": "Smalltown Boy",
+     "artista": "Bronski Beat",
+     "album": "The Age of Consent",
+     "ano": 1984,
+     "duracao": 303
+    },
+    {
+     "id": "1KlXbUuiiARhsK60E15SR3",
+     "titulo": "Born Slippy (Sorrentino Mix)",
+     "artista": "C Boys",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 229
+    },
+    {
+     "id": "7lAGn5fw74txrU2oGyyFpF",
+     "titulo": "How Deep Is Your Love",
+     "artista": "Calvin Harris & Disciples",
+     "album": "House Every Weekend Volume Two",
+     "ano": 2016,
+     "duracao": 220
+    },
+    {
+     "id": "5mqdvytfjMxbefYhxEzrTj",
+     "titulo": "We Found Love",
+     "artista": "Calvin Harris feat. Rihanna",
+     "album": "18 Months",
+     "ano": 2012,
+     "duracao": 216
+    },
+    {
+     "id": "7io9MSdDQprtM2uMkvcFu1",
+     "titulo": "No Hay Ritmo",
+     "artista": "Capablanca & T. Keeler",
+     "album": "100% Gomma Mixed by Severino of Horse Meat Disco (Unmixed)",
+     "ano": 2016,
+     "duracao": 654
+    },
+    {
+     "id": "61juFb6tuTsMqvDmTOGMFd",
+     "titulo": "Finally",
+     "artista": "CeCe Peniston",
+     "album": "Soul 90s",
+     "ano": 2019,
+     "duracao": 245
+    },
+    {
+     "id": "44uZQsm1FyEcWbV6Kr3yh7",
+     "titulo": "I Like To Party (Original Mix)",
+     "artista": "Disko Junkie",
+     "album": "I Like To Party",
+     "ano": 2020,
+     "duracao": 354
+    },
+    {
+     "id": "04OKaxIcG6GXKeMr125qr1",
+     "titulo": "It's You (Mousse T.'s Teef Vocal Mix)",
+     "artista": "FCL",
+     "album": "It's You (2014 Remixes)",
+     "ano": 2014,
+     "duracao": 375
+    },
+    {
+     "id": "4YPSEXkP81JhTXJ5uwuVlo",
+     "titulo": "Solitary Daze",
+     "artista": "Gabriel Ananda & Maceo Plex",
+     "album": "[Unknown Album]",
+     "ano": 2015,
+     "duracao": 463
+    },
+    {
+     "id": "2eyXqvInjwFBxCQ3XovE5D",
+     "titulo": "Lost in Music",
+     "artista": "Gay Marvine",
+     "album": "Bath House Etiquette Vol. 1",
+     "ano": 2010,
+     "duracao": 314
+    },
+    {
+     "id": "3joLph4NVSKFI2jLhlWLii",
+     "titulo": "Follia",
+     "artista": "Giancarlo D'Auria",
+     "album": "Napoli segreta, Volume 1",
+     "ano": 2018,
+     "duracao": 288
+    },
+    {
+     "id": "3IoJoMIBuuCcSHnmIbVcaV",
+     "titulo": "Casa Dag",
+     "artista": "Gigi D'Agostino",
+     "album": "Suono Libero",
+     "ano": 2008,
+     "duracao": 435
+    },
+    {
+     "id": "5ju7cZOq0q31YVudczSVzS",
+     "titulo": "Superstylin’",
+     "artista": "Groove Armada",
+     "album": "10 Year Story: From the Vaults 1997-2007",
+     "ano": 2007,
+     "duracao": 360
+    },
+    {
+     "id": "409FK4PYahi0KKIyXely1i",
+     "titulo": "Deep Inside (Original 12 Inch)",
+     "artista": "Hardrive",
+     "album": "Grand House Classics 1 Compiled by Ben Liebrand",
+     "ano": 2016,
+     "duracao": 394
+    },
+    {
+     "id": "1EGCDl7UgdNVw5XMYoyO1g",
+     "titulo": "Keep On Rising feat. Michelle Shellers (Rocco vs. Bass-T Bootleg Radio Mix)",
+     "artista": "Ian Carey",
+     "album": "Future Trance Vol. 43 (CD2)",
+     "ano": 2008,
+     "duracao": 215
+    },
+    {
+     "id": "3sJhMoJB79ST8L7mDWnftk",
+     "titulo": "Different from the Rest",
+     "artista": "In Flagranti",
+     "album": "Different from the Rest",
+     "ano": 2013,
+     "duracao": 375
+    },
+    {
+     "id": "3eKxUjrqnK7Noc2flIIn6A",
+     "titulo": "The Boy Is Mine",
+     "artista": "James Mac & Vall ft. Rosalie.",
+     "album": "The Boy Is Mine",
+     "ano": 2023,
+     "duracao": 202
+    },
+    {
+     "id": "0g5GAcDR8XN6J3moOuun0W",
+     "titulo": "Space Cowboy (David Morales Mix)",
+     "artista": "Jamiroquai",
+     "album": "The Return Of The Space Cowboy (CD2)",
+     "ano": 1994,
+     "duracao": 471
+    },
+    {
+     "id": "29q19WHpBnum0VOEgL4rlK",
+     "titulo": "My Feeling (Kick 'n Deep Mix)",
+     "artista": "Junior Jack",
+     "album": "My Feeling",
+     "ano": 1999,
+     "duracao": 393
+    },
+    {
+     "id": "4tODpGQZQyRFwoOu6ZIQ1l",
+     "titulo": "Finally (Original Extended Mix)",
+     "artista": "Kings Of Tomorrow + Julie McKnight",
+     "album": "Finally",
+     "ano": 2001,
+     "duracao": 361
+    },
+    {
+     "id": "5uv3xASs6ngI7AdZ2Kh443",
+     "titulo": "When You're Watching Me (Original mix)",
+     "artista": "Krankbrother",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 566
+    },
+    {
+     "id": "40rqO2oV2nJf5x7om7Vuzv",
+     "titulo": "Love Story (vs Finally) (Tim Deluxe Radio Mix)",
+     "artista": "Layo and bushwacka!",
+     "album": "Love Story (vs Finally)",
+     "ano": 2003,
+     "duracao": 216
+    },
+    {
+     "id": "1aIVrxYlLoh3FVIW8e1B5Y",
+     "titulo": "Dance Yrself Clean",
+     "artista": "LCD Soundsystem",
+     "album": "This Is Happening",
+     "ano": 2010,
+     "duracao": 536
+    },
+    {
+     "id": "2rIjJn3LgQAbD9UrdKvbpV",
+     "titulo": "Vogue (Edit)",
+     "artista": "Madonna",
+     "album": "Best Of Madonna",
+     "ano": 2023,
+     "duracao": 290
+    },
+    {
+     "id": "0EtTBOXkRf0aqlPVn1OaRJ",
+     "titulo": "Work It (Soulwax Remix)",
+     "artista": "Marie Davidson",
+     "album": "Ministry of Sound  The Annual 2020",
+     "ano": 2019,
+     "duracao": 287
+    },
+    {
+     "id": "0xwMIxiBtbVPFc6VDB3IvA",
+     "titulo": "Burnin' (Original Mix)",
+     "artista": "Martin Ikin, Noizu",
+     "album": "djsoundtop.com",
+     "ano": 2023,
+     "duracao": 307
+    },
+    {
+     "id": "7IlLJVt5va8ycNwGbfNAoo",
+     "titulo": "Final Credits (Radio Edit)",
+     "artista": "Midland",
+     "album": "Final Credits",
+     "ano": 2016,
+     "duracao": 197
+    },
+    {
+     "id": "6jBL5UoVbY3Q3bAMdoesHN",
+     "titulo": "Lovely Day (Original Mix)",
+     "artista": "Ministry Of Funk",
+     "album": "[Unknown Album]",
+     "ano": 2025,
+     "duracao": 164
+    },
+    {
+     "id": "1K98fkIikXwOTTvSYYx7A9",
+     "titulo": "Lazy",
+     "artista": "X-Press 2 feat. David Byrne",
+     "album": "The Chillout Session 2003 Winter Collection",
+     "ano": 2002,
+     "duracao": 297
+    },
+    {
+     "id": "1UeIW9ze8C5KeQCH7Bfzsc",
+     "titulo": "I Love to Move in Here",
+     "artista": "Moby",
+     "album": "Last Night (Bonus Tracks Edition)",
+     "ano": 2008,
+     "duracao": 285
+    },
+    {
+     "id": "2ROztrpKCfhcd4lVtvz3Fb",
+     "titulo": "Sing It Back (Boris Musical Mix Edit)",
+     "artista": "Moloko",
+     "album": "Sing It Back",
+     "ano": 1998,
+     "duracao": 278
+    },
+    {
+     "id": "0TVi5cjfi5Rpqg8QQWBFIs",
+     "titulo": "Dove (I'll Be Loving You) (T&F vs. Moltosugo Radio Mix)",
+     "artista": "Moony",
+     "album": "Dove (I'll Be Loving You)",
+     "ano": 2002,
+     "duracao": 241
+    },
+    {
+     "id": "4nTQ5xqpiTb1ucse8Wx7Jo",
+     "titulo": "PSG 22",
+     "artista": "New Scene",
+     "album": "Welcome To Technology Vol. 3",
+     "ano": 1992,
+     "duracao": 327
+    },
+    {
+     "id": "31TJ71FrzUxph87mBRZk9K",
+     "titulo": "The Stalker (Original Mix)",
+     "artista": "Nick Monaco",
+     "album": "[Unknown Album]",
+     "ano": null,
+     "duracao": 339
+    },
+    {
+     "id": "7bkZgnuIDWQnjhb6oce1IW",
+     "titulo": "Push The Feeling On 2003",
+     "artista": "Nightcrawlers",
+     "album": "As 7 Melhores Jovem Pan 2004",
+     "ano": 2004,
+     "duracao": 214
+    },
+    {
+     "id": "3GC6mOGJjxe2eT0qUEf4fa",
+     "titulo": "Raw Vis Vision",
+     "artista": "NO ZU",
+     "album": "Oceans Apart",
+     "ano": 2014,
+     "duracao": 387
+    },
+    {
+     "id": "0qbGkQ3FOJh0D9HibydhLW",
+     "titulo": "Around (Solomun vox)",
+     "artista": "Noir & Haze",
+     "album": "Around (remixes)",
+     "ano": 2012,
+     "duracao": 419
+    },
+    {
+     "id": "71y7BzzpFqkx1JQuMG7Tdy",
+     "titulo": "Domino",
+     "artista": "Oxia",
+     "album": "A State Of Trance Year Mix 2006",
+     "ano": 2006,
+     "duracao": 116
+    },
+    {
+     "id": "4E2vE3IJiDLyU7b2PCvfXQ",
+     "titulo": "Time",
+     "artista": "Pachanga Boys",
+     "album": "Girlcatcher",
+     "ano": 2011,
+     "duracao": 913
+    },
+    {
+     "id": "7MXpwvvpC12pKT7myX4wfq",
+     "titulo": "Get a Little",
+     "artista": "Patrick Cowley",
+     "album": "Megatron Man",
+     "ano": 1981,
+     "duracao": 367
+    },
+    {
+     "id": "0znTtp3Ur4qa2N1gNmDuMM",
+     "titulo": "Starry Night (Original Mix)",
+     "artista": "Peggy Gou",
+     "album": "Moment EP",
+     "ano": 2019,
+     "duracao": 399
+    },
+    {
+     "id": "3g1DIYWGZMh3R0a1XWH9jk",
+     "titulo": "BELLAKEO",
+     "artista": "Peso Pluma, Anitta",
+     "album": "ÉXODO",
+     "ano": 2024,
+     "duracao": 197
+    },
+    {
+     "id": "0RE1c1TAo1qILrii5O6UOu",
+     "titulo": "Turn Around",
+     "artista": "Phats & Small",
+     "album": "Now That’s What I Call Music! 43",
+     "ano": 1999,
+     "duracao": 213
+    },
+    {
+     "id": "7FDC6RcDfNML33DAChZF7u",
+     "titulo": "Karma",
+     "artista": "Phillipi & Rodrigo",
+     "album": "Karma / Gueto de Gent",
+     "ano": 2016,
+     "duracao": 351
+    },
+    {
+     "id": "0Gow8baletOTyrofB91kY9",
+     "titulo": "Gueto De Gent",
+     "artista": "Phillipi & Rodrigo",
+     "album": "Karma / Gueto de Gent",
+     "ano": 2016,
+     "duracao": 306
+    },
+    {
+     "id": "5wtidfRXJKeS4FlCZEO501",
+     "titulo": "I'll Go Rhythm",
+     "artista": "Professor Kliq",
+     "album": "The Scientific Method, Volume II: Experiments in Sound and Perspective",
+     "ano": 2008,
+     "duracao": 195
+    },
+    {
+     "id": "55KjB9KLgECRAU7N2eM48H",
+     "titulo": "Plastic People",
+     "artista": "Reinier Zonneveld",
+     "album": "Megacity Servant",
+     "ano": 2016,
+     "duracao": 431
+    },
+    {
+     "id": "3unZbfPtUr0Dz0ekcyp3Js",
+     "titulo": "Another Chance (Radio Edit)",
+     "artista": "Roger Sanchez",
+     "album": "Another Chance",
+     "ano": 2001,
+     "duracao": 210
+    },
+    {
+     "id": "7ImIDdD9RvsOISN2POxCGb",
+     "titulo": "Touch Me (Original 12'' Mix)",
+     "artista": "Rui Da Silva",
+     "album": "Ministry Of Sound - Trance Nation 2001 (Mixed by Ferry Corsten, System F)",
+     "ano": 2001,
+     "duracao": 300
+    },
+    {
+     "id": "0NHODnE4E4U5LMJ0FV9it1",
+     "titulo": "Howling (Âme Remix)",
+     "artista": "Ry & Frank Wiedemann",
+     "album": "Howling EP",
+     "ano": 2012,
+     "duracao": 485
+    },
+    {
+     "id": "7KwPMELQBkVGqqs6OKhS7X",
+     "titulo": "Student Night (Lion's Drums Edit)",
+     "artista": "Sandy B, Lion's Drums",
+     "album": "Lion's Drums Edits",
+     "ano": null,
+     "duracao": 336
+    },
+    {
+     "id": "619e8xxh1jlvot1NbkCj3e",
+     "titulo": "At Night (Purple Disco Machine Extended Remix)",
+     "artista": "Shakedown",
+     "album": "At Night (Purple Disco Machine Extended Remix)",
+     "ano": 2018,
+     "duracao": 429
+    },
+    {
+     "id": "4ZjlGOGTpOZbuRDNLcoG8u",
+     "titulo": "Dai Dai",
+     "artista": "Shakira, Burna Boy",
+     "album": "Dai Dai",
+     "ano": 2026,
+     "duracao": 223
+    },
+    {
+     "id": "1WCHvudWyThCOUa1ufVgCS",
+     "titulo": "Can't Get Enough! (Vocal Club Mix)",
+     "artista": "Soulsearcher",
+     "album": "We Are Defected. This Is Our House!",
+     "ano": 2016,
+     "duracao": 413
+    },
+    {
+     "id": "4veoMQO7IeUhnLywpSoxyN",
+     "titulo": "The Pressure (Frankie Knuckles Classic Mix)",
+     "artista": "Sounds Of Blackness",
+     "album": "Defected Presents House Masters - Frankie Knuckles",
+     "ano": 2015,
+     "duracao": 304
+    },
+    {
+     "id": "4vmKastqVpggKFIQ4xUzDV",
+     "titulo": "Groovejet (If This Ain't Love) [feat. Sophie Ellis-Bextor] (Extended Vocal Mix)",
+     "artista": "Spiller • Sophie Ellis-Bextor",
+     "album": "Groovejet (If This Ain't Love) [feat. Sophie Ellis-Bextor]",
+     "ano": 2000,
+     "duracao": 446
+    },
+    {
+     "id": "6LnPNi2ItSlAeopOxXY0iq",
+     "titulo": "Music Sounds Better With You (feat. Thomas Bangalter) (Radio Edit)",
+     "artista": "Stardust, Benjamin Diamond, Alan Braxe",
+     "album": "Music Sounds Better With You",
+     "ano": null,
+     "duracao": 261
+    },
+    {
+     "id": "4mj2lLd7dEBXWstx35dQXk",
+     "titulo": "Self Aware",
+     "artista": "Temper City",
+     "album": "Self Aware",
+     "ano": 2026,
+     "duracao": 181
+    },
+    {
+     "id": "6mDy8C0FcbaV1Gjz0anKf9",
+     "titulo": "The Birds & The Bees (Filthy Dukes remix)",
+     "artista": "The 2 Bears",
+     "album": "Be Strong (Remixes)",
+     "ano": 2012,
+     "duracao": 457
+    },
+    {
+     "id": "1gRds3ZOUBEanzbRxRId02",
+     "titulo": "Lola's Theme Recut (Radio Edit)",
+     "artista": "The Shapeshifters",
+     "album": "Lola's Theme Recut",
+     "ano": 2017,
+     "duracao": 181
+    },
+    {
+     "id": "2aW1VFq5LMfc4Xvwetwiyz",
+     "titulo": "Reflect In Mirrors",
+     "artista": "Tia Carys • Jerome Williams",
+     "album": "Reflect In Mirrors",
+     "ano": 2020,
+     "duracao": 172
+    },
+    {
+     "id": "1jHt6vbpznKWjhQGQhMpao",
+     "titulo": "It Just Won’t Do (radio edit)",
+     "artista": "Tim Deluxe & Sam Obernik",
+     "album": "It Just Won’t Do",
+     "ano": 2002,
+     "duracao": 198
+    },
+    {
+     "id": "6ZzmdvKKcLJ9IDfuP8TwiI",
+     "titulo": "Hakyo No Kiki (ft. Kristos x Mona Matsuoka)",
+     "artista": "Tim Lucent",
+     "album": "Lucent Loops Vol. 1",
+     "ano": 2026,
+     "duracao": 276
+    },
+    {
+     "id": "2SuS4Xlo2AkZhWvQnGYyj1",
+     "titulo": "Inspector Norse",
+     "artista": "Todd Terje",
+     "album": "It’s the Arps EP",
+     "ano": 2012,
+     "duracao": 401
+    },
+    {
+     "id": "4UvmmDgOsLXouuS13QeAdz",
+     "titulo": "Free (Mood II Swing radio mix)",
+     "artista": "Ultra Naté",
+     "album": "Free",
+     "ano": 1997,
+     "duracao": 219
+    },
+    {
+     "id": "7GTnPfq1QxL4tFWuz2prPf",
+     "titulo": "Saturday Night (Radio Edit)",
+     "artista": "Whigfield",
+     "album": "Commercial Dance",
+     "ano": null,
+     "duracao": 223
+    },
+    {
+     "id": "6j71LzFSO7yJDbw4kQBezl",
+     "titulo": "From Disco To Disco (Remastered)",
+     "artista": "Whirlpool Productions",
+     "album": "From Disco To Disco",
+     "ano": 2017,
+     "duracao": 357
+    },
+    {
+     "id": "77QTcUpqZceRxeDEChSrnu",
+     "titulo": "I Wanna Dance With Somebody (Who Loves Me) (12\" remix)",
+     "artista": "Whitney Houston",
+     "album": "I Wanna Dance With Somebody (Who Loves Me)",
+     "ano": 1987,
+     "duracao": 514
+    },
+    {
+     "id": "7nefr3UVNFyjxrESVhYWFq",
+     "titulo": "raingurl",
+     "artista": "Yaeji",
+     "album": "EP2",
+     "ano": 2017,
+     "duracao": 237
+    },
+    {
+     "id": "2JAYGLLf7Coz80rBOzDsko",
+     "titulo": "Situation (US 12'' Remix by Francois Kevorkian)",
+     "artista": "Yazoo",
+     "album": "Upstairs At Eric's",
+     "ano": 1982,
+     "duracao": 346
+    }
+   ]
+  }
+ ],
+ "correcoes": {
+  "4kQeU4lUEVo9Fs50nzQjoY": {
+   "artista": "Taken by Trees",
+   "titulo": "Make 1,2"
+  },
+  "2Y81xidpiUfggq36j6ibOV": {
+   "artista": "Toquinho & Vinicius",
+   "titulo": "O Canto de Oxum"
+  },
+  "5mxm3Ugy5QcJCPKtXX1GPY": {
+   "artista": "Donatella Viggiano",
+   "titulo": "Napule Canta E More"
+  },
+  "5zFtAjQn2biaT0ebt539Uy": {
+   "artista": "Oasis",
+   "titulo": "Wonderwall (Remastered)"
+  },
+  "4fErI8igZTmTvcdHQNSCwP": {
+   "artista": "Letta Mbulu",
+   "titulo": "Vumani Makhosi"
+  },
+  "0lcVBS5gRfBOe1t5udAAFY": {
+   "artista": "Donna Summer",
+   "titulo": "Hot Stuff (Original 12'')"
+  },
+  "6jBL5UoVbY3Q3bAMdoesHN": {
+   "artista": "Ministry Of Funk",
+   "titulo": "Lovely Day (Original Mix)"
+  },
+  "02yzmQ5gQgYjGIxpX6kH7m": {
+   "artista": "INXS",
+   "titulo": "Never Tear Us Apart"
+  },
+  "5wiUNgD99ct3Q8UM2XvbMe": {
+   "artista": "Magic Box",
+   "titulo": "If You (Radio Mix)"
+  },
+  "2wolHfYFtP2ktgjoyeAsWx": {
+   "artista": "Benoit & Sergio",
+   "titulo": "Walk And Talk"
+  },
+  "3zf16vAqHDpSezTNqyFFoD": {
+   "artista": "Kasino",
+   "titulo": "Can't Get Over (Radio Edit)"
+  },
+  "3HF5JJWozKqLfjtNVWzDqm": {
+   "artista": "Björk",
+   "titulo": "Big Time Sensuality (The Fluke Minimix)"
+  },
+  "5uv3xASs6ngI7AdZ2Kh443": {
+   "artista": "Krankbrother",
+   "titulo": "When You're Watching Me (Original mix)"
+  },
+  "1K98fkIikXwOTTvSYYx7A9": {
+   "artista": "X-Press 2 feat. David Byrne",
+   "titulo": "Lazy"
+  },
+  "4ZjlGOGTpOZbuRDNLcoG8u": {
+   "artista": "Shakira, Burna Boy",
+   "titulo": "Dai Dai"
+  },
+  "3JQniaqKH7cBNf9SeuEhsn": {
+   "artista": "Tears for Fears",
+   "titulo": "Head Over Heels (ao vivo)"
+  }
+ },
+ "semCapa": [
+  "5uv3xASs6ngI7AdZ2Kh443",
+  "6V6AAglMsO1fDAzdcRuOmY",
+  "31TJ71FrzUxph87mBRZk9K",
+  "5wiUNgD99ct3Q8UM2XvbMe",
+  "2wolHfYFtP2ktgjoyeAsWx",
+  "1KOUBiOSUPSd4q8r44r71o",
+  "4YPSEXkP81JhTXJ5uwuVlo",
+  "3zf16vAqHDpSezTNqyFFoD",
+  "0lcVBS5gRfBOe1t5udAAFY",
+  "4WeLo3xYM5DM3SovFaRp02",
+  "6jBL5UoVbY3Q3bAMdoesHN",
+  "1KlXbUuiiARhsK60E15SR3"
+ ]
+}

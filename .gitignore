@@ -1,0 +1,57 @@
+# Só entra o que está liberado aqui. O resto de C:\apps fica de fora.
+/*
+!/.gitignore
+!/README.md
+!/tv-player/
+!/visual-pista/
+!/radio-player/
+!/programacao-circadiana/
+
+# dependências, ambientes e cópias de segurança
+node_modules/
+.venv/
+__pycache__/
+antes-*/
+*.antes-*
+*.bak
+*.orig
+
+# mídia pesada: fica só no PC
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.bin
+*.exr
+
+# registros e estado do servidor em uso
+*.log
+*.pid
+/tv-player/state.json
+/tv-player/caixa-*.json
+/tv-player/zonas-*.json
+/tv-player/visuais-ajuste.json
+/tv-player/reacoes.json
+/tv-player/logs/
+/visual-pista/mesa/saida/ultimo-visual.txt
+/visual-pista/mesa/saida/led-ligado.txt
+
+# assinatura e certificados das TVs, chaves e senhas
+/tv-player/tizen/author-signature.xml
+/tv-player/tizen/signature*.xml
+*.wgt
+*.p12
+*.pfx
+*.pem
+*.key
+*.crt
+.env
+.env.*
+*credencia*
+*senha*
+*secret*

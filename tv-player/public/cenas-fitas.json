@@ -1,0 +1,20 @@
+[
+  {"id":"fx-filamento","nome":"Filamento respirando","duracao":7,"balcao":{"efeito":"respirar","cor":"#ffc465"},"thumb":"cenas/fx-filamento.png"},
+  {"id":"fx-ambar","nome":"Âmbar respirando","duracao":9,"balcao":{"efeito":"respirar","cor":"#ffaf32"},"thumb":"cenas/fx-ambar.png"},
+  {"id":"fx-cometas","nome":"Cometas coloridos","duracao":14.9,"balcao":{"efeito":"cometas","cores":["metal","vermelho","verde","azul"]},"thumb":"cenas/fx-cometas.png"},
+  {"id":"fx-cometas-vermelho","nome":"Cometas vermelhos","duracao":14.9,"balcao":{"efeito":"cometas","cores":["vermelho","metal","vermelho","metal"]},"thumb":"cenas/fx-cometas-vermelho.png"},
+  {"id":"fx-cometas-verde","nome":"Cometas verdes","duracao":14.9,"balcao":{"efeito":"cometas","cores":["verde","metal","verde","metal"]},"thumb":"cenas/fx-cometas-verde.png"},
+  {"id":"fx-cometas-azul","nome":"Cometas azuis","duracao":14.9,"balcao":{"efeito":"cometas","cores":["azul","metal","azul","metal"]},"thumb":"cenas/fx-cometas-azul.png"},
+  {"id":"fx-faixas","nome":"Faixas prata","duracao":14.7,"balcao":{"efeito":"faixas","n":19,"k":4,"cor":"metal"},"thumb":"cenas/fx-faixas.png"},
+  {"id":"fx-faixas-quentes","nome":"Faixas quentes","duracao":14.7,"balcao":{"efeito":"faixas","n":19,"k":4,"cor":"#ffc465","fundo":"#1a0c00"},"thumb":"cenas/fx-faixas-quentes.png"},
+  {"id":"fx-degrade","nome":"Degradê da marca","duracao":14.7,"balcao":{"efeito":"degrade","n":19,"k":4},"thumb":"cenas/fx-degrade.png"},
+  {"id":"fx-degrade-cinza","nome":"Degradê cinza","duracao":13.6,"balcao":{"efeito":"degrade","cinza":true,"n":18,"k":4},"thumb":"cenas/fx-degrade-cinza.png"},
+  {"id":"fx-varredura","nome":"Varredura branca","duracao":8,"balcao":{"efeito":"faixas","n":1,"k":1,"cor":"branco"},"thumb":"cenas/fx-varredura.png"},
+  {"id":"fx-pulsos","nome":"Pulsos laranja","duracao":15,"balcao":{"efeito":"mensagens","n":3,"cor":"laranja"},"thumb":"cenas/fx-pulsos.png"},
+  {"id":"fx-sequencia","nome":"Sequência","duracao":57.9,"balcao":{"partes":[
+    {"duracao":14.9,"efeito":"cometas","cores":["metal","vermelho","verde","azul"]},
+    {"duracao":14.7,"efeito":"faixas","n":19,"k":4,"cor":"metal"},
+    {"duracao":14.7,"efeito":"degrade","n":19,"k":4},
+    {"duracao":13.6,"efeito":"degrade","cinza":true,"n":18,"k":4}]},"thumb":"cenas/fx-sequencia.png"},
+  {"id":"apagar","nome":"Apagar","apagar":true}
+]

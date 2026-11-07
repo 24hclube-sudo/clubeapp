@@ -1,0 +1,472 @@
+[
+  {
+    "id": "c-mare-quente",
+    "nome": "Maré quente",
+    "duracao": 60,
+    "balcao": {
+      "efeito": "mare"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-mare-quente.png",
+    "preview": "cenas/anim-c-mare-quente.mp4"
+  },
+  {
+    "id": "c-mare-oceano",
+    "nome": "Maré oceano",
+    "duracao": 60,
+    "balcao": {
+      "efeito": "mare",
+      "cores": [
+        "#001020",
+        "#006faf",
+        "#00bae3",
+        "#003a5c",
+        "#001020"
+      ]
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-mare-oceano.png",
+    "preview": "cenas/anim-c-mare-oceano.mp4"
+  },
+  {
+    "id": "c-aurora",
+    "nome": "Aurora",
+    "duracao": 90,
+    "balcao": {
+      "efeito": "aurora"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-aurora.png",
+    "preview": "cenas/anim-c-aurora.mp4"
+  },
+  {
+    "id": "c-brasa",
+    "nome": "Brasa",
+    "duracao": 40,
+    "balcao": {
+      "efeito": "brasa",
+      "cor": "#ffffff"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-brasa.png",
+    "preview": "cenas/anim-c-brasa.mp4"
+  },
+  {
+    "id": "c-constelacao",
+    "nome": "Constelação",
+    "duracao": 60,
+    "balcao": {
+      "efeito": "constelacao",
+      "n": 5
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-constelacao.png",
+    "preview": "cenas/anim-c-constelacao.mp4"
+  },
+  {
+    "id": "c-marca",
+    "nome": "Cores da marca",
+    "duracao": 120,
+    "balcao": {
+      "efeito": "marcaLenta"
+    },
+    "categoria": "calma",
+    "thumb": "cenas/anim-c-marca.png",
+    "preview": "cenas/anim-c-marca.mp4"
+  },
+  {
+    "id": "b-arcoiris",
+    "nome": "Arco-íris",
+    "duracao": 10,
+    "balcao": {
+      "efeito": "arcoiris",
+      "k": 1,
+      "n": 1
+    },
+    "thumb": "cenas/anim-b-arcoiris.png",
+    "preview": "cenas/anim-b-arcoiris.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-cometas",
+    "nome": "Cometas coloridos",
+    "duracao": 14.9,
+    "balcao": {
+      "efeito": "cometas",
+      "cores": [
+        "metal",
+        "vermelho",
+        "verde",
+        "azul"
+      ]
+    },
+    "thumb": "cenas/anim-b-cometas.png",
+    "preview": "cenas/anim-b-cometas.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-cometas-vermelho",
+    "nome": "Cometas vermelhos",
+    "duracao": 14.9,
+    "balcao": {
+      "efeito": "cometas",
+      "cores": [
+        "vermelho",
+        "metal",
+        "vermelho",
+        "metal"
+      ]
+    },
+    "thumb": "cenas/anim-b-cometas-vermelho.png",
+    "preview": "cenas/anim-b-cometas-vermelho.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-cometas-verde",
+    "nome": "Cometas verdes",
+    "duracao": 14.9,
+    "balcao": {
+      "efeito": "cometas",
+      "cores": [
+        "verde",
+        "metal",
+        "verde",
+        "metal"
+      ]
+    },
+    "thumb": "cenas/anim-b-cometas-verde.png",
+    "preview": "cenas/anim-b-cometas-verde.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-cometas-azul",
+    "nome": "Cometas azuis",
+    "duracao": 14.9,
+    "balcao": {
+      "efeito": "cometas",
+      "cores": [
+        "azul",
+        "metal",
+        "azul",
+        "metal"
+      ]
+    },
+    "thumb": "cenas/anim-b-cometas-azul.png",
+    "preview": "cenas/anim-b-cometas-azul.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-onda-azul",
+    "nome": "Onda azul",
+    "duracao": 9,
+    "balcao": {
+      "efeito": "onda",
+      "cor": "azul",
+      "k": 2,
+      "n": 3
+    },
+    "thumb": "cenas/anim-b-onda-azul.png",
+    "preview": "cenas/anim-b-onda-azul.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-onda-quente",
+    "nome": "Onda quente",
+    "duracao": 9,
+    "balcao": {
+      "efeito": "onda",
+      "cor": "#ffc465",
+      "k": 2,
+      "n": 3
+    },
+    "thumb": "cenas/anim-b-onda-quente.png",
+    "preview": "cenas/anim-b-onda-quente.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-brilhos",
+    "nome": "Brilhos",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "brilhos",
+      "cor": "branco",
+      "n": 3
+    },
+    "thumb": "cenas/anim-b-brilhos.png",
+    "preview": "cenas/anim-b-brilhos.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-brilhos-quentes",
+    "nome": "Brilhos quentes",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "brilhos",
+      "cor": "#ffc465",
+      "n": 3
+    },
+    "thumb": "cenas/anim-b-brilhos-quentes.png",
+    "preview": "cenas/anim-b-brilhos-quentes.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-scanner",
+    "nome": "Scanner",
+    "duracao": 6,
+    "balcao": {
+      "efeito": "scanner",
+      "cor": "vermelho",
+      "n": 2
+    },
+    "thumb": "cenas/anim-b-scanner.png",
+    "preview": "cenas/anim-b-scanner.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-pulso",
+    "nome": "Pulso do centro",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "pulsoCentro",
+      "cor": "metal",
+      "k": 2,
+      "n": 4
+    },
+    "thumb": "cenas/anim-b-pulso.png",
+    "preview": "cenas/anim-b-pulso.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-faixas",
+    "nome": "Faixas prata",
+    "duracao": 14.7,
+    "balcao": {
+      "efeito": "faixas",
+      "n": 19,
+      "k": 4,
+      "cor": "metal"
+    },
+    "thumb": "cenas/anim-b-faixas.png",
+    "preview": "cenas/anim-b-faixas.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-faixas-quentes",
+    "nome": "Faixas quentes",
+    "duracao": 14.7,
+    "balcao": {
+      "efeito": "faixas",
+      "n": 19,
+      "k": 4,
+      "cor": "#ffc465",
+      "fundo": "#1a0c00"
+    },
+    "thumb": "cenas/anim-b-faixas-quentes.png",
+    "preview": "cenas/anim-b-faixas-quentes.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-degrade",
+    "nome": "Degradê da marca",
+    "duracao": 14.7,
+    "balcao": {
+      "efeito": "degrade",
+      "n": 19,
+      "k": 4
+    },
+    "thumb": "cenas/anim-b-degrade.png",
+    "preview": "cenas/anim-b-degrade.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-degrade-cinza",
+    "nome": "Degradê cinza",
+    "duracao": 13.6,
+    "balcao": {
+      "efeito": "degrade",
+      "cinza": true,
+      "n": 18,
+      "k": 4
+    },
+    "thumb": "cenas/anim-b-degrade-cinza.png",
+    "preview": "cenas/anim-b-degrade-cinza.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-varredura",
+    "nome": "Varredura branca",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "faixas",
+      "n": 1,
+      "k": 1,
+      "cor": "branco"
+    },
+    "thumb": "cenas/anim-b-varredura.png",
+    "preview": "cenas/anim-b-varredura.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "b-sequencia",
+    "nome": "Sequência",
+    "duracao": 57.9,
+    "balcao": {
+      "partes": [
+        {
+          "duracao": 14.9,
+          "efeito": "cometas",
+          "cores": [
+            "metal",
+            "vermelho",
+            "verde",
+            "azul"
+          ]
+        },
+        {
+          "duracao": 14.7,
+          "efeito": "faixas",
+          "n": 19,
+          "k": 4,
+          "cor": "metal"
+        },
+        {
+          "duracao": 14.7,
+          "efeito": "degrade",
+          "n": 19,
+          "k": 4
+        },
+        {
+          "duracao": 13.6,
+          "efeito": "degrade",
+          "cinza": true,
+          "n": 18,
+          "k": 4
+        }
+      ]
+    },
+    "thumb": "cenas/anim-b-sequencia.png",
+    "preview": "cenas/anim-b-sequencia.mp4",
+    "categoria": "normal"
+  },
+  {
+    "id": "x-flash",
+    "nome": "Flash no beat",
+    "batidas": 4,
+    "balcao": {
+      "efeito": "flashBeat",
+      "cores": [
+        "branco",
+        "branco",
+        "branco",
+        "vermelho"
+      ]
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-flash.png",
+    "preview": "cenas/anim-x-flash.mp4"
+  },
+  {
+    "id": "x-flash-cores",
+    "nome": "Flash colorido",
+    "batidas": 4,
+    "balcao": {
+      "efeito": "flashBeat",
+      "cores": [
+        "vermelho",
+        "azul",
+        "verde",
+        "branco"
+      ]
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-flash-cores.png",
+    "preview": "cenas/anim-x-flash-cores.mp4"
+  },
+  {
+    "id": "x-chase",
+    "nome": "Corrida no beat",
+    "batidas": 4,
+    "balcao": {
+      "efeito": "chaseBeat",
+      "seg": 4,
+      "cor": "metal"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-chase.png",
+    "preview": "cenas/anim-x-chase.mp4"
+  },
+  {
+    "id": "x-chase-vaivem",
+    "nome": "Vai e volta no beat",
+    "batidas": 6,
+    "balcao": {
+      "efeito": "chaseBeat",
+      "seg": 4,
+      "vaivem": true,
+      "cor": "vermelho"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-chase-vaivem.png",
+    "preview": "cenas/anim-x-chase-vaivem.mp4"
+  },
+  {
+    "id": "x-metade",
+    "nome": "Metade / metade",
+    "batidas": 2,
+    "balcao": {
+      "efeito": "metadeBeat",
+      "cores": [
+        "vermelho",
+        "azul"
+      ]
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-metade.png",
+    "preview": "cenas/anim-x-metade.mp4"
+  },
+  {
+    "id": "x-arcoiris",
+    "nome": "Arco-íris no beat",
+    "batidas": 8,
+    "balcao": {
+      "efeito": "arcoirisBeat"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-arcoiris.png",
+    "preview": "cenas/anim-x-arcoiris.mp4"
+  },
+  {
+    "id": "x-scanner",
+    "nome": "Scanner no beat",
+    "batidas": 2,
+    "balcao": {
+      "efeito": "scannerBeat",
+      "cor": "vermelho"
+    },
+    "categoria": "pista",
+    "thumb": "cenas/anim-x-scanner.png",
+    "preview": "cenas/anim-x-scanner.mp4"
+  },
+  {
+    "id": "x-strobo",
+    "nome": "Strobo branco",
+    "batidas": 1,
+    "balcao": {
+      "partes": [
+        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" },
+        { "duracao": 0.071, "efeito": "preto" },
+        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" },
+        { "duracao": 0.071, "efeito": "preto" },
+        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" },
+        { "duracao": 0.071, "efeito": "preto" },
+        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" }
+      ]
+    },
+    "categoria": "pista"
+  },
+  {
+    "id": "apagar",
+    "nome": "Apagar",
+    "apagar": true
+  }
+]

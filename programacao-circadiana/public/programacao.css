@@ -1,0 +1,91 @@
+/* Tela "Programação" do app: mesmos tons e peças do restante do controle (celular.html). */
+.prog-cartao { margin-bottom: 14px; cursor: pointer; }
+.prog-cartao .prog-tira { display: block; width: 100%; height: 34px; }
+.prog-cartao .corpo { padding-top: 12px; }
+.prog-cartao .sub { color: var(--muted); }
+.prog-previa { display: block; width: 100%; height: 100%; }
+
+.prog-sala { background: #000; border-radius: var(--r); padding: 14px 14px 10px; display: grid; gap: 10px; }
+.prog-sala canvas { display: block; width: 100%; height: 100%; }
+.prog-sala .led { height: 12px; border-radius: 3px; overflow: hidden; }
+.prog-sala .tvs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.prog-sala .tv { position: relative; aspect-ratio: 9 / 16; max-height: 200px; width: 100%; border-radius: 4px; overflow: hidden; background: #000; }
+.prog-sala .tv img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.prog-sala .fita { height: 10px; border-radius: 3px; overflow: hidden; }
+.prog-sala .rotulos { display: flex; justify-content: space-between; color: var(--dim); font-size: 11px; font-weight: 600; }
+
+.prog-agora { display: flex; align-items: center; gap: 12px; padding: 16px 4px 6px; }
+.prog-agora .t { flex: 1; min-width: 0; }
+.prog-agora b { display: block; font-size: 22px; letter-spacing: -.01em; }
+.prog-agora small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.prog-etiqueta { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--warn); color: #000; font-size: 11px; font-weight: 800; vertical-align: 3px; margin-left: 6px; }
+
+.prog-linha { position: relative; margin: 10px 0 2px; touch-action: none; cursor: ew-resize; user-select: none; -webkit-user-select: none; }
+.prog-linha canvas { display: block; width: 100%; height: 52px; border-radius: 12px; }
+.prog-cursor { position: absolute; top: -4px; bottom: 16px; width: 2px; margin-left: -1px; background: #fff; border-radius: 1px; box-shadow: 0 0 0 1px rgba(0,0,0,.5); pointer-events: none; }
+.prog-cursor.sim { background: var(--warn); }
+.prog-horas { display: flex; justify-content: space-between; color: var(--dim); font-size: 11px; font-weight: 600; padding: 5px 1px 0; }
+.prog-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 2px; align-items: center; }
+.prog-acoes .dica { color: var(--muted); font-size: 13px; flex: 1 1 100%; }
+
+#prog-corpo { margin-top: 14px; }
+.prog-faixa { background: var(--s1); border-radius: 18px; margin-bottom: 8px; overflow: hidden; }
+.prog-faixa .cab { display: grid; grid-template-columns: 58px 1fr auto; gap: 10px; align-items: center; width: 100%; padding: 12px 14px; text-align: left; }
+.prog-faixa .hora { font-weight: 800; font-size: 16px; font-variant-numeric: tabular-nums; }
+.prog-faixa .nm { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prog-faixa.agora .nm::after { content: "agora"; margin-left: 8px; padding: 2px 7px; border-radius: 999px; background: var(--ink); color: #000; font-size: 10px; font-weight: 800; vertical-align: 2px; }
+.prog-amostras { display: grid; gap: 3px; margin-top: 7px; }
+.prog-amostras i { display: block; height: 10px; border-radius: 5px; }
+.prog-amostras i + i { height: 5px; }
+.prog-seta { color: var(--dim); transition: transform .2s var(--ease); }
+.prog-faixa.aberta .prog-seta { transform: rotate(90deg); }
+.prog-editor { padding: 2px 14px 14px; display: grid; gap: 10px; }
+.prog-editor h4 { margin: 10px 0 0; color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.prog-dupla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.prog-dupla.datas { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+#programacao, #prog-corpo { min-width: 0; }
+.prog-campo { display: block; }
+.prog-campo span { display: block; color: var(--muted); font-size: 12px; font-weight: 600; margin: 0 2px 4px; }
+.prog-campo input, .prog-campo select { width: 100%; font: inherit; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); color-scheme: dark; min-width: 0; }
+.prog-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.prog-chip { padding: 8px 11px; border-radius: 999px; background: var(--s2); color: var(--muted); font-weight: 700; font-size: 13px; }
+.prog-chip.on { background: var(--ink); color: #000; }
+.prog-chip.cor { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.65); }
+.prog-cores { display: grid; grid-template-columns: repeat(3, 1fr) ; gap: 8px; }
+.prog-cor { position: relative; height: 44px; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); display: block; }
+.prog-cor input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; cursor: pointer; }
+.prog-grad { height: 34px; border-radius: 10px; }
+.prog-linhas2 { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.prog-anuncio { background: var(--s1); border-radius: 18px; padding: 14px; margin-bottom: 10px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.prog-anuncio .topo { display: flex; align-items: center; gap: 12px; }
+.prog-anuncio .topo .t { flex: 1; min-width: 0; }
+.prog-anuncio .topo b { display: block; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prog-anuncio .topo small { color: var(--muted); font-size: 13px; }
+.prog-anuncio .topo small.noar { color: var(--ok); font-weight: 700; }
+.prog-slides { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.prog-slide { position: relative; flex: none; width: 78px; height: 98px; border-radius: 10px; overflow: hidden; background: #000; }
+.prog-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.prog-slide span { position: absolute; left: 4px; bottom: 4px; padding: 1px 5px; border-radius: 6px; background: rgba(0,0,0,.72); color: #fff; font-size: 10px; font-weight: 700; }
+.prog-slide button { position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 50%; background: rgba(0,0,0,.72); color: #fff; font-size: 13px; line-height: 22px; text-align: center; }
+.prog-slide.mais { display: grid; place-items: center; background: var(--s2); color: var(--muted); font-size: 12px; font-weight: 700; text-align: center; padding: 6px; cursor: pointer; }
+.prog-slide.mais input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+.prog-zona { background: var(--s1); border-radius: 18px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.prog-zona .t { flex: 1; min-width: 0; }
+.prog-zona .t b { display: block; font-size: 15px; }
+.prog-zona .t small { color: var(--muted); font-size: 13px; }
+.prog-zona .t small.manual { color: var(--warn); }
+
+#det-prog { display: flex; align-items: center; gap: 12px; background: var(--s1); border-radius: 16px; padding: 12px 14px; margin-bottom: 14px; }
+#det-prog[hidden] { display: none; }
+#det-prog .t { flex: 1; min-width: 0; }
+#det-prog b { display: block; font-size: 14px; }
+#det-prog small { color: var(--muted); font-size: 13px; }
+#det-prog a { color: inherit; text-decoration: none; }
+
+@media (min-width: 980px) {
+  body.em-prog #detalhe { display: none !important; }
+  #programacao { max-width: 900px; }
+  .prog-sala .tvs { max-width: 480px; margin: 0 auto; width: 100%; }
+}

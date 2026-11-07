@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<script>
+  // Fora do servidor (arquivo aberto direto / página "data:" do navegador do app):
+  // imagens, miniaturas e logos passam a vir do servidor deste PC.
+  if (!/^https?:$/.test(location.protocol)) document.write('<base href="http://localhost:8080/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0f11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>CLUBE · Cenas</title>
+<style>
+  :root {
+    --bg: #0e0f11; --card: #181a1d; --card-on: #20242a; --ink: #f4f5f6; --muted: #8e949b;
+    --line: #2a2d31; --accent: #00a0e6; --ok: #00c44a; --off: #ff3308;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { padding: max(14px, env(safe-area-inset-top)) 14px max(24px, env(safe-area-inset-bottom)); touch-action: manipulation; }
+
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: .08em; font-weight: 800; }
+  #status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+  #dot { width: 10px; height: 10px; border-radius: 50%; background: var(--off); }
+  #dot.on { background: var(--ok); }
+
+  /* Abas dos andares: cada andar tem cenas, logo + cor e brilho próprios. */
+  #andares { position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    padding: 8px 0; margin: -4px 0 4px; background: var(--bg); }
+  #andares button { font: inherit; font-weight: 800; font-size: 16px; padding: 12px 0; border-radius: 12px;
+    border: 2px solid var(--line); background: var(--card); color: var(--muted); cursor: pointer; }
+  #andares button.on { color: var(--ink); border-color: var(--accent); background: var(--card-on); }
+
+  /* Aparelhos: cada tela/fita tem controle e cenas próprios. */
+  #zonas { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 6px; }
+  #zonas button { font: inherit; font-weight: 700; font-size: 14px; padding: 9px 12px; border-radius: 999px;
+    border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  #zonas button.on { border-color: #ffd54f; background: #2a2410; color: #ffd54f; }
+  #zonas button small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); }
+
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 20px 2px 10px; font-weight: 600; }
+
+  #cenas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cena { position: relative; border: 2px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 14px; padding: 0; overflow: hidden; text-align: left; min-height: 92px;
+    display: flex; flex-direction: column; font: inherit; cursor: pointer; }
+  .cena .thumb { height: 44px; background: #000 center / cover no-repeat; position: relative; overflow: hidden; }
+  .cena .thumb video { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Logo + cor */
+  #logo-box { background: var(--card); border: 2px solid var(--line); border-radius: 14px; padding: 12px; }
+  #logo-box.on { border-color: var(--accent); background: var(--card-on); }
+  #logo-prev { height: 44px; border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 12px; }
+  #logo-prev .trilho { position: absolute; top: 0; left: 0; height: 100%; display: flex; align-items: center;
+    animation: passa 3s linear infinite; }
+  #logo-prev .lg { flex: 0 0 110px; height: 100%; display: flex; align-items: center; justify-content: center; }
+  #logo-prev .lg i { width: 80px; height: 20px; display: block;
+    -webkit-mask: url(logo_clube.png) center/100% 100% no-repeat; mask: url(logo_clube.png) center/100% 100% no-repeat; }
+  #logo-prev.noalto .lg i { width: 64px; height: 35px;
+    -webkit-mask-image: url(logo_noalto.png); mask-image: url(logo_noalto.png); }
+  #seg-marca { margin-top: 0; margin-bottom: 12px; grid-template-columns: 1fr 1fr; }
+  @keyframes passa { to { transform: translateX(-110px); } }
+  .cores { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .cor { aspect-ratio: 1; border-radius: 10px; border: 2px solid rgba(255,255,255,.12); padding: 0; cursor: pointer; }
+  .cor.on { border-color: #fff; box-shadow: 0 0 0 2px var(--accent); }
+  .cor.custom { position: relative; overflow: hidden;
+    background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red); }
+  .cor.custom input { position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; border: 0; padding: 0; }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 12px; }
+  .seg button { font: inherit; font-weight: 700; font-size: 14px; padding: 10px 0; border-radius: 10px;
+    border: 2px solid var(--line); background: #111316; color: var(--ink); cursor: pointer; }
+  .seg button.on { border-color: var(--accent); }
+  .dica { color: var(--muted); font-size: 12px; margin-top: 10px; }
+
+  /* Subir arte */
+  #subir { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 10px; }
+  #subir input[type=text] { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: #111316; color: var(--ink); }
+  #subir input[type=file] { color: var(--muted); font: inherit; font-size: 14px; }
+  #subir-bt { font: inherit; font-weight: 800; padding: 12px; border-radius: 10px; border: 0; background: var(--accent); color: #000; cursor: pointer; }
+  #subir-bt:disabled { opacity: .5; }
+  .cena .apagar-arte { position: absolute; top: 6px; left: 6px; z-index: 3; font-size: 11px; font-weight: 800; padding: 3px 8px;
+    border-radius: 999px; background: rgba(0,0,0,.7); color: #fff; border: 1px solid rgba(255,255,255,.3); }
+
+  /* Fitas de LED */
+  #cor-fitas, .fita { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+  #cor-fitas.on { border: 2px solid var(--accent); background: var(--card-on); }
+  .rotulo { font-weight: 700; font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  #cor-fitas-on { font-size: 11px; font-weight: 800; color: #000; background: var(--accent); padding: 2px 8px; border-radius: 999px; display: none; }
+  #cor-fitas.on #cor-fitas-on { display: inline; }
+  .cor .nome-cor { display: block; font-size: 10px; font-weight: 700; color: #000; line-height: 1.1; padding: 2px; }
+  .fita canvas { width: 100%; height: 54px; display: block; background: #000; border-radius: 6px; image-rendering: pixelated; }
+  .fita.vertical canvas { height: 110px; }
+  .fita .dimmer { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; margin: 12px 0 2px; }
+  .fita .dimmer b { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; font-size: 13px; }
+  .fita .info { color: var(--muted); font-size: 13px; margin-top: 10px; line-height: 1.6; }
+  .fita .seg { grid-template-columns: 1fr 1fr; }
+  .fita .bt-saida.on { border-color: var(--ok); color: var(--ok); }
+  .fita .bt-teste.on { border-color: #ffd54f; color: #ffd54f; }
+  .cena .nome { padding: 10px 12px; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .cena .num { color: var(--muted); font-weight: 600; font-size: 13px; }
+  .cena:active { transform: scale(.97); }
+  .cena.on { border-color: var(--accent); background: var(--card-on); }
+  .cena.on::after { content: "no ar"; position: absolute; top: 6px; right: 6px; z-index: 2; font-size: 11px; font-weight: 800;
+    color: #000; background: var(--accent); padding: 3px 8px; border-radius: 999px; }
+  .cena.apagar .thumb { background: repeating-linear-gradient(135deg, #111 0 8px, #1b1b1b 8px 16px); }
+  .cena.enviando { opacity: .6; }
+
+  .fader { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+  .fader.master { border-color: #3a3f45; }
+  .fader label { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+  .fader label span { color: var(--muted); font-variant-numeric: tabular-nums; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 36px; background: transparent; margin: 0; }
+  input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--accent) var(--p, 100%), #2c3035 var(--p, 100%)); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; margin-top: -11px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 4px rgba(0,0,0,.5); }
+  input[type=range]::-moz-range-track { height: 8px; border-radius: 4px; background: #2c3035; }
+  input[type=range]::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--accent); }
+  input[type=range]::-moz-range-thumb { width: 30px; height: 30px; border-radius: 50%; background: #fff; border: 0; }
+
+  #telas { color: var(--muted); font-size: 13px; line-height: 1.7; }
+  #telas b { color: var(--ink); font-weight: 600; }
+  .st-on { color: var(--ok); } .st-off { color: var(--off); }
+</style>
+</head>
+<body>
+<header>
+  <h1>CLUBE</h1>
+  <div id="status"><span id="st-txt">Conectando…</span><span id="dot"></span></div>
+</header>
+<nav id="andares">
+  <button data-andar="1">1º andar</button>
+  <button data-andar="5">5º andar</button>
+</nav>
+<nav id="zonas" aria-label="O que controlar"></nav>
+
+<h2 id="titulo-cenas">Cenas</h2>
+<div id="cenas"></div>
+
+<section id="subir-box" style="display:none">
+  <h2>Subir arte para as TVs</h2>
+  <div id="subir">
+    <input type="file" id="subir-arquivo" accept="image/*,video/*">
+    <input type="text" id="subir-nome" placeholder="Nome da arte (opcional)" maxlength="40">
+    <button id="subir-bt">Enviar</button>
+    <div class="dica" id="subir-msg">Imagem ou vídeo em pé (ideal 1080×1920). Ela entra na lista acima; toque nela para colocar no ar.</div>
+  </div>
+</section>
+
+<h2>Logo + cor de fundo</h2>
+<div id="logo-box">
+  <div class="seg" id="seg-marca">
+    <button data-marca="clube">CLUBE</button>
+    <button data-marca="noalto">NO ALTO</button>
+  </div>
+  <div id="logo-prev"><div class="trilho"></div></div>
+  <div class="cores" id="cores"></div>
+  <div class="seg" id="seg-logo">
+    <button data-logo="branco">Logo branco</button>
+    <button data-logo="preto">Logo preto</button>
+    <button data-logo="metal">Metálico</button>
+  </div>
+  <div class="dica">Toque numa cor para colocar no ar. O último quadrado abre qualquer cor.</div>
+</div>
+
+<section id="fitas-box">
+  <h2>Fitas de LED</h2>
+  <div id="cor-fitas">
+    <div class="rotulo">Cor fixa nas fitas <span id="cor-fitas-on"></span></div>
+    <div class="cores" id="cores-fitas"></div>
+    <div class="dica">Toque numa cor para deixar as fitas do andar nela. Tocar numa cena volta aos movimentos.</div>
+  </div>
+  <div id="fitas"></div>
+</section>
+
+<section id="brilho-box">
+<h2>Brilho</h2>
+<div id="faders"></div>
+</section>
+
+<section id="telas-box">
+<h2>Telas deste aparelho</h2>
+<div id="telas">—</div>
+</section>
+
+<script>
+// Aberto como arquivo (file://) não há servidor para conectar: vai para o endereço certo.
+// Endereço do servidor. Aberta como arquivo (file://), a página fala direto com o servidor
+// deste PC — o navegador do app às vezes abre o arquivo e não deixa redirecionar.
+var SERVIDOR = /^https?:$/.test(location.protocol) ? location.origin + '/' : 'http://localhost:8080/';
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var NOMES_FADER = { master: 'Master', led: 'Painel LED', telas: 'TVs', balcao: 'Balcão do bar',
+    painel: 'Painel LED', projetores: 'Projetores', barras: 'Barras verticais' };
+  var estado = { andares: {} };
+  var arrastando = {};
+  var ws, retry = 1000;
+  var ultimasTelas = [];
+
+  // ---------- andar ----------
+  function lerAndar() {
+    var q = /[?&]andar=(\d)/.exec(location.search);
+    if (q) return q[1];
+    try { return localStorage.getItem('clube-andar') || '1'; } catch (e) { return '1'; }
+  }
+  var andar = lerAndar();
+  function doAndar() { return estado.andares[andar] || { cena: null, brilho: {}, grupos: [] }; }
+
+  // ---------- aparelhos (zonas): cada um com controle e cenas próprios ----------
+  // Telas: "telas:<tipo>:<andar>" (as TVs do andar vão todas juntas). Fitas: "fita:<instalação>".
+  var TIPO_ZONA = { led: 'Painel de LED', telas: 'Todas as TVs', painel: 'Painel de LED', projetores: 'Projetores', balcao: 'Fita de LED', barras: 'Fitas de LED' };
+  function zonasDoAndar() { return (estado.zonas || []).filter(function (z) { return z.andar === andar; }); }
+  function lerZona() { try { return localStorage.getItem('clube-zona-' + andar) || ''; } catch (e) { return ''; } }
+  var zonaSel = '';
+  function zonaAtual() {
+    var zs = zonasDoAndar();
+    return zs.filter(function (z) { return z.id === zonaSel; })[0] || zs[0] || null;
+  }
+  function alvos() { var z = zonaAtual(); return z ? [z] : []; }
+  function comum(campo) { var z = zonaAtual(); return z ? (z[campo] || null) : null; }
+  function ehFita() { var z = zonaAtual(); return !!z && z.id.indexOf('fita:') === 0; }
+
+  function escolherZona(z) {
+    zonaSel = z;
+    try { localStorage.setItem('clube-zona-' + andar, z); } catch (e) {}
+    desenharZonas(); montarCenas(); montarFaders(); marcarCena(); aplicarEstadoLogo(); mostrarTelas(ultimasTelas);
+    if (typeof mostrarBalcao === 'function') mostrarBalcao();
+  }
+  function desenharZonas() {
+    var zs = zonasDoAndar(), atual = zonaAtual();
+    zonaSel = atual ? atual.id : '';
+    var html = '';
+    zs.forEach(function (z) {
+      html += '<button data-z="' + esc(z.id) + '"' + (zonaSel === z.id ? ' class="on"' : '') + '>' + esc(z.nome) +
+        (z.qtd > 1 ? ' (' + z.qtd + ')' : '') + '<small>' + (TIPO_ZONA[z.grupo] || '') + '</small></button>';
+    });
+    $('zonas').innerHTML = html || '<span class="dica">Nenhum aparelho neste andar ainda.</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('#zonas button'), function (b) {
+      b.onclick = function () { escolherZona(b.dataset.z); };
+    });
+    // Cor fixa só vale para fitas.
+    $('cor-fitas').style.display = ehFita() ? '' : 'none';
+  }
+
+  function trocarAndar(a) {
+    andar = a;
+    try { localStorage.setItem('clube-andar', a); } catch (e) {}
+    zonaSel = lerZona();
+    var bs = document.querySelectorAll('#andares button');
+    for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].dataset.andar === a);
+    document.title = 'CLUBE · ' + (a === '5' ? '5º andar' : '1º andar');
+    desenharZonas(); montarCenas(); montarFaders(); marcarCena(); aplicarEstadoLogo(); mostrarTelas(ultimasTelas);
+    if (typeof mostrarBalcao === 'function') { mostrarBalcao(); pedirPrevia(); }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#andares button'), function (b) {
+    b.onclick = function () { trocarAndar(b.dataset.andar); };
+  });
+
+  // ---------- cenas: vídeos para telas, efeitos de luz para fitas ----------
+  var listas = { telas: null, fitas: null, tvs: null };
+  var montadas = '';
+  function carregar(arquivo, chave) {
+    fetch(SERVIDOR + arquivo, { cache: 'no-store' }).then(function (r) { return r.json(); })
+      .then(function (l) { listas[chave] = l; montadas = ''; montarCenas(); marcarCena(); });
+  }
+  carregar('cenas.json', 'telas');
+  carregar('cenas-fitas.json', 'fitas');
+  carregar('cenas-tv.json', 'tvs');
+
+  function montarCenas() {
+    var z = zonaAtual();
+    var chave = ehFita() ? 'fitas' : (z && z.grupo === 'telas') ? 'tvs' : 'telas';
+    $('subir-box').style.display = chave === 'tvs' ? '' : 'none';
+    var cenas = listas[chave];
+    if (!cenas || montadas === chave) return;
+    montadas = chave;
+    $('titulo-cenas').textContent = chave === 'fitas' ? 'Efeitos de luz' : 'Cenas';
+    $('cenas').innerHTML = '';
+    cenas.forEach(function (c, i) {
+      var b = document.createElement('button');
+      b.className = 'cena' + (c.apagar ? ' apagar' : '');
+      b.dataset.id = c.id;
+      var thumb = document.createElement('div'); thumb.className = 'thumb';
+      if (c.thumb) thumb.style.backgroundImage = 'url("' + c.thumb + '")';
+      if (c.preview) {
+        // Trecho real do vídeo tocando em loop (mudo, inline: exigência do iPhone/Android para autoplay).
+        var v = document.createElement('video');
+        v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+        v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.preload = 'auto';
+        if (c.thumb) v.poster = c.thumb;
+        v.src = c.preview;
+        thumb.appendChild(v);
+      }
+      var nome = document.createElement('div'); nome.className = 'nome';
+      var num = document.createElement('span'); num.className = 'num'; num.textContent = String(i + 1);
+      nome.appendChild(num); nome.appendChild(document.createTextNode(c.nome));
+      b.appendChild(thumb); b.appendChild(nome);
+      b.onclick = function () {
+        var z = zonaAtual();
+        if (!z || !ws || ws.readyState !== 1) return;
+        if (navigator.vibrate) navigator.vibrate(12);
+        b.classList.add('enviando');
+        ws.send(JSON.stringify({ type: 'cena', andar: andar, zona: z.id, id: c.id }));
+      };
+      // Artes enviadas podem ser apagadas (toque 2x no "apagar").
+      if (c.enviada) {
+        var x = document.createElement('span'); x.className = 'apagar-arte'; x.textContent = 'apagar';
+        x.onclick = function (ev) {
+          ev.stopPropagation();
+          if (!x.dataset.ok) { x.dataset.ok = '1'; x.textContent = 'toque de novo'; setTimeout(function () { delete x.dataset.ok; x.textContent = 'apagar'; }, 3000); return; }
+          fetch(SERVIDOR + 'api/arte-tv/' + encodeURIComponent(c.id), { method: 'DELETE' });
+        };
+        b.appendChild(x);
+      }
+      $('cenas').appendChild(b);
+    });
+    marcarCena();
+    tocarPrevias();
+  }
+
+  // ---------- subir arte para as TVs ----------
+  $('subir-bt').onclick = function () {
+    var f = $('subir-arquivo').files[0];
+    if (!f) { $('subir-msg').textContent = 'Escolha uma imagem ou vídeo primeiro.'; return; }
+    var nome = $('subir-nome').value.trim() || f.name.replace(/\.[^.]+$/, '');
+    $('subir-bt').disabled = true;
+    $('subir-msg').textContent = 'Enviando e preparando para as TVs…';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', SERVIDOR + 'api/arte-tv?arquivo=' + encodeURIComponent(f.name) + '&nome=' + encodeURIComponent(nome));
+    xhr.upload.onprogress = function (e) { if (e.lengthComputable) $('subir-msg').textContent = 'Enviando… ' + Math.round(e.loaded / e.total * 100) + '%'; };
+    xhr.onload = function () {
+      $('subir-bt').disabled = false;
+      var r = {}; try { r = JSON.parse(xhr.responseText); } catch (e) {}
+      if (xhr.status === 200) {
+        $('subir-msg').textContent = '"' + nome + '" pronta! Toque nela na lista para colocar no ar.';
+        $('subir-arquivo').value = ''; $('subir-nome').value = '';
+        montadas = ''; carregar('cenas-tv.json', 'tvs');
+      } else $('subir-msg').textContent = r.error || 'Não deu certo o envio.';
+    };
+    xhr.onerror = function () { $('subir-bt').disabled = false; $('subir-msg').textContent = 'Falha de conexão no envio.'; };
+    xhr.send(f);
+  };
+
+  // Só dá para dar play depois que os vídeos estão na página; alguns celulares
+  // ainda exigem um primeiro toque, e ao voltar para a aba o navegador pausa tudo.
+  function tocarPrevias() {
+    var vs = document.querySelectorAll('.cena video');
+    for (var i = 0; i < vs.length; i++) if (vs[i].paused) vs[i].play().catch(function () {});
+  }
+  document.addEventListener('touchstart', tocarPrevias, { passive: true });
+  document.addEventListener('click', tocarPrevias);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) tocarPrevias(); });
+
+  function marcarCena() {
+    var bs = document.querySelectorAll('.cena');
+    for (var i = 0; i < bs.length; i++) {
+      bs[i].classList.toggle('on', bs[i].dataset.id === comum('cena'));
+      bs[i].classList.remove('enviando');
+    }
+  }
+
+  // ---------- logo + cor ----------
+  // Paleta CLUBE (02. Paleta) + preto/branco.
+  // '#ffc465' = Filamento (mesmo tom quente das fitas), para deixar telas e fitas iguais.
+  var CORES = ['#000000', '#ffffff', '#ffc465', '#707070', '#e1e2e3', '#ff0000', '#ff3308',
+               '#ff7452', '#007000', '#00b000', '#00c44a', '#006faf', '#00a0e6'];
+  var CORES_LOGO = { branco: '#ffffff', preto: '#000000',
+    metal: 'linear-gradient(90deg,#6f6f6f,#ffffff,#9d9d9d,#cfd0d1,#8a8a8a,#e1e2e3,#6f6f6f)' };
+  var escolha = { fundo: '#000000', logo: 'branco', marca: 'clube' };
+
+  // Logo branco some em fundo claro: sugere preto nesses casos (só se a pessoa não escolheu).
+  function claro(hex) {
+    var n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 170;
+  }
+
+  var trilho = document.querySelector('#logo-prev .trilho');
+  for (var k = 0; k < 6; k++) { var lg = document.createElement('div'); lg.className = 'lg'; lg.innerHTML = '<i></i>'; trilho.appendChild(lg); }
+
+  function pintarPrevia() {
+    $('logo-prev').style.background = escolha.fundo;
+    var is = trilho.querySelectorAll('i');
+    for (var i = 0; i < is.length; i++) is[i].style.background = CORES_LOGO[escolha.logo];
+    var cs = document.querySelectorAll('.cor[data-cor]');
+    for (var j = 0; j < cs.length; j++) cs[j].classList.toggle('on', cs[j].dataset.cor === escolha.fundo);
+    var bs = document.querySelectorAll('#seg-logo button');
+    for (var b = 0; b < bs.length; b++) bs[b].classList.toggle('on', bs[b].dataset.logo === escolha.logo);
+    var ms = document.querySelectorAll('#seg-marca button');
+    for (var n = 0; n < ms.length; n++) ms[n].classList.toggle('on', ms[n].dataset.marca === escolha.marca);
+    $('logo-prev').classList.toggle('noalto', escolha.marca === 'noalto');
+  }
+
+  function aplicarLogo() {
+    pintarPrevia();
+    if (navigator.vibrate) navigator.vibrate(12);
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'logo', andar: andar, zona: zonaSel, fundo: escolha.fundo, logo: escolha.logo, marca: escolha.marca }));
+  }
+
+  function aplicarEstadoLogo() {
+    var lc = comum('logoCor');
+    if (lc) { escolha.fundo = lc.fundo; escolha.logo = lc.logo; escolha.marca = lc.marca || 'clube'; }
+    pintarPrevia();
+    $('logo-box').classList.toggle('on', comum('cena') === 'logo-cor');
+  }
+
+  CORES.forEach(function (hex) {
+    var b = document.createElement('button');
+    b.className = 'cor'; b.dataset.cor = hex; b.style.background = hex; b.setAttribute('aria-label', 'Fundo ' + hex);
+    b.onclick = function () {
+      var trocouLogo = escolha.fundo !== hex && ((claro(hex) && escolha.logo === 'branco') || (!claro(hex) && escolha.logo === 'preto'));
+      escolha.fundo = hex;
+      if (trocouLogo) escolha.logo = claro(hex) ? 'preto' : 'branco';
+      aplicarLogo();
+    };
+    $('cores').appendChild(b);
+  });
+  var custom = document.createElement('label');
+  custom.className = 'cor custom'; custom.setAttribute('aria-label', 'Outra cor');
+  custom.innerHTML = '<input type="color" value="#ff00aa">';
+  custom.querySelector('input').addEventListener('change', function (e) { escolha.fundo = e.target.value.toLowerCase(); aplicarLogo(); });
+  $('cores').appendChild(custom);
+
+  Array.prototype.forEach.call(document.querySelectorAll('#seg-logo button'), function (b) {
+    b.onclick = function () { escolha.logo = b.dataset.logo; aplicarLogo(); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#seg-marca button'), function (b) {
+    b.onclick = function () { escolha.marca = b.dataset.marca; aplicarLogo(); };
+  });
+  pintarPrevia();
+
+  // ---------- brilho ----------
+  // Os controles dependem do andar (1º: painel, TVs, balcão · 5º: painel, projetores, balcão).
+  var fadersMontados = '';
+  function montarFaders() {
+    // Só o brilho do aparelho selecionado; fitas usam o dimmer do próprio cartão.
+    var za = zonaAtual();
+    var grupos = za && !ehFita() ? [za.grupo] : [];
+    $('brilho-box').style.display = grupos.length ? '' : 'none';
+    var chave = andar + ':' + grupos.join(',');
+    if (chave === fadersMontados) return atualizarFaders();
+    fadersMontados = chave;
+    $('faders').innerHTML = '';
+    grupos.forEach(function (g) { criarFader({ grupo: g, nome: NOMES_FADER[g] || g }); });
+    atualizarFaders();
+  }
+
+  function criarFader(f) {
+    var box = document.createElement('div'); box.className = 'fader' + (f.grupo === 'master' ? ' master' : '');
+    box.innerHTML = '<label for="r-' + f.grupo + '">' + f.nome + ' <span id="v-' + f.grupo + '">100%</span></label>' +
+      '<input type="range" min="0" max="100" step="1" value="100" id="r-' + f.grupo + '">';
+    $('faders').appendChild(box);
+    var r = box.querySelector('input');
+    var ultimo = 0, pendente = null;
+    var andarDoFader = andar;
+    function enviar() {
+      pendente = null; ultimo = Date.now();
+      if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'brilho', andar: andarDoFader, grupo: f.grupo, valor: +r.value }));
+    }
+    r.addEventListener('input', function () {
+      pintar(f.grupo, +r.value);
+      // no máximo ~12 envios por segundo enquanto arrasta
+      var espera = 80 - (Date.now() - ultimo);
+      clearTimeout(pendente);
+      if (espera <= 0) enviar(); else pendente = setTimeout(enviar, espera);
+    });
+    var soltar = function () { arrastando[f.grupo] = false; clearTimeout(pendente); enviar(); };
+    r.addEventListener('pointerdown', function () { arrastando[f.grupo] = true; });
+    r.addEventListener('pointerup', soltar);
+    r.addEventListener('pointercancel', soltar);
+    r.addEventListener('change', soltar);
+  }
+
+  function pintar(grupo, v) {
+    if (!$('v-' + grupo)) return;
+    $('v-' + grupo).textContent = v + '%';
+    $('r-' + grupo).style.setProperty('--p', v + '%');
+  }
+
+  function atualizarFaders() {
+    var brilho = doAndar().brilho || {};
+    Object.keys(brilho).forEach(function (g) {
+      var v = brilho[g];
+      if (v === undefined || arrastando[g] || !$('r-' + g)) return;
+      $('r-' + g).value = v; pintar(g, v);
+    });
+  }
+
+  // ---------- fitas de LED (bancadas e barras) ----------
+  var fitasStatus = [];
+  var cartoes = {}; // id → { el, cv, ctx }
+
+  // Cores fixas: tons de lâmpada de filamento primeiro, depois a paleta da marca.
+  var CORES_FITAS = [
+    { hex: '#ffc465', nome: 'Filamento' }, { hex: '#ffaf32', nome: 'Âmbar' }, { hex: '#ffd6a1', nome: 'Branco quente' },
+    { hex: '#ffffff' }, { hex: '#ff0000' }, { hex: '#ff3308' }, { hex: '#00b000' }, { hex: '#00c44a' },
+    { hex: '#006faf' }, { hex: '#00a0e6' }, { hex: '#9d9d9d' }
+  ];
+  CORES_FITAS.forEach(function (c) {
+    var b = document.createElement('button');
+    b.className = 'cor'; b.dataset.cor = c.hex; b.style.background = c.hex;
+    b.setAttribute('aria-label', c.nome || ('Cor ' + c.hex));
+    if (c.nome) b.innerHTML = '<span class="nome-cor">' + c.nome + '</span>';
+    b.onclick = function () { enviarCorFitas(c.hex); };
+    $('cores-fitas').appendChild(b);
+  });
+  var customFitas = document.createElement('label');
+  customFitas.className = 'cor custom'; customFitas.setAttribute('aria-label', 'Outra cor');
+  customFitas.innerHTML = '<input type="color" value="#ffc465">';
+  customFitas.querySelector('input').addEventListener('change', function (e) { enviarCorFitas(e.target.value.toLowerCase()); });
+  $('cores-fitas').appendChild(customFitas);
+
+  function enviarCorFitas(hex) {
+    if (!ws || ws.readyState !== 1) return;
+    if (navigator.vibrate) navigator.vibrate(12);
+    ws.send(JSON.stringify({ type: 'balcao-cor', andar: andar, zona: zonaSel, cor: hex }));
+  }
+
+  function cartao(s) {
+    if (cartoes[s.id]) return cartoes[s.id];
+    var el = document.createElement('div');
+    el.className = 'fita' + (s.vertical ? ' vertical' : '');
+    el.innerHTML = '<div class="rotulo">' + esc(s.nome) + '</div><canvas></canvas>' +
+      '<label class="dimmer"><span>Dimmer</span> <b class="dim-valor">—</b></label>' +
+      '<input type="range" class="dim" min="0" max="100" step="1" value="100" aria-label="Dimmer ' + esc(s.nome) + '">' +
+      '<div class="info"></div>' +
+      '<div class="seg"><button class="bt-saida">Saída desligada</button><button class="bt-teste">Teste de direção</button></div>';
+    var c = { el: el, cv: el.querySelector('canvas'), dim: el.querySelector('.dim'), arrastando: false };
+    c.ctx = c.cv.getContext('2d');
+    // Dimmer = fader de brilho do grupo desta fita (o mesmo da seção Brilho).
+    // 100% no dimmer = limite de segurança da fonte (60%).
+    var ultimoEnvio = 0, pendente = null;
+    function enviarDim() {
+      pendente = null; ultimoEnvio = Date.now();
+      if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'brilho', andar: s.andar, grupo: s.grupo, valor: +c.dim.value }));
+    }
+    c.dim.addEventListener('input', function () {
+      pintarDim(c, s, +c.dim.value);
+      clearTimeout(pendente);
+      var espera = 80 - (Date.now() - ultimoEnvio);
+      if (espera <= 0) enviarDim(); else pendente = setTimeout(enviarDim, espera);
+    });
+    c.dim.addEventListener('pointerdown', function () { c.arrastando = true; });
+    ['pointerup', 'pointercancel', 'change'].forEach(function (ev) {
+      c.dim.addEventListener(ev, function () { c.arrastando = false; clearTimeout(pendente); enviarDim(); });
+    });
+    el.querySelector('.bt-saida').onclick = function () {
+      var st = fitasStatus.filter(function (x) { return x.id === s.id; })[0];
+      if (!st || !ws || ws.readyState !== 1) return;
+      // Confirmação na própria página (tocar 2x): alguns navegadores bloqueiam confirm().
+      var bt = el.querySelector('.bt-saida');
+      if (!bt.dataset.confirmar) {
+        bt.dataset.confirmar = '1';
+        bt.textContent = st.saida ? 'Toque de novo p/ DESLIGAR' : 'Toque de novo p/ LIGAR';
+        setTimeout(function () { delete bt.dataset.confirmar; mostrarBalcao(); }, 3000);
+        return;
+      }
+      delete bt.dataset.confirmar;
+      ws.send(JSON.stringify({ type: 'balcao-saida', id: s.id, ligada: !st.saida }));
+    };
+    el.querySelector('.bt-teste').onclick = function () {
+      var st = fitasStatus.filter(function (x) { return x.id === s.id; })[0];
+      if (!st || !ws || ws.readyState !== 1) return;
+      ws.send(JSON.stringify({ type: 'balcao-teste', id: s.id, ligado: !st.teste }));
+    };
+    $('fitas').appendChild(el);
+    cartoes[s.id] = c;
+    return c;
+  }
+
+  function pintarDim(c, s, v) {
+    var lim = s.limite != null ? s.limite : 1;
+    c.el.querySelector('.dim-valor').textContent = lim < 1
+      ? v + '%  ·  ' + Math.round(v * lim) + '% real (máx. ' + Math.round(lim * 100) + '%)'
+      : v + '%';
+    c.dim.style.setProperty('--p', v + '%');
+  }
+
+  function desenharFita(m) {
+    var c = cartoes[m.id]; if (!c) return;
+    if (c.cv.width !== m.colunas || c.cv.height !== m.linhas) { c.cv.width = m.colunas; c.cv.height = m.linhas; }
+    var bin = atob(m.px), img = c.ctx.createImageData(m.colunas, m.linhas);
+    for (var i = 0, j = 0; i < bin.length; i += 3, j += 4) {
+      img.data[j] = bin.charCodeAt(i); img.data[j + 1] = bin.charCodeAt(i + 1); img.data[j + 2] = bin.charCodeAt(i + 2); img.data[j + 3] = 255;
+    }
+    c.ctx.putImageData(img, 0, 0);
+  }
+
+  function mostrarBalcao() {
+    fitasStatus.forEach(function (s) {
+      var c = cartao(s);
+      // Mostra só o cartão da fita escolhida.
+      var visivel = s.andar === andar && zonaSel === 'fita:' + s.id;
+      c.el.style.display = visivel ? '' : 'none';
+      var ctrl = Object.keys(s.controladoras).map(function (ip) {
+        return '.' + ip.split('.').pop() + ' ' + (s.controladoras[ip] ? '<span class="st-on">respondendo</span>' : '<span class="st-off">sem resposta</span>');
+      }).join(' · ');
+      c.el.querySelector('.info').innerHTML = 'Controladora ' + ctrl;
+      var b = estado.andares[s.andar] && estado.andares[s.andar].brilho;
+      if (b && b[s.grupo] !== undefined && !c.arrastando) { c.dim.value = b[s.grupo]; pintarDim(c, s, b[s.grupo]); }
+      var bs = c.el.querySelector('.bt-saida'), bt = c.el.querySelector('.bt-teste');
+      bs.textContent = s.saida ? 'Saída LIGADA' : 'Saída desligada'; bs.classList.toggle('on', s.saida);
+      bt.textContent = s.teste ? 'Parar teste' : 'Teste de direção'; bt.classList.toggle('on', s.teste);
+    });
+    var algumaFita = alvos().some(function (z) { return z.id.indexOf('fita:') === 0; });
+    $('fitas-box').style.display = algumaFita ? '' : 'none';
+    var fitasAlvo = alvos().filter(function (z) { return z.id.indexOf('fita:') === 0; });
+    var corAtiva = fitasAlvo.length && fitasAlvo.every(function (z) { return z.cor && z.cor === fitasAlvo[0].cor; }) ? fitasAlvo[0].cor : null;
+    $('cor-fitas').classList.toggle('on', !!corAtiva);
+    var cs = document.querySelectorAll('#cores-fitas .cor[data-cor]');
+    for (var i = 0; i < cs.length; i++) cs[i].classList.toggle('on', cs[i].dataset.cor === corAtiva);
+  }
+
+  // Prévia só enquanto a página está visível (economiza bateria e rede).
+  function pedirPrevia() {
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'balcao-previa', ligado: !document.hidden }));
+  }
+  document.addEventListener('visibilitychange', pedirPrevia);
+
+  // ---------- telas ----------
+  var NOMES_GRUPO = { led: 'Painel LED', telas: 'TV', balcao: 'Balcão', painel: 'Painel LED', projetores: 'Projetores' };
+  function mostrarTelas(todas) {
+    ultimasTelas = todas;
+    // Só as telas do aparelho selecionado (ex.: as 5 TVs); para fitas, some.
+    var za = zonaAtual();
+    $('telas-box').style.display = za && !ehFita() ? '' : 'none';
+    var ids = (za && za.telas) || [];
+    var tvs = todas.filter(function (t) { return ids.indexOf(t.id) >= 0; });
+    if (!tvs.length) { $('telas').textContent = 'Nenhuma tela conectada neste andar ainda.'; return; }
+    $('telas').innerHTML = tvs.map(function (t) {
+      return '<b>' + esc(t.name) + '</b> · ' + (NOMES_GRUPO[t.grupo] || t.grupo) + ' · ' +
+        (t.online ? '<span class="st-on">online</span>' : '<span class="st-off">offline</span>');
+    }).join('<br>');
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // ---------- conexão ----------
+  var versaoServidor = null;
+  function conectar() {
+    ws = new WebSocket(SERVIDOR.replace(/^http/, 'ws') + 'ws');
+    ws.onopen = function () {
+      retry = 1000; $('dot').classList.add('on'); $('st-txt').textContent = 'Conectado';
+      ws.send(JSON.stringify({ type: 'hello-panel' }));
+      pedirPrevia();
+    };
+    ws.onmessage = function (e) {
+      // Um erro ao desenhar uma parte da tela não pode derrubar o resto do controle.
+      try {
+        var m = JSON.parse(e.data);
+        if (m.type === 'versao') {
+          // Servidor reiniciou com versão nova → recarrega para não ficar com página velha.
+          if (versaoServidor && versaoServidor !== m.v) location.reload();
+          versaoServidor = m.v;
+        }
+        else if (m.type === 'estado') {
+          estado = m; desenharZonas(); montarCenas(); montarFaders(); marcarCena(); aplicarEstadoLogo();
+          fitasStatus = m.balcao || []; mostrarBalcao();
+        }
+        else if (m.type === 'balcao-previa') { if (m.andar === andar) desenharFita(m); }
+        else if (m.type === 'tvs') mostrarTelas(m.tvs);
+        else if (m.type === 'cenas-mudaram') { carregar('cenas-tv.json', 'tvs'); }
+      } catch (err) { console.error('controle:', err); }
+    };
+    ws.onclose = function () {
+      $('dot').classList.remove('on'); $('st-txt').textContent = 'Reconectando…';
+      setTimeout(conectar, retry); retry = Math.min(retry * 2, 10000);
+    };
+    ws.onerror = function () { try { ws.close(); } catch (e) {} };
+  }
+  trocarAndar(andar);
+  if (!/^https?:$/.test(location.protocol)) {
+    // Prévia de arquivo do navegador do app: ele bloqueia rede aqui, então não há como controlar.
+    $('st-txt').innerHTML = '<a href="http://localhost:8080/celular" style="color:#ffd54f">Prévia — abrir o controle</a>';
+    var aviso = document.createElement('div');
+    aviso.style.cssText = 'background:#3a2a00;border:2px solid #ffd54f;color:#ffd54f;border-radius:12px;padding:12px;margin:0 0 12px;font-weight:700';
+    aviso.innerHTML = 'Esta é só uma prévia do arquivo e não controla nada. Use o endereço <a href="http://localhost:8080/celular" style="color:#fff">http://localhost:8080/celular</a> (no celular: http://192.168.1.21:8080/celular).';
+    document.body.insertBefore(aviso, document.body.firstChild.nextSibling);
+    return;
+  }
+  conectar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Universo CLUBE</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { position: fixed; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+  #hud { position: fixed; right: 12px; top: 12px; max-width: 42%; color: #f4f4f4; font: 12px/1.5 system-ui, sans-serif; white-space: pre-wrap;
+         background: rgba(0, 0, 0, .55); padding: 8px 10px; border-radius: 6px; pointer-events: none; }
+  body.saida #hud { display: none; }
+  body.saida { overflow: visible; }
+</style>
+</head>
+<body>
+<canvas id="tela"></canvas>
+<div id="hud">Carregando…</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

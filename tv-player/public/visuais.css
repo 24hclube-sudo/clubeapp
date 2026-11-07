@@ -1,0 +1,48 @@
+/* Visuais do LED da pista (visuais-app.js) */
+#visuais-cartao { margin-bottom: 12px; }
+.vis-cartao { cursor: pointer; }
+.vis-cartao .sub { color: var(--muted); }
+.vis-previa { height: 64px; }
+.vis-previa img { image-rendering: auto; }
+#visuais { min-width: 0; }
+.vis-topo { display: flex; align-items: center; gap: 12px; }
+.vis-topo .t { flex: 1; min-width: 0; }
+.vis-topo .t b { display: block; font-size: 17px; }
+.vis-topo .t small { display: block; color: var(--muted); margin-top: 2px; }
+.vis-ajustes > div + div { margin-top: 10px; }
+.vis-tom-pe { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.vis-tom-pe small { flex: 1; min-width: 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.vis-tom-pe button:disabled { opacity: .4; }
+.vis-grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.vis-item { display: block; width: 100%; text-align: left; color: var(--ink); background: var(--s1); border-radius: var(--r); padding: 8px 8px 12px; transition: box-shadow .2s; }
+.vis-item:active { transform: scale(.985); }
+.vis-item b { display: block; margin: 10px 6px 2px; font-size: 15px; }
+.vis-item small { display: block; margin: 0 6px; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.vis-img { display: block; position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: #000; }
+.vis-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.vis-img em { position: absolute; left: 8px; top: 8px; font-style: normal; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--ink); color: #000; }
+.vis-img em:empty { display: none; }
+.vis-item.on { box-shadow: 0 0 0 2px var(--ink); }
+.vis-item.troca .vis-img img { opacity: .55; }
+.vis-item.confirmar .vis-img em { background: var(--warn); }
+.vis-controles > .t b, .vis-controles > .t small { display: block; }
+.vis-controles > .t small, .vis-linha .t small { color: var(--muted); margin-top: 2px; font-size: 12px; line-height: 1.35; }
+.vis-linha { display: flex; align-items: center; gap: 12px; min-height: 48px; }
+.vis-controles > .vis-linha:not(:first-child) { margin-top: 10px; }
+.vis-linha .t { flex: 1; min-width: 0; }
+.vis-linha .t b, .vis-linha .t small { display: block; }
+.vis-rotulo { display: block; margin: 12px 0 6px; color: var(--muted); font-size: 12px; }
+.vis-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.vis-chips button { min-height: 40px; padding: 0 14px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px; background: rgba(255, 255, 255, .06); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; }
+.vis-chips button.on { background: #fff; color: #000; border-color: #fff; }
+.vis-flash .t { display: block; }
+.vis-flash .t b, .vis-flash .t small { display: block; }
+.vis-flash-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.vis-flash-grade button { min-height: 58px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 12px; background: rgba(255, 255, 255, .06); color: var(--ink); font: inherit; font-weight: 700; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.vis-flash-grade button.on { background: #fff; color: #000; border-color: #fff; }
+.vis-flash-grade .strobo { grid-column: 1 / -1; min-height: 72px; border-color: rgba(255, 255, 255, .55); }
+@media (min-width: 980px) {
+  body.em-visuais #detalhe { display: none !important; }
+  #visuais { max-width: 900px; }
+  .vis-grade { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+}

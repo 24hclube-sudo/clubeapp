@@ -1,0 +1,113 @@
+{
+ "tamanho": 1024,
+ "camadas": [
+  {
+   "nome": "bombinha",
+   "largura": 0.9854,
+   "altura": 0.9746,
+   "tipo": "pq"
+  },
+  {
+   "nome": "fogo",
+   "largura": 0.7852,
+   "altura": 0.9854,
+   "tipo": "pq"
+  },
+  {
+   "nome": "gelinho",
+   "largura": 0.9854,
+   "altura": 0.6133,
+   "tipo": "pq"
+  },
+  {
+   "nome": "nuvem",
+   "largura": 0.9854,
+   "altura": 0.7598,
+   "tipo": "pq"
+  },
+  {
+   "nome": "suado1",
+   "largura": 0.7969,
+   "altura": 0.9854,
+   "tipo": "pq"
+  },
+  {
+   "nome": "suado2",
+   "largura": 0.6963,
+   "altura": 0.9854,
+   "tipo": "pq"
+  },
+  {
+   "nome": "titulo",
+   "largura": 0.9854,
+   "altura": 0.3545,
+   "tipo": "pq"
+  },
+  {
+   "nome": "fig-a",
+   "largura": 0.8145,
+   "altura": 0.9854,
+   "tipo": "figura"
+  },
+  {
+   "nome": "fig-b",
+   "largura": 0.8271,
+   "altura": 0.9854,
+   "tipo": "figura"
+  },
+  {
+   "nome": "fig-d",
+   "largura": 0.6104,
+   "altura": 0.9854,
+   "tipo": "figura"
+  },
+  {
+   "nome": "fig-f",
+   "largura": 0.6504,
+   "altura": 0.9854,
+   "tipo": "figura"
+  },
+  {
+   "nome": "fig-h",
+   "largura": 0.6611,
+   "altura": 0.9854,
+   "tipo": "figura"
+  },
+  {
+   "nome": "fig-j",
+   "largura": 0.7139,
+   "altura": 0.9854,
+   "tipo": "figura"
+  },
+  {
+   "nome": "clube",
+   "largura": 0.9854,
+   "altura": 0.2412,
+   "tipo": "texto"
+  },
+  {
+   "nome": "millos",
+   "largura": 0.9854,
+   "altura": 0.5986,
+   "tipo": "texto"
+  },
+  {
+   "nome": "soft",
+   "largura": 0.9854,
+   "altura": 0.2158,
+   "tipo": "texto"
+  },
+  {
+   "nome": "data",
+   "largura": 0.9854,
+   "altura": 0.2969,
+   "tipo": "texto"
+  },
+  {
+   "nome": "rotulo",
+   "largura": 1.0,
+   "altura": 1.0,
+   "tipo": "texto"
+  }
+ ]
+}

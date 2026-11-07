@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>TV Player</title>
+<script src="$WEBAPIS/webapis/webapis.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: sans-serif; }
+  /* (sem "inset": o navegador das TVs Tizen 6 não entende) */
+  iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+  #cfg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 24px; color: #ddd; font-size: 32px; }
+  #cfg.on { display: flex; }
+  #cfg input { font-size: 40px; padding: 10px 16px; width: 520px; text-align: center; }
+  #cfg small { color: #888; font-size: 24px; }
+</style>
+</head>
+<body>
+<iframe id="player" allow="autoplay; fullscreen"></iframe>
+<div id="cfg">
+  <div>Endereço do servidor</div>
+  <input id="host" type="text">
+  <small>Digite o IP:porta do PC com o painel e pressione OK. Segure VOLTAR por 3 s para abrir esta tela de novo.</small>
+</div>
+<script>
+// Carrega o player hospedado no servidor dentro de um iframe.
+// Esta página local só cuida do que precisa das APIs da TV: ID único, protetor de tela, teclas.
+(function () {
+  var DEFAULT_HOST = '192.168.1.21:8080';
+  function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var host = get('server') || DEFAULT_HOST;
+  var id = '', model = '';
+  try { id = webapis.productinfo.getDuid(); } catch (e) {}
+  try { model = webapis.productinfo.getRealModel(); } catch (e) {}
+  if (!id) { id = get('tvp-id') || ('tv-' + Math.random().toString(36).slice(2, 10)); set('tvp-id', id); }
+
+  // Mantém a tela sempre ligada (sem protetor de tela)
+  try { webapis.appcommon.setScreenSaver(webapis.appcommon.AppCommonScreenSaverState.SCREEN_SAVER_OFF); } catch (e) {}
+
+  var frame = document.getElementById('player');
+  function load() {
+    frame.src = 'http://' + host + '/player.html?app=1&id=' + encodeURIComponent(id) + '&model=' + encodeURIComponent(model);
+  }
+  // Se a TV girar (em pé ↔ deitada), recarrega o player para ele se ajustar ao novo tamanho.
+  var ultimaForma = window.innerWidth > window.innerHeight;
+  function aoGirar() {
+    var forma = window.innerWidth > window.innerHeight;
+    if (forma !== ultimaForma) { ultimaForma = forma; if (frame.src) load(); }
+  }
+  window.addEventListener('resize', aoGirar);
+  try { screen.orientation.addEventListener('change', aoGirar); } catch (e) {}
+
+  // Tela de configuração do servidor
+  var cfg = document.getElementById('cfg'), input = document.getElementById('host');
+  function openCfg() { input.value = host; cfg.classList.add('on'); input.focus(); }
+  input.addEventListener('keydown', function (e) {
+    if (e.keyCode === 13) { host = input.value.trim() || DEFAULT_HOST; set('server', host); cfg.classList.remove('on'); load(); }
+  });
+
+  try { tizen.tvinputdevice.registerKey('Exit'); } catch (e) {}
+  var backDown = 0;
+  document.addEventListener('keydown', function (e) {
+    if (e.keyCode === 10009) { // VOLTAR
+      if (cfg.classList.contains('on')) { cfg.classList.remove('on'); return; }
+      if (!backDown) backDown = Date.now();
+      else if (Date.now() - backDown > 3000) { backDown = 0; openCfg(); }
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('keyup', function (e) { if (e.keyCode === 10009) backDown = 0; });
+
+  // Só carrega o player quando o servidor responder (a TV pode ligar antes do PC).
+  // Depois de carregado, o próprio player reconecta sozinho.
+  function waitServer() {
+    var x = new XMLHttpRequest();
+    x.open('GET', 'http://' + host + '/api/media');
+    x.timeout = 4000;
+    x.onload = function () { load(); };
+    x.onerror = x.ontimeout = function () { setTimeout(waitServer, 5000); };
+    x.send();
+  }
+  waitServer();
+})();
+</script>
+</body>
+</html>

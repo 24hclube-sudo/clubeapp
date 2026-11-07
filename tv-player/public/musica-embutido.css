@@ -1,0 +1,20 @@
+/* A interface da rádio dentro do app: mesmo fundo e a navegação principal é a do app, embaixo.
+   No celular, Início, Programação e Buscar sobem para o topo, como as abas dos aparelhos. */
+:root { --fundo: #0b0c0e; --painel: #0b0c0e; --painel-alto: #15171b; --linha: rgba(255, 255, 255, .07); }
+
+@media (max-width: 860px) {
+  .app { grid-template-rows: auto minmax(0, 1fr) auto; }
+  .principal { background: var(--fundo); padding-top: 0; }
+  .pagina { padding-top: 12px; }
+  .abas {
+    order: -1; display: flex; gap: 6px; height: auto;
+    padding: 2px 16px 8px; border-top: 0; background: var(--fundo);
+  }
+  .abas a {
+    flex: none; flex-direction: row; padding: 9px 16px; border-radius: 999px;
+    background: #15171b; color: #8d939c; font-size: 14px; font-weight: 700;
+  }
+  .abas a svg { display: none; }
+  .abas a[aria-current="page"] { background: #f3f4f6; color: #000; }
+  .barra { margin-bottom: 8px; }
+}

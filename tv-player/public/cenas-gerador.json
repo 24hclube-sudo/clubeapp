@@ -1,0 +1,18 @@
+[
+  { "id": "g-grade", "nome": "Grade viva", "shader": "grade", "categoria": "calma", "paleta": "vermelho", "thumb": "cenas/gp-g-grade.png", "preview": "cenas/gp-g-grade.mp4" },
+  { "id": "g-mare", "nome": "Maré", "shader": "mare", "categoria": "calma", "paleta": "azul", "thumb": "cenas/gp-g-mare.png", "preview": "cenas/gp-g-mare.mp4" },
+  { "id": "g-constelacao", "nome": "Constelação", "shader": "constelacao", "categoria": "calma", "paleta": "prata", "thumb": "cenas/gp-g-constelacao.png", "preview": "cenas/gp-g-constelacao.mp4" },
+  { "id": "g-cromo", "nome": "Cromo", "shader": "cromo", "categoria": "normal", "paleta": "prata", "thumb": "cenas/gp-g-cromo.png", "preview": "cenas/gp-g-cromo.mp4" },
+  { "id": "g-faixas", "nome": "Faixas", "shader": "faixas", "categoria": "normal", "paleta": "vermelho", "thumb": "cenas/gp-g-faixas.png", "preview": "cenas/gp-g-faixas.mp4" },
+  { "id": "g-clube", "nome": "CLUBE passando", "shader": "clube", "categoria": "normal", "paleta": "vermelho", "thumb": "cenas/gp-g-clube.png", "preview": "cenas/gp-g-clube.mp4" },
+  { "id": "g-pulso", "nome": "Pulso", "shader": "pulso", "categoria": "pista", "paleta": "vermelho", "thumb": "cenas/gp-g-pulso.png", "preview": "cenas/gp-g-pulso.mp4" },
+  { "id": "g-scanner", "nome": "Scanner", "shader": "scanner", "categoria": "pista", "paleta": "azul", "thumb": "cenas/gp-g-scanner.png", "preview": "cenas/gp-g-scanner.mp4" },
+  { "id": "g-aneis", "nome": "Anéis", "shader": "aneis", "categoria": "pista", "paleta": "verde", "thumb": "cenas/gp-g-aneis.png", "preview": "cenas/gp-g-aneis.mp4" },
+  { "id": "g-flash", "nome": "Flash", "shader": "flash", "categoria": "pista", "paleta": "vermelho", "thumb": "cenas/gp-g-flash.png", "preview": "cenas/gp-g-flash.mp4" },
+  { "id": "g-espectro", "nome": "Espectro", "shader": "espectro", "categoria": "audio", "paleta": "vermelho", "thumb": "cenas/gp-g-espectro.png", "preview": "cenas/gp-g-espectro.mp4" },
+  { "id": "g-onda", "nome": "Onda do som", "shader": "onda", "categoria": "audio", "paleta": "azul", "thumb": "cenas/gp-g-onda.png", "preview": "cenas/gp-g-onda.mp4" },
+  { "id": "g-bumbo", "nome": "Bumbo", "shader": "bumbo", "categoria": "audio", "paleta": "vermelho", "thumb": "cenas/gp-g-bumbo.png", "preview": "cenas/gp-g-bumbo.mp4" },
+  { "id": "g-teste-painel", "nome": "Teste do painel", "especial": "teste-painel", "categoria": "normal" },
+  { "id": "g-teste-saida", "nome": "Teste de mapa (saída)", "especial": "teste-saida", "categoria": "normal" },
+  { "id": "apagar", "nome": "Apagar", "apagar": true }
+]

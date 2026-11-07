@@ -1,0 +1,144 @@
+[
+  {
+    "id": "tv-par",
+    "nome": "CLUBE e NO ALTO (um por TV)",
+    "porTela": [
+      "tv-arte-clube.jpg",
+      "tv-arte-noalto.jpg"
+    ],
+    "thumb": "cenas/tvp-par.png",
+    "foraDaRegra": "logo sobre preto: a peça ocupa a tela de propósito"
+  },
+  {
+    "id": "tv-so-clube",
+    "nome": "Só CLUBE",
+    "imagem": "tv-arte-clube.jpg",
+    "thumb": "cenas/tvp-so-clube.png",
+    "foraDaRegra": "logo sobre preto: a peça ocupa a tela de propósito"
+  },
+  {
+    "id": "tv-so-noalto",
+    "nome": "Só NO ALTO",
+    "imagem": "tv-arte-noalto.jpg",
+    "thumb": "cenas/tvp-so-noalto.png",
+    "foraDaRegra": "logo sobre preto: a peça ocupa a tela de propósito"
+  },
+  {
+    "id": "tv-logos",
+    "nome": "CLUBE + NO ALTO",
+    "imagem": "tv-arte-logos.jpg",
+    "thumb": "cenas/tvp-logos.png",
+    "foraDaRegra": "logo sobre preto: a peça ocupa a tela de propósito"
+  },
+  {
+    "id": "tv-anim-grade-vermelha",
+    "nome": "Grade vermelha",
+    "video": "tv-anim-grade-vermelha.mp4",
+    "thumb": "cenas/tvp-anim-grade-vermelha.png",
+    "preview": "cenas/tvp-anim-grade-vermelha.mp4"
+  },
+  {
+    "id": "tv-anim-grade-azul",
+    "nome": "Grade azul",
+    "video": "tv-anim-grade-azul.mp4",
+    "thumb": "cenas/tvp-anim-grade-azul.png",
+    "preview": "cenas/tvp-anim-grade-azul.mp4"
+  },
+  {
+    "id": "tv-anim-grade-verde",
+    "nome": "Grade verde",
+    "video": "tv-anim-grade-verde.mp4",
+    "thumb": "cenas/tvp-anim-grade-verde.png",
+    "preview": "cenas/tvp-anim-grade-verde.mp4"
+  },
+  {
+    "id": "tv-anim-prata",
+    "nome": "Prata 3D",
+    "video": "tv-anim-prata.mp4",
+    "thumb": "cenas/tvp-anim-prata.png",
+    "preview": "cenas/tvp-anim-prata.mp4"
+  },
+  {
+    "id": "tv-anim-carrossel",
+    "nome": "Carrossel",
+    "video": "tv-anim-carrossel.mp4",
+    "thumb": "cenas/tvp-anim-carrossel.png",
+    "preview": "cenas/tvp-anim-carrossel.mp4"
+  },
+  {
+    "id": "tv-anim-pixel",
+    "nome": "Pixel",
+    "video": "tv-anim-pixel.mp4",
+    "thumb": "cenas/tvp-anim-pixel.png",
+    "preview": "cenas/tvp-anim-pixel.mp4"
+  },
+  {
+    "id": "tv-anim-clube",
+    "nome": "CLUBE",
+    "video": "tv-anim-clube.mp4",
+    "thumb": "cenas/tvp-anim-clube.png",
+    "preview": "cenas/tvp-anim-clube.mp4"
+  },
+  {
+    "id": "tv-anim-cores",
+    "nome": "Uma cor por TV",
+    "porTela": [
+      "tv-anim-grade-vermelha.mp4",
+      "tv-anim-grade-azul.mp4",
+      "tv-anim-grade-verde.mp4",
+      "tv-anim-prata.mp4",
+      "tv-anim-pixel.mp4"
+    ],
+    "thumb": "cenas/tvp-anim-cores.png"
+  },
+  {
+    "id": "tv-teste-giro",
+    "nome": "Teste de giro",
+    "imagem": "tv-teste-giro.png",
+    "thumb": "cenas/tvp-teste-giro.png",
+    "foraDaRegra": "cartão de teste de orientação: é deitado de propósito"
+  },
+  {
+    "id": "arte-1790474679819",
+    "nome": "Logo 3D cromado",
+    "video": "tv-arte-1790474679819.mp4",
+    "thumb": "cenas/arte-1790474679819.png",
+    "enviada": true,
+    "foraDaRegra": "logo sobre preto: a peça ocupa a tela de propósito"
+  },
+  {
+    "id": "tv-fotos-noite",
+    "nome": "Fotos do WhatsApp (slideshow)",
+    "porTela": [
+      "tv-fotos-noite-1.mp4",
+      "tv-fotos-noite-2.mp4",
+      "tv-fotos-noite-3.mp4",
+      "tv-fotos-noite-4.mp4",
+      "tv-fotos-noite-5.mp4"
+    ],
+    "thumb": "cenas/tv-fotos-noite.png"
+  },
+  {
+    "id": "tv-hear-pista",
+    "nome": "HEAR pista (1 min cada)",
+    "video": "tv-hear-pista.mp4",
+    "thumb": "cenas/tv-hear-pista.png"
+  },
+  {
+    "id": "tv-soft-opening",
+    "nome": "Soft opening · Millos Kaiser",
+    "video": "tv-soft-opening.mp4",
+    "thumb": "cenas/tv-soft-opening.png"
+  },
+  {
+    "id": "tv-akin",
+    "nome": "Pista Quente · Akin",
+    "video": "tv-akin.mp4",
+    "thumb": "cenas/tv-akin.png"
+  },
+  {
+    "id": "apagar",
+    "nome": "Apagar",
+    "apagar": true
+  }
+]

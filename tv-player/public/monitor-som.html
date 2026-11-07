@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monitor de som</title>
+<style>
+  :root { --fundo:#0b0b0c; --cartao:#161618; --linha:#2a2a2d; --texto:#f2f2f3; --fraco:#9a9aa1; --marca:#d9dadd; --apagado:#2c2c30; --bom:#3ecf74; --atencao:#e8b339; --parado:#77777e; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--fundo); color:var(--texto); font:15px/1.35 -apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:900px; margin:0 auto; padding:14px 16px 40px; }
+  header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  header a { color:var(--fraco); text-decoration:none; font-size:24px; line-height:1; padding:4px 8px 4px 0; }
+  h1 { font-size:18px; margin:0; font-weight:600; flex:1; white-space:nowrap; }
+  #visual { font-size:13px; color:var(--fraco); text-align:right; }
+  .cartao { background:var(--cartao); border:1px solid var(--linha); border-radius:12px; padding:12px; margin-bottom:12px; }
+  #estado { display:flex; align-items:center; gap:10px; font-size:16px; font-weight:600; }
+  #estado i { flex:none; width:12px; height:12px; border-radius:50%; background:var(--parado); }
+  #estado.musica i { background:var(--bom); }
+  #estado.ruido i { background:var(--atencao); border-radius:2px; transform:rotate(45deg); }
+  #nota { margin:4px 0 0 22px; font-size:13px; color:var(--fraco); }
+  .numeros { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .num b { display:block; font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1.15; }
+  .num span { font-size:12px; color:var(--fraco); }
+  h2 { margin:0 0 8px; font-size:13px; font-weight:600; color:var(--fraco); }
+  canvas { display:block; width:100%; }
+  #espectro { height:190px; touch-action:none; cursor:crosshair; }
+  #dica { min-height:18px; margin-top:4px; font-size:12px; color:var(--fraco); font-variant-numeric:tabular-nums; }
+  #entrada { height:64px; }
+  .faixa { display:grid; grid-template-columns:88px 1fr 40px; gap:10px; align-items:center; padding:9px 0; border-top:1px solid var(--linha); }
+  .faixa:first-of-type { border-top:0; padding-top:0; }
+  .faixa:last-of-type { padding-bottom:0; }
+  .faixa b { display:block; font-size:14px; font-weight:600; }
+  .faixa span { font-size:11px; color:var(--fraco); white-space:nowrap; }
+  .faixa canvas { height:44px; background:#0a0a0b; border-radius:6px; }
+  .faixa output { text-align:right; font-size:14px; font-variant-numeric:tabular-nums; }
+  #fonte { font-size:12px; color:var(--fraco); margin:0 2px; overflow-wrap:anywhere; }
+  @media (max-width:480px) { .numeros { grid-template-columns:repeat(2,1fr); } #espectro { height:150px; } .faixa { grid-template-columns:82px 1fr 30px; } #visual { font-size:11px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <a href="/celular#/visuais" aria-label="Voltar ao app">‹</a>
+    <h1>Monitor de som</h1>
+    <div id="visual"></div>
+  </header>
+
+  <section class="cartao">
+    <div id="estado"><i></i><span>Conectando</span></div>
+    <p id="nota"></p>
+  </section>
+
+  <section class="cartao numeros">
+    <div class="num"><b id="n-db">–</b><span>entrada (dBFS)</span></div>
+    <div class="num"><b id="n-pico">–</b><span>pico (dBFS)</span></div>
+    <div class="num"><b id="n-bpm">–</b><span>BPM</span></div>
+    <div class="num"><b id="n-est">–</b><span>grave nas estrelas</span></div>
+  </section>
+
+  <section class="cartao">
+    <h2>Frequências: nível real de cada faixa, de 30 Hz a 16 kHz</h2>
+    <canvas id="espectro" role="img" aria-label="Espectro do som em 48 faixas"></canvas>
+    <div id="dica">Passe o dedo ou o mouse para ler uma faixa.</div>
+  </section>
+
+  <section class="cartao">
+    <h2>Volume da entrada nos últimos 15 s, com o piso que separa música de ruído</h2>
+    <canvas id="entrada" role="img" aria-label="Volume da entrada nos últimos 15 segundos"></canvas>
+  </section>
+
+  <section class="cartao" id="faixas">
+    <h2>O que os visuais recebem, de 0 a 100</h2>
+  </section>
+
+  <p id="fonte"></p>
+  <p style="margin:12px 2px 0;font-size:14px"><a href="reacoes.html" style="color:inherit">Escolher o que reage a quê</a></p>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const COR = { marca: css('--marca'), apagado: css('--apagado'), fraco: css('--fraco'), linha: css('--linha'), atencao: css('--atencao') };
+const NF = 48, HIST = 300, DB_MIN = -100, DB_MAX = 0;   // 300 pontos a 20 por segundo = 15 s
+const hzDe = b => 30 * Math.pow(16000 / 30, b / NF);
+const virgula = (v, c = 1) => v.toFixed(c).replace('.', ',');
+
+const LINHAS = [
+  { id: 'z', nome: 'Estrelas', sub: 'só com música', ler: p => p.z },
+  { id: 'g', nome: 'Grave', sub: '35–180 Hz', ler: p => p.g },
+  { id: 'm', nome: 'Médio', sub: '200 Hz–2 kHz', ler: p => p.m },
+  { id: 'a', nome: 'Agudo', sub: '2,5–12 kHz', ler: p => p.a },
+].map(l => {
+  const el = document.createElement('div');
+  el.className = 'faixa';
+  el.innerHTML = `<div><b>${l.nome}</b><span>${l.sub}</span></div><canvas></canvas><output>–</output>`;
+  $('faixas').appendChild(el);
+  return { ...l, canvas: el.querySelector('canvas'), saida: el.querySelector('output'), hist: new Float32Array(HIST), golpes: new Uint8Array(HIST) };
+});
+
+const barras = new Float32Array(NF).fill(0), picos = new Float32Array(NF).fill(0);
+const niveis = new Float32Array(HIST).fill(-120);
+let ult = null, tUlt = 0, bumbosAntes = null, marcarGolpe = false, dica = -1, visualNome = '';
+
+function ajustar(c) {
+  const r = c.getBoundingClientRect(), k = Math.min(2, devicePixelRatio || 1);
+  const w = Math.round(r.width * k), h = Math.round(r.height * k);
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  return k;
+}
+const alturaDb = db => Math.max(0, Math.min(1, (db - DB_MIN) / (DB_MAX - DB_MIN)));
+
+function pintarEstado() {
+  const est = $('estado'), nota = $('nota'), span = est.querySelector('span');
+  const p = ult && performance.now() - tUlt < 2500 ? ult : null;
+  let classe = '', titulo, texto;
+  if (!p) { titulo = 'Sem dados'; texto = 'A saída do LED está fechada, ou o visual no ar não publica a análise de som.'; }
+  else if (p.w === undefined) {
+    classe = p.v ? 'musica' : 'ruido';
+    titulo = p.v ? 'Música na entrada' : 'Sem música na entrada';
+    texto = p.v ? 'O visual no ar reage a este som.' : 'O visual no ar segue uma batida interna, que não vem deste som.';
+  } else if (p.w) { classe = 'musica'; titulo = 'Música na entrada'; texto = 'Os visuais estão recebendo o som. A linha Estrelas mostra o que chega ao céu.'; }
+  else if (p.r > -55) { classe = 'ruido'; titulo = 'Só ruído: o que segue o som fica parado'; texto = `Chega sinal, mas abaixo do piso de ${virgula(p.y, 0)} dBFS ou sem cara de música.`; }
+  else { titulo = 'Silêncio: o que segue o som fica parado'; texto = 'Não chega som na entrada.'; }
+  if (p && p.k > 0) texto += ' Entrada estourada: o pico passou de 0 dBFS. Baixe o nível do Microfone no Windows.';
+  est.className = classe; span.textContent = titulo; nota.textContent = texto;
+  $('n-db').textContent = p ? virgula(p.r) : '–';
+  $('n-pico').textContent = p ? virgula(p.k) : '–';
+  $('n-bpm').textContent = p && (p.w === undefined ? p.v : p.w) && p.bpm ? Math.round(p.bpm) : '–';
+  $('n-est').textContent = p && p.z !== undefined ? Math.round(p.z * 100) + '%' : '–';
+  $('fonte').textContent = p && p.e ? 'Entrada: ' + p.e : '';
+  LINHAS.forEach(l => { const v = p ? l.ler(p) : undefined; l.saida.textContent = v === undefined ? '–' : Math.round(v * 100); });
+}
+
+function receber(p) {
+  ult = p; tUlt = performance.now();
+  marcarGolpe = bumbosAntes !== null && p.b !== bumbosAntes;
+  bumbosAntes = p.b;
+}
+
+// um ponto de história a cada 50 ms
+setInterval(() => {
+  const p = ult && performance.now() - tUlt < 2500 ? ult : null;
+  niveis.copyWithin(0, 1); niveis[HIST - 1] = p ? p.r : -120;
+  LINHAS.forEach(l => {
+    l.hist.copyWithin(0, 1); l.golpes.copyWithin(0, 1);
+    const v = p ? l.ler(p) : 0;
+    l.hist[HIST - 1] = v === undefined ? 0 : v;
+    l.golpes[HIST - 1] = marcarGolpe && l.id === 'g' ? 1 : 0;
+  });
+  marcarGolpe = false;
+  pintarEstado();
+}, 50);
+setInterval(async () => {
+  try {
+    const d = await (await fetch('/api/visuais', { cache: 'no-store' })).json();
+    const id = d.saida && d.saida.visual, v = id && d.visuais.find(x => x.id === id);
+    visualNome = d.saida ? (d.saida.noAr ? 'No LED: ' : 'Pronto: ') + (v ? `${v.nome} (${v.grupo})` : id) : '';
+    $('visual').textContent = visualNome;
+  } catch {}
+}, 5000);
+
+function desenharEspectro() {
+  const cv = $('espectro'), k = ajustar(cv), c = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const eixoY = 30 * k, base = H - 18 * k, gap = (W < 520 * k ? 1 : 2) * k, larg = (W - eixoY - gap * (NF - 1)) / NF;
+  if (larg <= 0) return;
+  const p = ult && performance.now() - tUlt < 2500 ? ult : null;
+  c.clearRect(0, 0, W, H);
+  c.font = `${11 * k}px -apple-system,"Segoe UI",Roboto,sans-serif`;
+  c.textBaseline = 'middle'; c.textAlign = 'left';
+  for (const db of [-80, -60, -40, -20]) {
+    const y = base - alturaDb(db) * base;
+    c.fillStyle = COR.linha; c.fillRect(eixoY, y, W - eixoY, Math.max(1, k * 0.5));
+    c.fillStyle = COR.fraco; c.fillText(String(db), 0, y);
+  }
+  for (let b = 0; b < NF; b++) {
+    const alvo = p ? (p.d ? alturaDb(p.d[b]) : (p.q[b] || 0) / 255) : 0;
+    barras[b] += (alvo - barras[b]) * (alvo > barras[b] ? 0.6 : 0.16);
+    picos[b] = Math.max(barras[b], picos[b] - 0.004);
+    const x = eixoY + b * (larg + gap), a = Math.max(2 * k, barras[b] * base), raio = Math.min(2 * k, larg / 2);
+    c.fillStyle = dica === b ? '#fff' : COR.marca;
+    c.beginPath(); c.roundRect(x, base - a, larg, a, [raio, raio, 0, 0]); c.fill();
+    if (picos[b] > barras[b] + 0.01) { c.fillStyle = COR.fraco; c.fillRect(x, base - picos[b] * base, larg, Math.max(1, k)); }
+  }
+  c.fillStyle = COR.fraco; c.textBaseline = 'alphabetic'; c.textAlign = 'center';
+  for (const [hz, txt] of [[50, '50 Hz'], [200, '200'], [1000, '1 kHz'], [5000, '5 kHz']]) {
+    const b = NF * Math.log(hz / 30) / Math.log(16000 / 30);
+    c.fillText(txt, Math.min(W - 24 * k, Math.max(eixoY + 18 * k, eixoY + b * (larg + gap))), H - 3 * k);
+  }
+  if (dica >= 0) {
+    const f = hzDe(dica), f2 = hzDe(dica + 1), hz = t => t >= 1000 ? virgula(t / 1000) + ' kHz' : Math.round(t) + ' Hz';
+    $('dica').textContent = !p ? 'Sem dados' : p.d ? `${hz(f)} a ${hz(f2)}: ${p.d[dica]} dB` : `${hz(f)} a ${hz(f2)}: ${Math.round(p.q[dica] / 2.55)} de 100, relativo à própria faixa`;
+  }
+}
+function lerDica(e) {
+  const r = $('espectro').getBoundingClientRect(), x = e.clientX - r.left - 30;
+  dica = Math.max(0, Math.min(NF - 1, Math.floor(x / (r.width - 30) * NF)));
+}
+$('espectro').addEventListener('pointermove', lerDica);
+$('espectro').addEventListener('pointerdown', lerDica);
+$('espectro').addEventListener('pointerleave', () => { dica = -1; $('dica').textContent = 'Passe o dedo ou o mouse para ler uma faixa.'; });
+
+function desenharEntrada() {
+  const cv = $('entrada'), k = ajustar(cv), c = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const MIN = -60, MAX = 12, yDe = db => H - Math.max(0, Math.min(1, (db - MIN) / (MAX - MIN))) * H;
+  const piso = ult && ult.y !== undefined ? ult.y : null, dx = W / HIST;
+  c.clearRect(0, 0, W, H);
+  c.fillStyle = COR.marca; c.globalAlpha = 0.85;
+  for (let i = 0; i < HIST; i++) { const y = yDe(niveis[i]); c.fillRect(i * dx, y, Math.ceil(dx), H - y); }
+  c.globalAlpha = 1;
+  if (piso !== null) {
+    const y = yDe(piso);
+    c.fillStyle = COR.atencao; c.fillRect(0, y, W, Math.max(1, k));
+    c.font = `${11 * k}px -apple-system,"Segoe UI",Roboto,sans-serif`; c.textBaseline = 'bottom';
+    c.fillText(`piso ${virgula(piso, 0)} dB`, 4 * k, y - 2 * k);
+  }
+}
+function desenharLinhas() {
+  for (const l of LINHAS) {
+    ajustar(l.canvas);
+    const c = l.canvas.getContext('2d'), W = l.canvas.width, H = l.canvas.height, dx = W / HIST;
+    c.clearRect(0, 0, W, H);
+    c.fillStyle = COR.marca; c.globalAlpha = 0.85;
+    for (let i = 0; i < HIST; i++) { const a = l.hist[i] * H; c.fillRect(i * dx, H - a, Math.ceil(dx), a); }
+    c.globalAlpha = 1; c.fillStyle = '#fff';
+    for (let i = 0; i < HIST; i++) if (l.golpes[i]) c.fillRect(i * dx, 0, Math.max(1.5, dx), 4 * Math.min(2, devicePixelRatio || 1));
+  }
+}
+function quadro() {
+  requestAnimationFrame(quadro);
+  if (!document.hidden) { desenharEspectro(); desenharEntrada(); desenharLinhas(); }
+}
+quadro();
+
+const es = new EventSource('/api/visuais/som');
+es.onmessage = m => { try { receber(JSON.parse(m.data)); } catch {} };
+</script>
+</body>
+</html>

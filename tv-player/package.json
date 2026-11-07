@@ -1,0 +1,13 @@
+{
+  "name": "tv-player",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Painel para enviar imagens, vídeos, páginas e playlists para as TVs Samsung",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

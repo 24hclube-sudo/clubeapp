@@ -1,0 +1,225 @@
+{
+  "ligada": false,
+  "zonas": {
+    "telas:telas:1": true,
+    "telas:led:1": true,
+    "fita:terreo": true,
+    "fita:sexto": true,
+    "fita:barras": true
+  },
+  "retorno": "06:00",
+  "faixas": [
+    {
+      "id": "amanhecer",
+      "nome": "Amanhecer",
+      "inicio": "06:00",
+      "transicao": 60,
+      "telas": {
+        "cores": [
+          "#9d9d9e",
+          "#6f6f6f",
+          "#b7b9bc"
+        ],
+        "efeito": "deriva",
+        "vel": 4,
+        "brilho": 55
+      },
+      "fitas": {
+        "cores": [
+          "#ffd5a1",
+          "#ffc98a",
+          "#ffead0"
+        ],
+        "efeito": "deriva",
+        "vel": 4,
+        "brilho": 60
+      }
+    },
+    {
+      "id": "manha",
+      "nome": "Manhã",
+      "inicio": "08:30",
+      "transicao": 60,
+      "telas": {
+        "cores": [
+          "#b7b9bc",
+          "#9d9d9e",
+          "#cccccd"
+        ],
+        "efeito": "deriva",
+        "vel": 4,
+        "brilho": 85
+      },
+      "fitas": {
+        "cores": [
+          "#ffead0",
+          "#ffffff",
+          "#ffead0"
+        ],
+        "efeito": "deriva",
+        "vel": 4,
+        "brilho": 85
+      }
+    },
+    {
+      "id": "dia",
+      "nome": "Dia",
+      "inicio": "11:30",
+      "transicao": 60,
+      "telas": {
+        "cores": [
+          "#e3e4e5",
+          "#cccccd",
+          "#b7b9bc"
+        ],
+        "efeito": "onda",
+        "vel": 4,
+        "brilho": 100
+      },
+      "fitas": {
+        "cores": [
+          "#ffffff",
+          "#e8f0ff",
+          "#ffffff"
+        ],
+        "efeito": "onda",
+        "vel": 4,
+        "brilho": 100
+      }
+    },
+    {
+      "id": "tarde",
+      "nome": "Tarde",
+      "inicio": "15:30",
+      "transicao": 60,
+      "telas": {
+        "cores": [
+          "#b7b9bc",
+          "#9d9d9e",
+          "#858585"
+        ],
+        "efeito": "onda",
+        "vel": 4,
+        "brilho": 85
+      },
+      "fitas": {
+        "cores": [
+          "#ffffff",
+          "#ffead0",
+          "#ffffff"
+        ],
+        "efeito": "deriva",
+        "vel": 4,
+        "brilho": 90
+      }
+    },
+    {
+      "id": "fim-de-tarde",
+      "nome": "Fim de tarde",
+      "inicio": "17:30",
+      "transicao": 45,
+      "telas": {
+        "cores": [
+          "#d2d3d3",
+          "#9c9d9d",
+          "#6f6f6f"
+        ],
+        "efeito": "respira",
+        "vel": 4,
+        "brilho": 70
+      },
+      "fitas": {
+        "cores": [
+          "#ffd5a1",
+          "#ffead0",
+          "#ffd5a1"
+        ],
+        "efeito": "respira",
+        "vel": 4,
+        "brilho": 75
+      }
+    },
+    {
+      "id": "anoitecer",
+      "nome": "Anoitecer",
+      "inicio": "19:00",
+      "transicao": 60,
+      "telas": {
+        "cores": [
+          "#07b9df",
+          "#0070ae",
+          "#003a5c"
+        ],
+        "efeito": "deriva",
+        "vel": 8,
+        "brilho": 70
+      },
+      "fitas": {
+        "igual": true,
+        "brilho": 70
+      }
+    },
+    {
+      "id": "noite",
+      "nome": "Noite",
+      "inicio": "21:30",
+      "transicao": 45,
+      "telas": {
+        "cores": [
+          "#00c059",
+          "#00771a",
+          "#003d2a"
+        ],
+        "efeito": "plasma",
+        "vel": 10,
+        "brilho": 65
+      },
+      "fitas": {
+        "igual": true,
+        "brilho": 65
+      }
+    },
+    {
+      "id": "madrugada",
+      "nome": "Madrugada",
+      "inicio": "23:30",
+      "transicao": 45,
+      "telas": {
+        "cores": [
+          "#ff8564",
+          "#ff4c2c",
+          "#b00000"
+        ],
+        "efeito": "plasma",
+        "vel": 12,
+        "brilho": 60
+      },
+      "fitas": {
+        "igual": true,
+        "brilho": 60
+      }
+    },
+    {
+      "id": "fim-de-noite",
+      "nome": "Fim de noite",
+      "inicio": "03:00",
+      "transicao": 60,
+      "telas": {
+        "cores": [
+          "#ff7a1a",
+          "#b53a00",
+          "#3a0e00"
+        ],
+        "efeito": "respira",
+        "vel": 4,
+        "brilho": 35
+      },
+      "fitas": {
+        "igual": true,
+        "brilho": 40
+      }
+    }
+  ],
+  "anuncios": [],
+  "manual": {}
+}

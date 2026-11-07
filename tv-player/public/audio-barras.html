@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Áudio das barras</title>
+<style>
+  :root { --fundo:#0b0b0c; --cartao:#161618; --linha:#2a2a2d; --texto:#f2f2f3; --fraco:#9a9aa1; --bumbo:#ff4a1f; --baixo:#ff8a2e; --medio:#1fd061; --agudo:#27b0ee; --alerta:#ff3b30; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--fundo); color:var(--texto); font:15px/1.35 -apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:14px 16px 40px; }
+  header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  header a { color:var(--fraco); text-decoration:none; font-size:22px; line-height:1; padding:4px 8px 4px 0; }
+  h1 { font-size:18px; margin:0; font-weight:600; flex:1; }
+  #sinal { font-size:13px; color:var(--fraco); display:flex; align-items:center; gap:6px; }
+  #sinal i { width:9px; height:9px; border-radius:50%; background:#555; }
+  #sinal.vivo i { background:var(--medio); }
+  #aviso { display:none; background:#3a1412; border:1px solid var(--alerta); border-radius:10px; padding:10px 12px; margin-bottom:12px; font-size:14px; }
+  .cartao { background:var(--cartao); border:1px solid var(--linha); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .topo { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .num b { display:block; font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1.15; }
+  .num span { font-size:12px; color:var(--fraco); }
+  .faixa { display:grid; grid-template-columns:62px 1fr 26px; gap:10px; align-items:center; padding:10px 0; border-top:1px solid var(--linha); }
+  .faixa:first-of-type { border-top:0; padding-top:0; }
+  .nome b { display:block; font-size:14px; font-weight:600; }
+  .nome span { font-size:11px; color:var(--fraco); white-space:nowrap; }
+  .faixa canvas { width:100%; height:46px; display:block; border-radius:6px; background:#0a0a0b; }
+  .lampada { width:22px; height:22px; border-radius:50%; background:#232326; }
+  .ganho { grid-column:1 / -1; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--fraco); }
+  .ganho input { flex:1; min-width:0; height:30px; }
+  .ganho output { width:42px; text-align:right; font-variant-numeric:tabular-nums; }
+  .abaixo { display:grid; grid-template-columns:1fr 120px; gap:12px; }
+  @media (max-width:430px) { .abaixo { grid-template-columns:1fr; } }
+  h2 { margin:0 0 8px; font-size:13px; font-weight:600; color:var(--fraco); }
+  #espectro { width:100%; height:110px; display:block; }
+  #previa { width:100%; height:110px; display:block; background:#050505; border-radius:6px; }
+  .botoes { display:flex; flex-wrap:wrap; gap:8px; }
+  button { font:inherit; font-size:14px; color:var(--texto); background:#232326; border:1px solid var(--linha); border-radius:9px; padding:10px 12px; cursor:pointer; }
+  button.on { background:var(--texto); color:#111; border-color:var(--texto); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <a href="/celular" aria-label="Voltar ao app">‹</a>
+    <h1>Áudio das barras</h1>
+    <div id="sinal"><i></i><span>conectando</span></div>
+  </header>
+  <div id="aviso"></div>
+
+  <section class="cartao topo">
+    <div class="num"><b id="bpm">–</b><span>BPM</span></div>
+    <div class="num"><b id="conf">–</b><span>acerto na batida</span></div>
+    <div class="num"><b id="db">–</b><span>entrada (dBFS)</span></div>
+  </section>
+
+  <section class="cartao" id="faixas"></section>
+
+  <section class="abaixo">
+    <div class="cartao"><h2>Espectro: uma banda por barra</h2><canvas id="espectro"></canvas></div>
+    <div class="cartao"><h2>Barras agora</h2><canvas id="previa"></canvas></div>
+  </section>
+
+  <section class="cartao">
+    <h2>Fundo das cenas sempre acesas</h2>
+    <label class="ganho">Aceso sem som<input type="range" id="fundo" min="10" max="85" step="5" value="50"><output id="fundo-v">50%</output></label>
+  </section>
+
+  <section class="cartao">
+    <h2>Cena nas barras</h2>
+    <div class="botoes" id="cenas"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>De onde vem o som</h2>
+    <div class="botoes" id="entradas">
+      <button data-e="mic">Entrada de linha (cabo)</button>
+      <button data-e="mix">O que o PC está tocando</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const FAIXAS = [
+  { nome: 'Bumbo', hz: '35–110 Hz', cor: '--bumbo' },
+  { nome: 'Baixo', hz: '110–400 Hz', cor: '--baixo' },
+  { nome: 'Médio', hz: '400–3 kHz', cor: '--medio' },
+  { nome: 'Agudo', hz: '3–14 kHz', cor: '--agudo' },
+];
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = id => document.getElementById(id);
+const HIST = 240; // 240 colunas a 25 por segundo ≈ 10 s de história
+
+const linhas = FAIXAS.map((f, i) => {
+  const el = document.createElement('div');
+  el.className = 'faixa';
+  el.innerHTML = `<div class="nome"><b>${f.nome}</b><span>${f.hz}</span></div><canvas></canvas><div class="lampada"></div>
+    <label class="ganho">Sensibilidade<input type="range" min="0" max="200" step="5" value="100"><output>100%</output></label>`;
+  $('faixas').appendChild(el);
+  const canvas = el.querySelector('canvas'), range = el.querySelector('input'), saida = el.querySelector('output');
+  range.oninput = () => { saida.textContent = range.value + '%'; enviarGanhos(); };
+  return { canvas, ctx: canvas.getContext('2d'), lamp: el.querySelector('.lampada'), range, saida, cor: css(f.cor), hist: new Float32Array(HIST), marcas: new Uint8Array(HIST), visto: null };
+});
+
+let tempoGanho = 0, mexendo = 0;
+function enviarGanhos() {
+  mexendo = Date.now();
+  clearTimeout(tempoGanho);
+  tempoGanho = setTimeout(() => {
+    fetch('/api/audio-barras', { method: 'POST', body: JSON.stringify({ ganhos: linhas.map(l => l.range.value / 100) }) });
+  }, 120);
+}
+function ajustar(c) {
+  const r = c.getBoundingClientRect(), k = Math.min(2, devicePixelRatio || 1);
+  const w = Math.round(r.width * k), h = Math.round(r.height * k);
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+}
+
+let mexeuFundo = 0, tempoFundo = 0;
+$('fundo').oninput = () => {
+  mexeuFundo = Date.now();
+  $('fundo-v').textContent = $('fundo').value + '%';
+  clearTimeout(tempoFundo);
+  tempoFundo = setTimeout(() => fetch('/api/audio-barras', { method: 'POST', body: JSON.stringify({ fundo: $('fundo').value / 100 }) }), 120);
+};
+
+let ultimo = null;
+function novoEstado(e) {
+  ultimo = e;
+  $('sinal').classList.toggle('vivo', !!e.vivo);
+  $('sinal').querySelector('span').textContent = !e.vivo ? 'sem ouvido' : e.ocioso ? 'em silêncio' : 'ouvindo';
+  $('bpm').textContent = e.bpm ? Math.round(e.bpm) : '–';
+  $('conf').textContent = e.bpm ? Math.round(e.conf * 100) + '%' : '–';
+  $('db').textContent = e.db == null ? '–' : String(e.db).replace('.', ',');
+  const aviso = $('aviso');
+  if (!e.vivo) { aviso.style.display = 'block'; aviso.textContent = 'O programa que escuta o som está fechado. As cenas de áudio ficam em espera.'; }
+  else if (e.clip > 0.05) { aviso.style.display = 'block'; aviso.textContent = `Entrada saturada: ${Math.round(e.clip * 100)}% do som no limite. Baixe o nível da entrada para as faixas ficarem bem separadas.`; }
+  else aviso.style.display = 'none';
+  linhas.forEach((l, i) => {
+    l.hist.copyWithin(0, 1); l.marcas.copyWithin(0, 1);
+    l.hist[HIST - 1] = e.faixas[i];
+    const n = e.golpes[i];
+    l.marcas[HIST - 1] = l.visto !== null && n !== l.visto ? 1 : 0;
+    l.visto = n;
+    l.lamp.style.background = e.idade[i] < 0.09 ? l.cor : '#232326';
+    if (Date.now() - mexendo > 1500) {
+      const v = Math.round(e.ganhos[i] * 100);
+      if (+l.range.value !== v) { l.range.value = v; l.saida.textContent = v + '%'; }
+    }
+    desenharFaixa(l);
+  });
+  desenharEspectro(e);
+  if (Date.now() - mexeuFundo > 1500 && e.fundo != null) {
+    const v = Math.round(e.fundo * 100);
+    if (+$('fundo').value !== v) { $('fundo').value = v; $('fundo-v').textContent = v + '%'; }
+  }
+  for (const b of $('entradas').children) b.classList.toggle('on', b.dataset.e === e.entrada);
+}
+function desenharFaixa(l) {
+  ajustar(l.canvas);
+  const c = l.ctx, W = l.canvas.width, H = l.canvas.height, dx = W / HIST;
+  c.clearRect(0, 0, W, H);
+  c.fillStyle = l.cor;
+  for (let i = 0; i < HIST; i++) {
+    const a = l.hist[i] * H;
+    c.globalAlpha = 0.85;
+    c.fillRect(i * dx, H - a, Math.ceil(dx), a);
+    if (l.marcas[i]) { c.globalAlpha = 1; c.fillStyle = '#fff'; c.fillRect(i * dx, 0, Math.max(1, dx), 5); c.fillStyle = l.cor; }
+  }
+  c.globalAlpha = 1;
+}
+function desenharEspectro(e) {
+  const cv = $('espectro');
+  ajustar(cv);
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height, n = 8, g = W * 0.02, w = (W - g * (n - 1)) / n;
+  c.clearRect(0, 0, W, H);
+  const cores = [0, 0, 1, 1, 2, 2, 3, 3].map(i => linhas[i].cor);
+  for (let i = 0; i < n; i++) {
+    c.fillStyle = '#232326'; c.fillRect(i * (w + g), 0, w, H);
+    c.fillStyle = cores[i];
+    const a = e.bandas[i] * H; c.fillRect(i * (w + g), H - a, w, a);
+  }
+}
+
+// Fluxo dos níveis, com volta sozinha se a conexão cair.
+function ligarFluxo() {
+  const es = new EventSource('/api/audio-barras/fluxo');
+  es.onmessage = m => novoEstado(JSON.parse(m.data));
+  es.onerror = () => { $('sinal').classList.remove('vivo'); $('sinal').querySelector('span').textContent = 'reconectando'; };
+}
+ligarFluxo();
+
+for (const b of $('entradas').children) b.onclick = () => fetch('/api/audio-barras', { method: 'POST', body: JSON.stringify({ entrada: b.dataset.e }) });
+
+// Prévia das barras e troca de cena: mesmo canal do app.
+let ws = null, cenaNoAr = null;
+function ligarWs() {
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
+  ws.onopen = () => { ws.send(JSON.stringify({ type: 'hello-panel' })); ws.send(JSON.stringify({ type: 'balcao-previa', ligado: true })); };
+  ws.onclose = () => setTimeout(ligarWs, 2000);
+  ws.onmessage = m => {
+    const d = JSON.parse(m.data);
+    if (d.type === 'balcao-previa' && d.id === 'barras') desenharPrevia(d);
+    if (d.type === 'estado') {
+      const z = (d.zonas || []).find(z => z.id === 'fita:barras');
+      if (z) { cenaNoAr = z.cena; marcarCena(); }
+    }
+  };
+}
+function desenharPrevia(d) {
+  const cv = $('previa');
+  ajustar(cv);
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height, px = atob(d.px);
+  c.clearRect(0, 0, W, H);
+  const larg = W / d.colunas, alt = H / d.linhas;
+  for (let r = 0; r < d.linhas; r++) for (let x = 0; x < d.colunas; x++) {
+    const o = (r * d.colunas + x) * 3;
+    c.fillStyle = `rgb(${px.charCodeAt(o)},${px.charCodeAt(o + 1)},${px.charCodeAt(o + 2)})`;
+    c.fillRect(x * larg + larg * 0.25, r * alt, larg * 0.5, Math.ceil(alt));
+  }
+}
+function marcarCena() { for (const b of $('cenas').children) b.classList.toggle('on', b.dataset.id === cenaNoAr); }
+fetch('animacoes-barras.json').then(r => r.json()).then(lista => {
+  const NOMES_GRUPO = { auto: 'Automático', minhas: 'Minhas', aceso: 'Sempre acesas', direcao: 'Direções', fogo: 'Fogo', fisica: 'Física', faixa: 'Por faixa', golpe: 'No golpe', batida: 'Na batida', calma: 'Calmas' };
+  let grupoAtual = null;
+  for (const c of lista.filter(c => c.categoria === 'audio')) {
+    if (c.grupo !== grupoAtual) {
+      grupoAtual = c.grupo;
+      const t = document.createElement('div');
+      t.textContent = NOMES_GRUPO[c.grupo] || '';
+      t.style.cssText = 'width:100%;font-size:12px;color:var(--fraco);margin-top:6px';
+      $('cenas').appendChild(t);
+    }
+    const b = document.createElement('button');
+    b.textContent = c.nome; b.dataset.id = c.id;
+    b.onclick = () => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'cena', andar: '5', zona: 'fita:barras', id: c.id })); };
+    $('cenas').appendChild(b);
+  }
+  marcarCena();
+});
+ligarWs();
+</script>
+</body>
+</html>

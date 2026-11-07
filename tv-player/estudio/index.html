@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CLUBE Sistema | Grid Motion</title>
+
+  <link rel="stylesheet" href="https://use.typekit.net/fpo6rzz.css">
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbarHead">
+      <div class="topbarBrand">
+        <div class="eyebrow">CLUBE Sistema</div>
+        <div class="topbarTitle">Grid Motion Studio</div>
+      </div>
+
+      <div class="topbarCopy">
+        Controles agrupados por decisao a esquerda e preview livre a direita.
+      </div>
+    </div>
+  </header>
+
+  <main class="stageWrap">
+    <aside class="workspaceSidebar">
+      <div class="sidebarStack">
+        <section class="sidebarCard controlsCard">
+          <div class="sidebarCardHead">
+            <div class="sidebarIntro">
+              <div class="sidebarEyebrow">Workspace</div>
+              <div class="sidebarTitle">Controles principais</div>
+            </div>
+
+            <div id="exportSummary" class="statusPill">1080 x 1350 / 60 fps / H.264 MP4</div>
+          </div>
+
+          <div class="toolbarActions">
+            <button id="regen" class="btn">Gerar</button>
+            <button id="pauseBtn" class="btn ghost">Pausar</button>
+            <button id="exportPng" class="btn ghost">PNG</button>
+            <button id="recStart" class="btn">Video</button>
+            <button id="recStop" class="btn ghost" disabled>Parar</button>
+            <button id="reset" class="btn ghost">Reset</button>
+          </div>
+
+          <div class="controlsAccordion">
+            <details class="controlsGroup" open>
+              <summary>
+                <span class="summaryText">
+                  <span class="summaryTitle">Composicao</span>
+                  <span class="summaryHint">Formato, encaixe e paleta base</span>
+                </span>
+              </summary>
+              <div class="controlsGrid">
+                <label class="controlField">
+                  <span>Formato vertical</span>
+                  <select id="aspect">
+                    <option value="reels">Reels 9:16</option>
+                    <option value="feed" selected>Feed 4:5</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Fit da midia</span>
+                  <select id="fitMode">
+                    <option value="contain">Contain</option>
+                    <option value="cover" selected>Cover</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Paleta base</span>
+                  <select id="paletteA">
+                    <option value="vermelho">Vermelho</option>
+                    <option value="azul" selected>Azul</option>
+                    <option value="verde">Verde</option>
+                    <option value="neutro">Neutro</option>
+                  </select>
+                </label>
+              </div>
+            </details>
+
+            <details class="controlsGroup" open>
+              <summary>
+                <span class="summaryText">
+                  <span class="summaryTitle">Grid</span>
+                  <span class="summaryHint">Densidade, visibilidade e comportamento da malha</span>
+                </span>
+              </summary>
+              <div class="controlsGrid">
+                <label class="controlField">
+                  <span>Complexidade</span>
+                  <input id="complexity" type="range" min="1" max="14" step="1" value="9" />
+                </label>
+
+                <label class="controlToggle">
+                  <input id="gridToggle" type="checkbox" checked />
+                  <span>Mostrar grid de referencia</span>
+                </label>
+
+                <label class="controlField">
+                  <span>Opacidade do grid</span>
+                  <input id="gridOpacity" type="range" min="0" max="1" step="0.01" value="0.22" />
+                </label>
+
+                <label class="controlField">
+                  <span>Grid motion</span>
+                  <select id="layoutMode">
+                    <option value="morph" selected>Morph editorial</option>
+                    <option value="quadrant">Quadrante</option>
+                    <option value="ripple">Ripple</option>
+                    <option value="stripeV">Faixa vertical</option>
+                    <option value="stripeH">Faixa horizontal</option>
+                    <option value="twoCols">Duas colunas</option>
+                    <option value="twoRows">Duas faixas</option>
+                    <option value="frameCenter">Frame centro</option>
+                    <option value="frameCorner">Frame canto</option>
+                    <option value="ladder">Ladder</option>
+                    <option value="scrollX">Scroll X</option>
+                    <option value="scrollY">Scroll Y</option>
+                    <option value="scrollXY">Scroll XY</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Direcao</span>
+                  <select id="layoutDir">
+                    <option value="right" selected>Direita</option>
+                    <option value="left">Esquerda</option>
+                    <option value="down">Baixo</option>
+                    <option value="up">Cima</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Intensidade do grid</span>
+                  <input id="layoutAmt" type="range" min="0" max="1" step="0.01" value="0.35" />
+                </label>
+
+                <label class="controlField">
+                  <span>Suavizacao</span>
+                  <input id="layoutSmooth" type="range" min="0" max="1" step="0.01" value="0.72" />
+                </label>
+              </div>
+            </details>
+
+            <details class="controlsGroup">
+              <summary>
+                <span class="summaryText">
+                  <span class="summaryTitle">Cor e tints</span>
+                  <span class="summaryHint">Contraste, luz e camadas de cor</span>
+                </span>
+              </summary>
+              <div class="controlsGrid">
+                <label class="controlField">
+                  <span>Contraste</span>
+                  <input id="contrast" type="range" min="0" max="2" step="0.01" value="1.0" />
+                </label>
+
+                <label class="controlField">
+                  <span>Luz</span>
+                  <input id="light" type="range" min="0" max="2" step="0.01" value="1.0" />
+                </label>
+
+                <label class="controlField">
+                  <span>Motion tint grad</span>
+                  <select id="tintMotion">
+                    <option value="none" selected>Nenhum</option>
+                    <option value="cycleY">Cycle vertical</option>
+                    <option value="cycleX">Cycle horizontal</option>
+                    <option value="bandsY">Bandas verticais</option>
+                    <option value="bandsX">Bandas horizontais</option>
+                    <option value="pingpong">Ping pong</option>
+                    <option value="shuffle">Shuffle</option>
+                    <option value="flash">Flash</option>
+                    <option value="fullPulse">Full pulse</option>
+                    <option value="fullSine">Full sine</option>
+                    <option value="fullFade">Full fade</option>
+                    <option value="fullBlinkSoft">Full blink soft</option>
+                    <option value="fullBlinkHard">Full blink hard</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Paleta tint grad</span>
+                  <select id="tintPalette">
+                    <option value="vermelho">Vermelho</option>
+                    <option value="azul" selected>Azul</option>
+                    <option value="verde">Verde</option>
+                    <option value="neutro">Neutro</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Cor tint grad</span>
+                  <select id="tintColorSlot">
+                    <option value="0">Cor 1</option>
+                    <option value="1" selected>Cor 2</option>
+                    <option value="2">Cor 3</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Opacidade tint grad</span>
+                  <input id="gradTintOpacity" type="range" min="0" max="1" step="0.01" value="0.16" />
+                </label>
+
+                <label class="controlField">
+                  <span>Motion tint midia</span>
+                  <select id="mediaTintMotion">
+                    <option value="none" selected>Nenhum</option>
+                    <option value="cycleY">Cycle vertical</option>
+                    <option value="cycleX">Cycle horizontal</option>
+                    <option value="bandsY">Bandas verticais</option>
+                    <option value="bandsX">Bandas horizontais</option>
+                    <option value="pingpong">Ping pong</option>
+                    <option value="shuffle">Shuffle</option>
+                    <option value="flash">Flash</option>
+                    <option value="fullPulse">Full pulse</option>
+                    <option value="fullSine">Full sine</option>
+                    <option value="fullFade">Full fade</option>
+                    <option value="fullBlinkSoft">Full blink soft</option>
+                    <option value="fullBlinkHard">Full blink hard</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Paleta tint midia</span>
+                  <select id="mediaTintPalette">
+                    <option value="vermelho">Vermelho</option>
+                    <option value="azul" selected>Azul</option>
+                    <option value="verde">Verde</option>
+                    <option value="neutro">Neutro</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Cor tint midia</span>
+                  <select id="mediaTintColorSlot">
+                    <option value="0">Cor 1</option>
+                    <option value="1" selected>Cor 2</option>
+                    <option value="2">Cor 3</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Opacidade tint midia</span>
+                  <input id="mediaTintOpacity" type="range" min="0" max="1" step="0.01" value="0.18" />
+                </label>
+
+                <label class="controlField">
+                  <span>Motion tint overlay</span>
+                  <select id="overlayTintMotion">
+                    <option value="none" selected>Nenhum</option>
+                    <option value="cycleY">Cycle vertical</option>
+                    <option value="cycleX">Cycle horizontal</option>
+                    <option value="bandsY">Bandas verticais</option>
+                    <option value="bandsX">Bandas horizontais</option>
+                    <option value="pingpong">Ping pong</option>
+                    <option value="shuffle">Shuffle</option>
+                    <option value="flash">Flash</option>
+                    <option value="fullPulse">Full pulse</option>
+                    <option value="fullSine">Full sine</option>
+                    <option value="fullFade">Full fade</option>
+                    <option value="fullBlinkSoft">Full blink soft</option>
+                    <option value="fullBlinkHard">Full blink hard</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Paleta tint overlay</span>
+                  <select id="overlayTintPalette">
+                    <option value="vermelho">Vermelho</option>
+                    <option value="azul" selected>Azul</option>
+                    <option value="verde">Verde</option>
+                    <option value="neutro">Neutro</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Cor tint overlay</span>
+                  <select id="overlayTintColorSlot">
+                    <option value="0">Cor 1</option>
+                    <option value="1" selected>Cor 2</option>
+                    <option value="2">Cor 3</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Opacidade tint overlay</span>
+                  <input id="overlayTintOpacity" type="range" min="0" max="1" step="0.01" value="0.12" />
+                </label>
+
+                <label class="controlField">
+                  <span>Duracao do tint</span>
+                  <input id="tintDuration" type="range" min="0.8" max="12" step="0.1" value="2.8" />
+                </label>
+              </div>
+            </details>
+
+            <details class="controlsGroup">
+              <summary>
+                <span class="summaryText">
+                  <span class="summaryTitle">Movimento</span>
+                  <span class="summaryHint">Animacao geral, cena e profundidade</span>
+                </span>
+              </summary>
+              <div class="controlsGrid">
+                <label class="controlField">
+                  <span>Motion do gradiente</span>
+                  <select id="motionMode">
+                    <option value="drift" selected>Drift</option>
+                    <option value="pulse">Pulse</option>
+                    <option value="sweep">Sweep</option>
+                    <option value="orbit">Orbit</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Velocidade</span>
+                  <input id="speed" type="range" min="0" max="2.5" step="0.01" value="1.0" />
+                </label>
+
+                <label class="controlField">
+                  <span>Loop mestre</span>
+                  <input id="motionLoopDuration" type="range" min="4" max="24" step="1" value="12" />
+                </label>
+
+                <label class="controlField">
+                  <span>Motion da cena</span>
+                  <select id="sceneMode">
+                    <option value="none" selected>Nenhum</option>
+                    <option value="pushRight">Push direita</option>
+                    <option value="pushLeft">Push esquerda</option>
+                    <option value="pushUp">Push cima</option>
+                    <option value="pushDown">Push baixo</option>
+                    <option value="carouselX">Carousel horizontal</option>
+                    <option value="carouselY">Carousel vertical</option>
+                    <option value="revealX">Reveal horizontal</option>
+                    <option value="revealY">Reveal vertical</option>
+                    <option value="splitX">Split horizontal</option>
+                    <option value="splitY">Split vertical</option>
+                    <option value="coverNextX">Cover next X</option>
+                    <option value="coverNextY">Cover next Y</option>
+                    <option value="wipeX">Wipe X</option>
+                    <option value="wipeY">Wipe Y</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Duracao da cena</span>
+                  <input id="sceneDuration" type="range" min="0.8" max="12" step="0.1" value="3.4" />
+                </label>
+
+                <label class="controlField">
+                  <span>Depth motion</span>
+                  <select id="tilt3dMode">
+                    <option value="none" selected>Nenhum</option>
+                    <option value="depthWave">Depth Wave</option>
+                    <option value="depthPulse">Depth Pulse</option>
+                    <option value="depthColumns">Depth Columns</option>
+                    <option value="depthRows">Depth Rows</option>
+                    <option value="depthStairs">Depth Stairs</option>
+                    <option value="depthCenter">Depth Center</option>
+                    <option value="depthBreath">Depth Breath</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Intensidade depth</span>
+                  <input id="tilt3d" type="range" min="0" max="1" step="0.01" value="0.42" />
+                </label>
+
+                <label class="controlField">
+                  <span>Duracao do depth</span>
+                  <input id="depthDuration" type="range" min="1" max="30" step="0.1" value="6.0" />
+                </label>
+
+                <label class="controlToggle">
+                  <input id="depthSyncExport" type="checkbox" checked />
+                  <span>Loop depth sincronizado no export</span>
+                </label>
+              </div>
+            </details>
+
+            <details class="controlsGroup" open>
+              <summary>
+                <span class="summaryText">
+                  <span class="summaryTitle">Export</span>
+                  <span class="summaryHint">Tempo, FPS e resolucao final</span>
+                </span>
+              </summary>
+              <div class="controlsGrid">
+                <label class="controlField">
+                  <span>Duracao do export</span>
+                  <input id="recSeconds" type="number" min="1" max="60" step="1" value="15" />
+                </label>
+
+                <label class="controlField">
+                  <span>FPS</span>
+                  <select id="recFps">
+                    <option value="30" selected>30</option>
+                    <option value="60">60</option>
+                  </select>
+                </label>
+
+                <label class="controlField">
+                  <span>Resolucao</span>
+                  <select id="recRes">
+                    <option value="720">720p</option>
+                    <option value="1080" selected>Full HD 1080p</option>
+                    <option value="2160">4K 2160p</option>
+                  </select>
+                </label>
+              </div>
+            </details>
+          </div>
+
+          <div class="hint">
+            Clique em um bloco para selecionar. Arraste imagem ou video para um bloco.
+            O grid aparece so no editor.
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panelCard">
+            <div class="panelTitle">Selecao</div>
+            <div class="selectionMeta">
+              <div class="panelRow"><span>Celula</span><strong id="selId">nenhuma</strong></div>
+              <div class="panelRow"><span>Tipo</span><strong id="selType">-</strong></div>
+              <div class="panelRow"><span>Arquivo</span><strong id="selName">-</strong></div>
+            </div>
+
+            <details class="panelSection" open>
+              <summary>Bloco</summary>
+              <div class="panelSectionBody">
+                <label>
+                  Paleta da cor
+                  <select id="cellPalette"></select>
+                </label>
+
+                <label>
+                  Cor do bloco
+                  <select id="cellColor"></select>
+                </label>
+
+                <div class="panelActions">
+                  <button id="applyCellColor" class="btn small">Aplicar cor</button>
+                  <button id="autoCell" class="btn small ghost">Automatico</button>
+                  <button id="clearCell" class="btn small ghost">Remover midia</button>
+                </div>
+
+                <div class="panelActions">
+                  <button id="lockCell" class="btn small ghost">Travar</button>
+                  <button id="unlockCell" class="btn small ghost">Destravar</button>
+                </div>
+              </div>
+            </details>
+
+            <details class="panelSection" open>
+              <summary>Midia</summary>
+              <div class="panelSectionBody">
+                <label>
+                  Escala da midia
+                  <input id="mediaScale" type="range" min="0.5" max="3" step="0.01" value="1" />
+                </label>
+
+                <label>
+                  Offset X da midia
+                  <input id="mediaOffsetX" type="range" min="-1" max="1" step="0.01" value="0" />
+                </label>
+
+                <label>
+                  Offset Y da midia
+                  <input id="mediaOffsetY" type="range" min="-1" max="1" step="0.01" value="0" />
+                </label>
+
+                <div class="panelActions">
+                  <button id="mediaReset" class="btn small ghost">Reset da midia</button>
+                </div>
+              </div>
+            </details>
+
+            <details class="panelSection">
+              <summary>Assets</summary>
+              <div class="panelSectionBody">
+                <div id="assetsMount"></div>
+
+                <label>
+                  Tratamento do asset
+                  <select id="assetTintMode">
+                    <option value="original" selected>Original</option>
+                    <option value="flat">Flat</option>
+                    <option value="lumaDiff">Luma Difference</option>
+                  </select>
+                </label>
+
+                <label>
+                  Cor do asset
+                  <input id="assetTint" type="color" value="#ffffff" />
+                </label>
+
+                <label>
+                  Opacidade do asset
+                  <input id="assetOpacity" type="range" min="0" max="1" step="0.01" value="1" />
+                </label>
+              </div>
+            </details>
+
+            <details class="panelSection">
+              <summary>Texto</summary>
+              <div class="panelSectionBody">
+                <div class="panelActions">
+                  <button id="addText" class="btn small">+ Texto</button>
+                  <button id="deleteText" class="btn small ghost">Deletar</button>
+                </div>
+
+                <label>
+                  Tipo textual
+                  <select id="textRole">
+                    <option value="title" selected>Titulo</option>
+                    <option value="section">Section</option>
+                    <option value="body">Body</option>
+                    <option value="micro">Micro</option>
+                    <option value="special">Special</option>
+                  </select>
+                </label>
+
+                <label>
+                  Movimento textual
+                  <select id="textMotion">
+                    <option value="free">Livre</option>
+                    <option value="follow" selected>Seguir bloco</option>
+                    <option value="driftX">Drift X</option>
+                    <option value="driftY">Drift Y</option>
+                  </select>
+                </label>
+
+                <div class="panelActions">
+                  <button id="textBindBlock" class="btn small">Usar bloco</button>
+                  <button id="textReleaseBlock" class="btn small ghost">Soltar</button>
+                </div>
+
+                <label>
+                  Linhas alvo
+                  <input id="textLines" type="range" min="1" max="6" step="1" value="2" />
+                </label>
+
+                <label>
+                  Margem do bloco
+                  <input id="textMargin" type="range" min="0" max="144" step="6" value="24" />
+                </label>
+
+                <div id="textMetrics" class="panelNote">
+                  Texto livre. Selecione um bloco e use "Usar bloco" para encaixar no grid.
+                </div>
+
+                <label>
+                  Fonte
+                  <select id="textFont">
+                    <option value="archivoRegular" selected>Archivo Regular</option>
+                    <option value="archivoMedium">Archivo Medium</option>
+                    <option value="archivoSemiBold">Archivo SemiBold</option>
+                    <option value="archivoBold">Archivo Bold</option>
+                    <option value="mythshire">Mythshire</option>
+                  </select>
+                </label>
+
+                <label>
+                  Tamanho
+                  <input id="textSize" type="range" min="10" max="260" step="1" value="72" />
+                </label>
+
+                <label>
+                  Largura da caixa
+                  <input id="textBoxW" type="range" min="60" max="900" step="1" value="520" />
+                </label>
+
+                <label>
+                  Line height
+                  <input id="textLineH" type="range" min="0.8" max="2.0" step="0.01" value="1.08" />
+                </label>
+
+                <label>
+                  Cor
+                  <input id="textColor" type="color" value="#ffffff" />
+                </label>
+
+                <label>
+                  Opacidade
+                  <input id="textOpacity" type="range" min="0" max="1" step="0.01" value="1" />
+                </label>
+
+                <label>
+                  Tracking
+                  <input id="textTracking" type="range" min="-0.08" max="0.25" step="0.001" value="0" />
+                </label>
+
+                <label>
+                  Alinhamento
+                  <select id="textAlign">
+                    <option value="left">Esquerda</option>
+                    <option value="center" selected>Centro</option>
+                    <option value="right">Direita</option>
+                  </select>
+                </label>
+
+                <div class="panelActions">
+                  <button id="bringFront" class="btn small ghost">Frente</button>
+                  <button id="sendBack" class="btn small ghost">Fundo</button>
+                </div>
+              </div>
+            </details>
+
+            <div class="panelNote">
+              Dica: use bloco e midia no fluxo principal. Abra assets ou texto so quando precisar inserir elementos.
+            </div>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <section class="viewerPane">
+      <div class="viewerMeta">
+        <div class="viewerEyebrow">Preview</div>
+        <div class="viewerTitle">Visualizacao ao vivo</div>
+        <div class="viewerCopy">Preview vertical fixo para compor, revisar movimento e ajustar enquadramento.</div>
+      </div>
+
+      <div class="viewerSurface">
+        <div id="stage" class="stage">
+          <canvas id="canvas"></canvas>
+          <div id="textHud" class="textHud"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./js/app.js"></script>
+<script src="./js/render-tv.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c0e">
+<title>Som do CLUBE</title>
+<style>
+  :root { --bg: #0b0c0e; --s1: #15171b; --ink: #f3f4f6; --muted: #8d939c; --ok: #34d17a; --warn: #ffc465; --danger: #ff5a3c; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, "Segoe UI", Roboto, sans-serif; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center; }
+  .lugar { font-size: 15px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 8px 0 0; font-size: clamp(30px, 8vw, 64px); line-height: 1.05; letter-spacing: -.02em; overflow-wrap: anywhere; }
+  .artista { font-size: clamp(16px, 4vw, 24px); color: var(--muted); }
+  .origem { font-size: 14px; color: var(--muted); min-height: 20px; }
+  .estado { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .estado i { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); }
+  .estado.on i { background: var(--ok); }
+  .ligar { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100%; border: 0; background: rgba(11,12,14,.96); color: var(--ink); font: inherit; font-size: clamp(24px, 6vw, 44px); font-weight: 800; padding: 24px; cursor: pointer; }
+  .ligar small { display: block; margin-top: 10px; font-size: 16px; font-weight: 600; color: var(--muted); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="lugar" id="lugar"></div>
+<h1 id="titulo">Conectando</h1>
+<div class="artista" id="artista"></div>
+<div class="origem" id="origem"></div>
+<div class="estado" id="estado"><i></i><span id="estado-txt">Conectando</span></div>
+<button class="ligar" id="ligar" hidden>Toque para ligar o som<small id="ligar-lugar"></small></button>
+
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const LUGAR = location.pathname.split('/').pop();
+  const PARAMETROS = new URLSearchParams(location.search);
+  const AUTO = PARAMETROS.has('auto'); // aparelho fixo: começa sem toque na tela
+  const MUDO = PARAMETROS.has('mudo'); // testes no PC do clube, onde o som sairia nas caixas
+  // No iPad o navegador ignora audio.volume. Sem isso as duas músicas tocariam juntas e altas na mistura,
+  // então lá uma faixa corta para a outra e a vinheta por cima fica de fora.
+  const SEM_VOLUME = PARAMETROS.has('semvolume') || (() => { const a = new Audio(); a.volume = 0.5; return a.volume !== 0.5; })();
+  const MISTURA_S = SEM_VOLUME ? 0 : 3; // tempo em que uma faixa entra enquanto a outra sai
+  const VINHETA_NIVEL = 0.22; // quanto a música abaixa durante a vinheta
+
+  const decks = [new Audio(), new Audio()];
+  decks.forEach(d => { d.preload = 'auto'; d.volume = 0; d.muted = MUDO; });
+  let ativo = 0;            // índice do deck que está no ar
+  let liberado = false;     // o navegador só libera o som depois de um toque
+  let tocando = null;       // chave do que está no ar
+  let faixaAtual = null;
+  let pediuProxima = false;
+  let ultimo = null;        // último estado recebido
+  let relogio = 0;          // diferença entre o relógio do servidor e o daqui
+  let tentativasStream = 0, retornoStream = null;
+  let nivel = 1;            // 1 normal; menor durante a vinheta
+
+  const rampas = new WeakMap();
+  function rampa(deck, alvo, segundos, depois) {
+    clearInterval(rampas.get(deck));
+    const passos = Math.max(1, Math.round(segundos * 20));
+    const inicio = deck.volume;
+    let n = 0;
+    const t = setInterval(() => {
+      n++;
+      deck.volume = Math.max(0, Math.min(1, inicio + (alvo - inicio) * (n / passos)));
+      if (n >= passos) { clearInterval(t); if (depois) depois(); }
+    }, 50);
+    rampas.set(deck, t);
+  }
+
+  function pedirProxima(de, erro) {
+    fetch('/api/zonas/' + LUGAR + '/proxima', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ de, erro: !!erro }) }).catch(() => {});
+  }
+
+  function parar(deck) {
+    deck.pause();
+    deck.removeAttribute('src');
+    deck.load();
+  }
+
+  // Entra a faixa nova no deck parado enquanto o outro sai.
+  function entrar(url, posicao) {
+    const novo = decks[1 - ativo], velho = decks[ativo];
+    ativo = 1 - ativo;
+    clearInterval(rampas.get(novo));
+    novo.volume = 0;
+    novo.src = url;
+    if (posicao > 0) novo.addEventListener('loadedmetadata', () => { novo.currentTime = posicao; }, { once: true });
+    const pedido = novo.play();
+    if (pedido) pedido.catch(erro => { if (erro.name === 'NotAllowedError') exigirToque(); });
+    rampa(novo, nivel, MISTURA_S);
+    rampa(velho, 0, MISTURA_S, () => { if (decks[ativo] !== velho) parar(velho); });
+  }
+
+  function exigirToque() {
+    liberado = false; tocando = null;
+    $('ligar').hidden = false;
+  }
+
+  function aplicar() {
+    const z = ultimo;
+    if (!z) return;
+    const chave = z.faixa ? 'faixa:' + z.faixa.id + ':' + z.faixaDesde : z.modo === 'radio' ? 'radio' : 'nada';
+    $('titulo').textContent = z.faixa ? z.faixa.titulo : z.modo === 'radio' ? 'Rádio CLUBE' : (z.erro ? 'Som parado' : 'Sem música');
+    $('artista').textContent = z.faixa ? z.faixa.artista : z.modo === 'radio' ? 'Ao vivo' : '';
+    $('origem').textContent = z.erro || (z.listaNome ? z.listaNome : '');
+    if (!liberado || chave === tocando) return;
+    tocando = chave;
+    pediuProxima = false;
+    clearTimeout(retornoStream);
+    if (z.faixa) {
+      faixaAtual = z.faixa;
+      // Recarregou no meio da música: continua de onde ela estaria.
+      const passou = (Date.now() + relogio - z.faixaDesde) / 1000;
+      if (z.faixa.duracao && passou >= z.faixa.duracao - MISTURA_S) { pediuProxima = true; return pedirProxima(z.faixa.id); }
+      entrar(z.faixa.url, passou > 5 ? passou : 0);
+    } else if (z.modo === 'radio') {
+      faixaAtual = null; tentativasStream = 0;
+      entrar('/musica/stream.mp3?t=' + Date.now(), 0);
+    } else {
+      faixaAtual = null;
+      rampa(decks[ativo], 0, MISTURA_S, () => parar(decks[ativo]));
+    }
+  }
+
+  function aoAvancar(deck) {
+    if (deck !== decks[ativo] || !faixaAtual || pediuProxima) return;
+    const resta = deck.duration - deck.currentTime;
+    if (Number.isFinite(resta) && resta <= MISTURA_S + 0.3) { pediuProxima = true; pedirProxima(faixaAtual.id); }
+  }
+  function aoTerminar(deck) {
+    if (deck !== decks[ativo]) return;
+    if (faixaAtual) { if (!pediuProxima) { pediuProxima = true; pedirProxima(faixaAtual.id); } } else reconectar();
+  }
+  function aoErrar(deck) {
+    if (deck !== decks[ativo] || !deck.getAttribute('src')) return;
+    if (faixaAtual) {
+      if (pediuProxima) return;
+      pediuProxima = true;
+      const de = faixaAtual.id;
+      setTimeout(() => pedirProxima(de, true), 2000);
+    } else reconectar();
+  }
+  function reconectar() {
+    if (!liberado || tocando !== 'radio') return;
+    clearTimeout(retornoStream);
+    const espera = Math.min(30000, 1000 * Math.pow(2, tentativasStream));
+    tentativasStream++;
+    retornoStream = setTimeout(() => {
+      if (tocando !== 'radio') return;
+      const d = decks[ativo];
+      d.src = '/musica/stream.mp3?t=' + Date.now();
+      d.play().catch(() => {});
+    }, espera);
+  }
+  decks.forEach(d => {
+    d.addEventListener('timeupdate', () => aoAvancar(d));
+    d.addEventListener('ended', () => aoTerminar(d));
+    d.addEventListener('error', () => aoErrar(d));
+    d.addEventListener('playing', () => { if (d === decks[ativo]) tentativasStream = 0; });
+  });
+
+  // Vinheta: a transmissão já traz a voz; nas listas a música abaixa e o arquivo toca por cima.
+  const voz = new Audio();
+  voz.muted = MUDO;
+  function tocarVinheta(url) {
+    if (!liberado || tocando === 'radio' || SEM_VOLUME) return;
+    nivel = VINHETA_NIVEL;
+    rampa(decks[ativo], nivel, 0.5);
+    voz.src = url;
+    voz.volume = 1;
+    const voltar = () => { nivel = 1; rampa(decks[ativo], nivel, 1.2); };
+    voz.onended = voz.onerror = voltar;
+    voz.play().catch(voltar);
+  }
+
+  $('ligar').onclick = () => {
+    liberado = true;
+    $('ligar').hidden = true;
+    // Destrava os três players com um som mudo dentro do toque; depois eles tocam sem pedir de novo.
+    [decks[0], decks[1], voz].forEach(a => { if (!a.getAttribute('src')) { a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='; a.play().catch(() => {}); } });
+    tocando = null;
+    setTimeout(aplicar, 50);
+  };
+
+  function conectar() {
+    const canal = new EventSource('/api/zonas/eventos?aparelho=' + encodeURIComponent(LUGAR));
+    canal.onopen = () => { $('estado').classList.add('on'); $('estado-txt').textContent = 'Conectado'; };
+    canal.onerror = () => { $('estado').classList.remove('on'); $('estado-txt').textContent = 'Reconectando'; };
+    canal.onmessage = e => {
+      const dados = JSON.parse(e.data);
+      relogio = dados.agora - Date.now();
+      ultimo = dados.lugares[LUGAR];
+      if (!ultimo) return;
+      $('lugar').textContent = ultimo.nome;
+      $('ligar-lugar').textContent = ultimo.nome;
+      document.title = 'Som · ' + ultimo.nome;
+      aplicar();
+    };
+    canal.addEventListener('vinheta', e => tocarVinheta(JSON.parse(e.data).url));
+  }
+
+  // Com ?auto tenta tocar direto; se o navegador bloquear, entrar() mostra o botão.
+  if (AUTO) liberado = true;
+  else $('ligar').hidden = false;
+  conectar();
+})();
+</script>
+</body>
+</html>

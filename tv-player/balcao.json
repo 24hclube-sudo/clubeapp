@@ -1,0 +1,13 @@
+{
+  "saidas": {
+    "terreo": true,
+    "sexto": true,
+    "barras": true
+  },
+  "limites": {
+    "terreo": 1,
+    "sexto": 1,
+    "barras": 1
+  },
+  "externos": {}
+}

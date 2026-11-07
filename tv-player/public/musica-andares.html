@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c0e">
+<title>Música por andar</title>
+<style>
+  :root { --fundo:#0b0c0e; --cartao:#16181c; --alto:#23262b; --linha:#2b2e34; --texto:#f3f4f6; --fraco:#9aa0a8; --ok:#34d17a; --alerta:#ffc465; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--fundo); color:var(--texto); font:15px/1.35 -apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:14px 16px 48px; }
+  header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  header a { color:var(--fraco); text-decoration:none; font-size:24px; line-height:1; padding:4px 10px 4px 0; }
+  h1 { margin:0; font-size:18px; font-weight:600; }
+  h2 { margin:20px 0 10px; font-size:13px; font-weight:600; color:var(--fraco); }
+  button { font:inherit; color:inherit; cursor:pointer; }
+  .lugares { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; padding:4px; background:var(--cartao); border:1px solid var(--linha); border-radius:12px; }
+  .lugares button { display:flex; align-items:center; justify-content:center; gap:7px; padding:12px 4px; border:0; border-radius:9px; background:transparent; color:var(--fraco); font-weight:600; white-space:nowrap; min-width:0; }
+  .lugares button[aria-pressed="true"] { background:var(--alto); color:var(--texto); }
+  .lugares i { width:8px; height:8px; border-radius:50%; background:#555; flex:none; }
+  .lugares i.on { background:var(--ok); }
+  .agora { margin-top:12px; padding:16px; background:var(--cartao); border:1px solid var(--linha); border-radius:12px; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 12px; align-items:center; }
+  .agora small { grid-column:1 / -1; font-size:12px; color:var(--fraco); }
+  .agora b { font-size:20px; font-weight:650; overflow-wrap:anywhere; }
+  .agora span { grid-column:1; color:var(--fraco); overflow-wrap:anywhere; }
+  .agora button { grid-column:2; grid-row:2 / span 2; padding:11px 16px; border:0; border-radius:9px; background:var(--texto); color:#111; font-weight:650; }
+  .aviso { margin-top:12px; padding:11px 13px; border-left:3px solid var(--alerta); background:var(--cartao); border-radius:0 9px 9px 0; font-size:14px; color:var(--fraco); overflow-wrap:anywhere; }
+  .aviso b { color:var(--texto); font-weight:650; }
+  .grade { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  @media (min-width:560px) { .grade { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  .lista { min-height:74px; padding:12px; text-align:left; background:var(--cartao); border:1px solid var(--linha); border-radius:11px; }
+  .lista b { display:block; font-weight:650; }
+  .lista span { display:block; margin-top:3px; font-size:12px; color:var(--fraco); }
+  .lista[aria-pressed="true"] { border-color:var(--ok); }
+  .lista[aria-pressed="true"] span { color:var(--ok); }
+  .lista:disabled { opacity:.55; cursor:wait; }
+  input[type=search] { width:100%; padding:13px 14px; font:inherit; font-size:16px; color:var(--texto); background:var(--cartao); border:1px solid var(--linha); border-radius:10px; }
+  ul { list-style:none; margin:8px 0 0; padding:0; }
+  li { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:9px 2px; border-top:1px solid var(--linha); }
+  li b { display:block; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  li span { display:block; font-size:12px; color:var(--fraco); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  li button { padding:9px 12px; border:1px solid var(--linha); border-radius:8px; background:var(--alto); font-size:14px; }
+  .vazio { padding:12px 2px; color:var(--fraco); font-size:14px; }
+  #toast { position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom)); max-width:90vw; padding:11px 16px; transform:translateX(-50%); background:#f4f4f4; color:#000; border-radius:9px; font-size:14px; font-weight:650; opacity:0; pointer-events:none; transition:opacity .2s; text-align:center; }
+  #toast.on { opacity:1; }
+</style>
+</head>
+<body>
+<main>
+  <header><a href="/celular" aria-label="Voltar ao app">‹</a><h1>Música por andar</h1></header>
+  <div class="lugares" id="lugares" role="group" aria-label="Lugar"></div>
+  <div id="aviso"></div>
+  <section class="agora" aria-live="polite">
+    <small id="agora-rotulo"></small>
+    <b id="agora-titulo">Carregando</b>
+    <span id="agora-detalhe"></span>
+    <button id="pular" hidden>Pular</button>
+  </section>
+  <h2>O que toca aqui</h2>
+  <div class="grade" id="listas"></div>
+  <h2>Buscar uma música</h2>
+  <input type="search" id="busca" placeholder="Música, artista ou álbum" autocomplete="off">
+  <div id="resultados"></div>
+</main>
+<div id="toast" role="status"></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const NOMES = { 1: '1º andar', 5: '5º andar', rooftop: 'Rooftop' };
+const IDS = ['1', '5', 'rooftop'];
+// O app roda em localhost neste PC; o aparelho precisa do endereço da rede.
+const ENDERECO = /^(localhost|127\.)/.test(location.hostname) ? '192.168.1.21:8080' : location.host;
+
+let lugar = IDS.includes(location.hash.slice(1)) ? location.hash.slice(1) : (() => { try { return localStorage.getItem('lugar-musica') || '1'; } catch { return '1'; } })();
+if (!IDS.includes(lugar)) lugar = '1';
+let zonas = {}, caixa = null, listas = [], ocupado = false, toastT = 0;
+
+function avisar(texto) {
+  $('toast').textContent = texto;
+  $('toast').classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => $('toast').classList.remove('on'), 2200);
+}
+
+async function postar(url, corpo) {
+  const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corpo) });
+  const dados = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(dados.erro || 'Não consegui agora');
+  return dados;
+}
+
+// O 5º toca pela janela de som deste PC (caixa-player); 1º e rooftop, pelo aparelho de cada lugar (zonas).
+const noCaixa = corpo => postar('/musica/api/caixa', corpo).then(d => { caixa = d; desenhar(); return d; });
+const noLugar = (acao, corpo) => postar(`/api/zonas/${lugar}/${acao}`, corpo || {});
+
+const COMANDOS = {
+  async radio() { if (lugar === '5') await noCaixa({ acao: 'modo', modo: 'radio' }); else await noLugar('radio'); },
+  async lista(id) {
+    if (lugar !== '5') return noLugar('lista', { id });
+    const { faixas } = await (await fetch(`/api/zonas/lista/${encodeURIComponent(id)}`)).json();
+    if (!faixas || !faixas.length) throw new Error('Essa lista está vazia');
+    await noCaixa({ acao: 'tocar', id: faixas[Math.floor(Math.random() * faixas.length)].id, momento: id });
+    await noCaixa({ acao: 'modo', modo: 'player' });
+  },
+  async pedir(id) {
+    if (lugar !== '5') return noLugar('pedir', { id });
+    await noCaixa({ acao: 'tocar', id });
+    await noCaixa({ acao: 'modo', modo: 'player' });
+  },
+  async pular() {
+    if (lugar === '5') return noCaixa({ acao: 'proxima' });
+    const z = zonas[lugar];
+    if (z && z.faixa) return noLugar('proxima', { de: z.faixa.id });
+  },
+};
+
+async function executar(comando, valor, sucesso) {
+  if (ocupado) return;
+  ocupado = true;
+  try { await COMANDOS[comando](valor); avisar(sucesso); }
+  catch (e) { avisar(e.message || 'Sem conexão com o servidor'); }
+  finally { ocupado = false; desenhar(); }
+}
+
+function situacao() {
+  if (lugar === '5') {
+    const c = caixa;
+    const player = !!c && c.modo === 'player';
+    return {
+      conectado: !!c && c.caixaAberta, aparelhos: c && c.caixaAberta ? 1 : 0, radio: !!c && !player, lista: null,
+      titulo: !c ? 'Carregando' : player ? (c.faixa ? c.faixa.titulo : 'Sem música') : 'Rádio CLUBE',
+      detalhe: !c ? '' : player ? (c.faixa ? c.faixa.artista : '') : 'Ao vivo',
+      pular: player && !!(c && c.faixa), erro: null,
+    };
+  }
+  const z = zonas[lugar];
+  if (!z) return { conectado: false, aparelhos: 0, radio: false, lista: null, titulo: 'Carregando', detalhe: '', pular: false, erro: null };
+  return {
+    conectado: z.aparelhos > 0, aparelhos: z.aparelhos, radio: z.modo === 'radio' && !z.faixa, lista: z.lista,
+    titulo: z.faixa ? z.faixa.titulo : z.modo === 'radio' ? 'Rádio CLUBE' : 'Sem música',
+    detalhe: z.faixa ? [z.faixa.artista, z.listaNome].filter(Boolean).join(' · ') : z.modo === 'radio' ? 'Ao vivo' : '',
+    pular: !!z.faixa, erro: z.erro,
+  };
+}
+
+function desenharLugares() {
+  const ligado = id => id === '5' ? !!(caixa && caixa.caixaAberta) : !!(zonas[id] && zonas[id].aparelhos);
+  $('lugares').innerHTML = IDS.map(id => `<button data-lugar="${id}" aria-pressed="${id === lugar}"><i class="${ligado(id) ? 'on' : ''}"></i>${NOMES[id]}</button>`).join('');
+}
+
+function desenhar() {
+  desenharLugares();
+  const s = situacao();
+  $('agora-rotulo').textContent = 'Tocando em ' + NOMES[lugar];
+  $('agora-titulo').textContent = s.titulo;
+  $('agora-detalhe').textContent = s.detalhe;
+  $('pular').hidden = !s.pular;
+  const link = `${ENDERECO}/som/${lugar}`;
+  let aviso = '';
+  if (s.erro) aviso = `<b>${esc(s.erro)}.</b> Escolha a lista de novo para tentar outra vez.`;
+  else if (lugar === '5' && caixa && !caixa.caixaAberta) aviso = `<b>Janela de som fechada neste PC.</b> Abra ${esc(link)} no PC ligado às caixas.`;
+  else if (lugar !== '5' && zonas[lugar] && !s.aparelhos) aviso = `<b>Nenhum aparelho tocando em ${NOMES[lugar]}.</b> No aparelho ligado às caixas, abra ${esc(link)} e toque na tela.`;
+  else if (s.aparelhos > 1) aviso = `<b>${s.aparelhos} aparelhos tocando aqui.</b> Deixe a página aberta só no que está ligado às caixas.`;
+  $('aviso').innerHTML = aviso ? `<div class="aviso">${aviso}</div>` : '';
+
+  const hora = new Date().getHours();
+  const naHora = l => l.inicio != null && (l.inicio < l.fim ? hora >= l.inicio && hora < l.fim : hora >= l.inicio || hora < l.fim);
+  const cartoes = [`<button class="lista" data-acao="radio" aria-pressed="${s.radio}"><b>Rádio CLUBE</b><span>${s.radio ? 'Tocando aqui' : 'Ao vivo, com vinhetas'}</span></button>`];
+  for (const l of listas) {
+    const aqui = s.lista === l.id;
+    const faixaHora = l.inicio == null ? `${l.totalFaixas} faixas` : `${l.totalFaixas} músicas${naHora(l) ? ' · combina agora' : ''}`;
+    cartoes.push(`<button class="lista" data-acao="lista" data-id="${esc(l.id)}" data-nome="${esc(l.nome)}" aria-pressed="${aqui}"><b>${esc(l.nome)}</b><span>${aqui ? 'Tocando aqui' : faixaHora}</span></button>`);
+  }
+  $('listas').innerHTML = cartoes.join('');
+}
+
+$('lugares').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-lugar]');
+  if (!b) return;
+  lugar = b.dataset.lugar;
+  try { localStorage.setItem('lugar-musica', lugar); } catch {}
+  history.replaceState(null, '', '#' + lugar);
+  desenhar();
+});
+$('listas').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-acao]');
+  if (!b) return;
+  if (b.dataset.acao === 'radio') executar('radio', null, `Rádio CLUBE em ${NOMES[lugar]}`);
+  else executar('lista', b.dataset.id, `${b.dataset.nome} em ${NOMES[lugar]}`);
+});
+$('pular').onclick = () => executar('pular', null, 'Música pulada');
+window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (IDS.includes(h)) { lugar = h; desenhar(); } });
+
+// Busca
+let buscaN = 0, buscaT = 0;
+$('busca').addEventListener('input', () => {
+  clearTimeout(buscaT);
+  buscaT = setTimeout(async () => {
+    const q = $('busca').value.trim(), n = ++buscaN, alvo = $('resultados');
+    if (q.length < 2) { alvo.innerHTML = ''; return; }
+    try {
+      const { faixas } = await (await fetch('/api/zonas/busca?q=' + encodeURIComponent(q))).json();
+      if (n !== buscaN) return;
+      alvo.innerHTML = faixas.length
+        ? '<ul>' + faixas.map(f => `<li><div style="min-width:0"><b>${esc(f.titulo)}</b><span>${esc(f.artista)}</span></div><button data-id="${esc(f.id)}" data-nome="${esc(f.titulo)}">Tocar</button></li>`).join('') + '</ul>'
+        : '<p class="vazio">Nada encontrado. A lista de músicas pode levar um minuto para carregar depois de reiniciar.</p>';
+    } catch { alvo.innerHTML = '<p class="vazio">Não consegui buscar agora.</p>'; }
+  }, 220);
+});
+$('resultados').addEventListener('click', ev => {
+  const b = ev.target.closest('button[data-id]');
+  if (b) executar('pedir', b.dataset.id, `${b.dataset.nome} em ${NOMES[lugar]}`);
+});
+
+// Dados ao vivo
+function conectar() {
+  const canal = new EventSource('/api/zonas/eventos');
+  canal.onmessage = e => { zonas = JSON.parse(e.data).lugares; desenhar(); };
+}
+async function lerCaixa() {
+  try { caixa = await (await fetch('/musica/api/caixa')).json(); desenhar(); } catch {}
+}
+async function lerListas() {
+  try { listas = (await (await fetch('/api/zonas/listas')).json()).listas; desenhar(); } catch {}
+}
+// O 5º acompanha na hora o que outro aparelho mudar nas caixas.
+const sinc = new EventSource('/musica/api/sinc');
+sinc.onmessage = e => { try { const d = JSON.parse(e.data); if (d.caixa) { caixa = d.caixa; desenhar(); } } catch {} };
+conectar(); lerCaixa(); lerListas();
+setInterval(lerCaixa, 3000);
+setInterval(lerListas, 60000);
+</script>
+</body>
+</html>

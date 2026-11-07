@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rádio CLUBE</title>
+<meta name="description" content="A rádio do CLUBE, na Rua da Consolação, 1813, em São Paulo. Do bar ao rooftop.">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Rádio CLUBE">
+<link rel="manifest" href="app.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="icones/icon.png">
+<link rel="icon" type="image/svg+xml" href="icones/icon.svg">
+<link rel="apple-touch-icon" href="icones/apple-icon.png">
+<link rel="preload" href="fontes/Archivo-Variavel.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="lateral" aria-label="Navegação">
+    <a class="marca" href="#/" aria-label="Rádio CLUBE, início">
+      <span class="logo" aria-hidden="true"></span>
+      <span class="marca-sufixo">rádio</span>
+    </a>
+    <nav class="menu">
+      <a href="#/" data-rota="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 10.5V21h6v-6h6v6h6V10.5z"/></svg>Início</a>
+      <a href="#/programacao" data-rota="programacao"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 10.6 4.2 2.5-1 1.7L11 13.7V6h2z"/></svg>Programação</a>
+      <a href="#/busca" data-rota="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>Buscar</a>
+    </nav>
+    <div class="lateral-lista">
+      <h2>Momentos do dia</h2>
+      <ul id="lista-momentos"></ul>
+    </div>
+    <p class="endereco">Rua da Consolação, 1813<br>São Paulo</p>
+  </aside>
+
+  <main class="principal" id="principal" tabindex="-1"></main>
+
+  <footer class="barra" id="barra" aria-label="Tocando agora">
+    <button class="barra-faixa" id="abrir-tela" aria-label="Abrir tela do que está tocando">
+      <span class="capinha" id="barra-capa"></span>
+      <span class="barra-texto">
+        <strong id="barra-titulo">Rádio CLUBE</strong>
+        <span id="barra-artista">Conectando à estação</span>
+      </span>
+    </button>
+    <div class="barra-centro">
+      <div class="controles">
+        <button class="botao-passar" data-acao="anterior" aria-label="Música anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zm3.5 7L19 5v14z"/></svg></button>
+        <button class="botao-tocar" id="tocar" aria-label="Tocar nas caixas" data-estado="parado">
+          <svg class="i-tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="i-pausar" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+          <span class="i-carregando" aria-hidden="true"></span>
+        </button>
+        <button class="botao-passar" data-acao="proxima" aria-label="Próxima música"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM5 5l9.5 7L5 19z"/></svg></button>
+      </div>
+      <div class="progresso" aria-hidden="true">
+        <span id="tempo-atual">0:00</span>
+        <div class="trilho"><div class="trilho-feito" id="trilho-feito"></div></div>
+        <span id="tempo-total">0:00</span>
+      </div>
+    </div>
+    <div class="barra-direita">
+      <span class="ao-vivo" id="ao-vivo"><i></i><span id="ao-vivo-texto">ao vivo</span></span>
+      <div class="modo-caixas" role="group" aria-label="O que toca nas caixas">
+        <button data-modo="radio" aria-pressed="false">Rádio</button>
+        <button data-modo="player" aria-pressed="false">Player</button>
+      </div>
+      <label class="volume">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9zm11.5 3A4.5 4.5 0 0 0 12 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+        <span class="volume-nome">Caixas</span>
+        <input class="campo-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume das caixas">
+      </label>
+    </div>
+    <div class="trilho-celular" aria-hidden="true"><div id="trilho-celular"></div></div>
+  </footer>
+
+  <nav class="abas" aria-label="Navegação">
+    <a href="#/" data-rota="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 10.5V21h6v-6h6v6h6V10.5z"/></svg>Início</a>
+    <a href="#/programacao" data-rota="programacao"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 10.6 4.2 2.5-1 1.7L11 13.7V6h2z"/></svg>Programação</a>
+    <a href="#/busca" data-rota="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>Buscar</a>
+  </nav>
+</div>
+
+<section class="tela-cheia" id="tela-cheia" hidden aria-label="Tocando agora">
+  <header>
+    <button id="fechar-tela" aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 16.4-7.7-7.7 1.4-1.4 6.3 6.3 6.3-6.3 1.4 1.4z"/></svg></button>
+    <span id="tela-momento">Rádio CLUBE</span>
+    <span class="tela-lado"></span>
+  </header>
+  <div class="tela-capa" id="tela-capa"></div>
+  <div class="tela-texto">
+    <h2 id="tela-titulo">Rádio CLUBE</h2>
+    <p id="tela-artista"></p>
+    <p class="tela-album" id="tela-album"></p>
+  </div>
+  <div class="tela-progresso" aria-hidden="true">
+    <div class="trilho"><div class="trilho-feito" id="tela-trilho"></div></div>
+    <div class="tela-tempos"><span id="tela-atual">0:00</span><span id="tela-total">0:00</span></div>
+  </div>
+  <div class="controles">
+    <button class="botao-passar" data-acao="anterior" aria-label="Música anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zm3.5 7L19 5v14z"/></svg></button>
+    <button class="botao-tocar botao-tocar-grande" id="tela-tocar" aria-label="Tocar nas caixas" data-estado="parado">
+      <svg class="i-tocar" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="i-pausar" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+      <span class="i-carregando" aria-hidden="true"></span>
+    </button>
+    <button class="botao-passar" data-acao="proxima" aria-label="Próxima música"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM5 5l9.5 7L5 19z"/></svg></button>
+  </div>
+  <label class="volume volume-tela">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9zm11.5 3A4.5 4.5 0 0 0 12 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+    <span class="volume-nome">Caixas</span>
+    <input class="campo-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume das caixas">
+  </label>
+  <p class="tela-proxima" id="tela-proxima"></p>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>

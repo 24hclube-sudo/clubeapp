@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>O que reage a quê</title>
+<style>
+  :root { --fundo:#0b0b0c; --cartao:#161618; --linha:#2a2a2d; --texto:#f2f2f3; --fraco:#9a9aa1; --bom:#3ecf74; --alerta:#ff6a5e; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--fundo); color:var(--texto); font:15px/1.35 -apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:640px; margin:0 auto; padding:14px 16px 40px; }
+  header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  header a { color:var(--fraco); text-decoration:none; font-size:24px; line-height:1; padding:4px 8px 4px 0; }
+  h1 { font-size:18px; margin:0; font-weight:600; flex:1; white-space:nowrap; }
+  #salvo { font-size:13px; color:var(--fraco); white-space:nowrap; }
+  #salvo.erro { color:var(--alerta); }
+  .cartao { background:var(--cartao); border:1px solid var(--linha); border-radius:12px; padding:14px; margin-bottom:12px; }
+  h2 { margin:0; font-size:15px; font-weight:600; }
+  .explica { margin:3px 0 8px; font-size:13px; color:var(--fraco); }
+  .linha { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--linha); }
+  .linha:first-of-type { border-top:0; }
+  .linha div { min-width:0; }
+  .linha b { display:block; font-weight:600; font-size:14px; }
+  .linha small { display:block; font-size:12px; color:var(--fraco); }
+  select { flex:none; width:128px; height:40px; font:inherit; font-size:14px; color:var(--texto); background:#232326; border:1px solid var(--linha); border-radius:9px; padding:0 8px; }
+  select.fora { color:var(--fraco); }
+  .deslize { display:block; padding:10px 0; border-top:1px solid var(--linha); }
+  .deslize:first-of-type { border-top:0; }
+  .deslize .topo { display:flex; justify-content:space-between; gap:12px; }
+  .deslize b { font-size:14px; font-weight:600; }
+  .deslize output { font-size:14px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .deslize small { display:block; font-size:12px; color:var(--fraco); margin:2px 0 6px; }
+  .deslize input { width:100%; height:32px; margin:0; }
+  .chave { flex:none; position:relative; width:52px; height:32px; border-radius:16px; border:0; background:#3a3a3e; cursor:pointer; padding:0; }
+  .chave::after { content:""; position:absolute; top:3px; left:3px; width:26px; height:26px; border-radius:50%; background:#fff; transition:left .12s; }
+  .chave[aria-checked="true"] { background:var(--bom); }
+  .chave[aria-checked="true"]::after { left:23px; }
+  .pe { display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; }
+  .pe a { color:var(--texto); font-size:14px; }
+  button.texto { font:inherit; font-size:14px; color:var(--texto); background:#232326; border:1px solid var(--linha); border-radius:9px; padding:10px 12px; cursor:pointer; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <a href="/celular#/visuais" aria-label="Voltar ao app">‹</a>
+    <h1>O que reage a quê</h1>
+    <span id="salvo" role="status"></span>
+  </header>
+
+  <section class="cartao">
+    <h2>Som que vem da mesa</h2>
+    <p class="explica">Abaixo do piso, o som conta como silêncio e o que reage fica parado. Vale para os visuais do LED e para as barras. Acompanhe no monitor de som.</p>
+    <div id="som"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>Proteção e imagem do LED</h2>
+    <p class="explica">O limite vale para o brilho, o flash e o strobo do painel. Nenhum botão do app passa dele.</p>
+    <div id="seguranca"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>Logo</h2>
+    <p class="explica">Vale nos visuais de Espaço de pé, Marca em inox e Escultura cinética.</p>
+    <div id="logo"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>LED: visuais de pé e Marca em inox</h2>
+    <p class="explica">Vale na hora para os visuais de Espaço de pé e Marca em inox. Sem música, tudo o que segue o som fica parado.</p>
+    <div id="led"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>LED: visuais da Pista Quente (Akin)</h2>
+    <p class="explica">Cartaz, Recortes, Fila, Letras 3D, Cabeças 3D e Túnel 3D.</p>
+    <div id="akin"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>LED: demais visuais</h2>
+    <p class="explica">Cada um tem as reações desenhadas dentro dele. Aqui você escolhe quais sons chegam até eles.</p>
+    <div id="outros"></div>
+  </section>
+
+  <section class="cartao">
+    <h2>Barras do 5º</h2>
+    <p class="explica">Nas cenas de áudio, escolha de onde vem cada parte. Exemplo: em "Bumbo da cena", escolha Agudo e as cenas passam a bater no chimbal.</p>
+    <div id="barras"></div>
+  </section>
+
+  <div class="pe">
+    <a href="monitor-som.html">Abrir o monitor de som</a>
+    <button class="texto" id="padrao">Voltar ao padrão</button>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const NOMES = { desligado: 'Desligado', fixo: 'Fixo, sem som', bumbo: 'Bumbo (kick)', grave: 'Grave', baixo: 'Baixo', medio: 'Médio', agudo: 'Agudo', volume: 'Volume geral', ligado: 'Ligado', prata: 'Prata sólida', cromado: 'Cromado', canelado: 'Canelado', branco: 'Branco chapado', contorno: 'Só o contorno', metal: 'Gradiente metal', halo: 'Halo das letras', aurora: 'Nuvem de luz', neon: 'Neon fino', nada: 'Não reage', acende: 'Acende', pulsa: 'Pulsa no tamanho', equalizador: 'Equalizador nas letras', onda: 'Onda de luz', pequeno: 'Pequeno', medio: 'Médio', grande: 'Grande' };
+const SOM = ['desligado', 'bumbo', 'grave', 'medio', 'agudo', 'volume'];
+const LED = [
+  ['personagemSom', 'Brilho dos personagens', 'O brilho dos personagens da parede', ['desligado', 'grave', 'medio', 'agudo', 'volume']],
+  ['ceu', 'Céu do Firmamento', 'Galáxia, aurora, coroa, anéis e disco', SOM],
+  ['estrelas', 'Estrelas', 'O brilho do céu', SOM],
+  ['reflexo', 'Reflexo do metal', 'Só nos visuais de Marca em inox', SOM],
+  ['meteoros', 'Estrelas cadentes', 'Não dependem do som', ['ligado', 'desligado']],
+];
+const OUTROS = [['bumbo', 'Bumbo (kick)', 'As batidas'], ['grave', 'Grave', 'Até 180 Hz'], ['medio', 'Médio', '180 Hz a 2 kHz'], ['agudo', 'Agudo', 'Acima de 2 kHz']];
+const FONTES_BARRAS = ['desligado', 'bumbo', 'baixo', 'medio', 'agudo'];
+const BARRAS = [['bumbo', 'Bumbo da cena', '35–110 Hz'], ['baixo', 'Baixo da cena', '110–400 Hz'], ['medio', 'Médio da cena', '400 Hz–3 kHz'], ['agudo', 'Agudo da cena', '3–14 kHz']];
+
+let ultimoEnvio = 0;
+const avisar = (t, erro) => { const s = $('salvo'); s.textContent = t; s.classList.toggle('erro', !!erro); };
+async function enviar(corpo) {
+  ultimoEnvio = Date.now();
+  avisar('Salvando…');
+  try {
+    const r = await fetch('/api/reacoes', { method: 'POST', body: JSON.stringify(corpo) });
+    if (!r.ok) throw new Error();
+    pintar(await r.json());
+    avisar('Salvo');
+  } catch { avisar('Não salvou', true); }
+}
+function linhaEscolha(alvo, grupo, [chave, nome, sub, opcoes]) {
+  const el = document.createElement('label');
+  el.className = 'linha';
+  el.innerHTML = `<div><b>${nome}</b><small>${sub}</small></div><select>${opcoes.map(o => `<option value="${o}">${NOMES[o]}</option>`).join('')}</select>`;
+  const s = el.querySelector('select');
+  s.dataset.g = grupo; s.dataset.c = chave;
+  s.onchange = () => enviar({ grupo, chave, valor: s.value });
+  alvo.appendChild(el);
+}
+LED.forEach(l => linhaEscolha($('led'), 'led', l));
+[
+  ['logo', 'Acabamento', 'Como o logo é feito', ['prata', 'cromado', 'canelado', 'metal', 'branco', 'contorno']],
+  ['logoTam', 'Tamanho', 'Na parede do DJ', ['pequeno', 'medio', 'grande']],
+  ['logoReage', 'Como reage ao som', 'O jeito de o logo responder', ['nada', 'acende', 'pulsa', 'equalizador', 'onda']],
+  ['logoFonte', 'Reage a quê', 'Vale para Acende, Pulsa e Onda', SOM.slice(1)],
+  ['contraluz', 'Luz atrás do logo', 'Desligado apaga. Fixo fica sempre acesa', [...SOM, 'fixo']],
+  ['estiloLuz', 'Estilo da luz atrás', 'Sai das letras e some aos poucos', ['halo', 'aurora', 'neon']],
+  ['luz', 'Brilho em volta das letras', 'Um brilho discreto, separado da luz de trás', [...SOM, 'fixo']],
+  ['booth', 'Luz do booth', 'Spot que vem de baixo e reflete nas letras', [...SOM, 'fixo']],
+  ['faixa', 'Faixa de luz', 'Passa pelas letras', [...SOM, 'fixo']],
+  ['brilhinhos', 'Brilhinhos', 'Estrelinhas na borda das letras', [...SOM, 'fixo']],
+  ['empurra', 'Logo empurrado', 'O logo recua e volta', SOM],
+].forEach(l => linhaEscolha($('logo'), 'led', l));
+const deslizes = [];
+function deslize(alvo, nome, sub, min, max, passo, texto, aoMudar) {
+  const el = document.createElement('label');
+  el.className = 'deslize';
+  el.innerHTML = `<div class="topo"><b>${nome}</b><output></output></div><small>${sub}</small><input type="range" min="${min}" max="${max}" step="${passo}">`;
+  const i = el.querySelector('input'), o = el.querySelector('output');
+  let espera = 0;
+  const d = { mexeu: 0, definir: v => { if (Date.now() - d.mexeu < 1500) return; i.value = v; o.textContent = texto(Number(v)); } };
+  i.oninput = () => { d.mexeu = Date.now(); o.textContent = texto(Number(i.value)); clearTimeout(espera); espera = setTimeout(() => aoMudar(Number(i.value)), 120); };
+  alvo.appendChild(el);
+  deslizes.push(d);
+  return d;
+}
+const virg = v => String(v).replace('.', ',');
+const dPiso = deslize($('som'), 'Piso do som', 'Se o ruído da mesa acende as coisas, suba. Se a música não acende nada, desça.', -60, 0, 1, v => v + ' dB', v => enviar({ grupo: 'som', chave: 'piso', valor: v }));
+const dForca = deslize($('som'), 'Força da reação', 'O quanto tudo responde ao som. 100% é o normal.', 0, 200, 5, v => v + '%', v => enviar({ grupo: 'som', chave: 'forca', valor: v }));
+const ajuste = (nome, v) => fetch(`/api/visuais/ajuste?${nome}=${v}`, { method: 'POST' }).then(() => avisar('Salvo')).catch(() => avisar('Não salvou', true));
+const dLimite = deslize($('seguranca'), 'Limite de brilho', 'O máximo que o painel recebe, mesmo com brilho, flash ou strobo no topo.', 5, 100, 1, v => v + '%', v => ajuste('limite', v));
+const dHz = deslize($('seguranca'), 'Strobo máximo', 'Piscadas por segundo. O sinal do painel mostra limpo até 7,5.', 1, 7.5, 0.5, v => virg(v) + ' por segundo', v => ajuste('limiteHz', v));
+const dBanding = deslize($('seguranca'), 'Correção de banding', 'Disfarça as faixas nos degradês com um ruído bem fino. 0 desliga. Suba aos poucos: quanto mais baixo o brilho, mais ele ajuda.', 0, 8, 0.5, v => (v ? virg(v) : 'Desligada'), v => enviar({ grupo: 'tela', chave: 'antiBanding', valor: v }));
+async function lerAjuste() { try { const d = await (await fetch('/api/visuais', { cache: 'no-store' })).json(); if (d.limite) dLimite.definir(d.limite); if (d.limiteHz) dHz.definir(d.limiteHz); } catch {} }
+lerAjuste(); setInterval(lerAjuste, 5000);
+[
+  ['akinCor', 'Cor', 'O degradê sobe e desce, o fundo clareia', SOM],
+  ['akinLetra', 'Letras', 'A letra engorda e a palavra é empurrada', SOM],
+  ['akinMassa', 'Massa', 'Fatias, marcha, volume e blocos', SOM],
+].forEach(l => linhaEscolha($('akin'), 'led', l));
+BARRAS.forEach(([c, n, s]) => linhaEscolha($('barras'), 'barras', [c, n, s, FONTES_BARRAS]));
+OUTROS.forEach(([chave, nome, sub]) => {
+  const el = document.createElement('div');
+  el.className = 'linha';
+  el.innerHTML = `<div><b>${nome}</b><small>${sub}</small></div><button class="chave" role="switch" aria-label="${nome}"></button>`;
+  const b = el.querySelector('button');
+  b.dataset.c = chave;
+  b.onclick = () => enviar({ grupo: 'outros', chave, valor: b.getAttribute('aria-checked') !== 'true' });
+  $('outros').appendChild(el);
+});
+function pintar(d) {
+  if (d.som) { dPiso.definir(d.som.piso); dForca.definir(d.som.forca); }
+  if (d.tela) dBanding.definir(d.tela.antiBanding);
+  document.querySelectorAll('select').forEach(s => { s.value = d[s.dataset.g][s.dataset.c]; s.classList.toggle('fora', s.value === 'desligado'); });
+  document.querySelectorAll('.chave').forEach(b => b.setAttribute('aria-checked', String(!!d.outros[b.dataset.c])));
+}
+$('padrao').onclick = () => enviar({ padrao: true });
+async function ler() {
+  if (Date.now() - ultimoEnvio < 1500 || document.activeElement.tagName === 'SELECT') return;
+  try { pintar(await (await fetch('/api/reacoes', { cache: 'no-store' })).json()); } catch { avisar('Sem resposta', true); }
+}
+ler();
+setInterval(ler, 3000);
+</script>
+</body>
+</html>

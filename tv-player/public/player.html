@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TV Player</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; cursor: none; font-family: system-ui, sans-serif; }
+  /* Área de exibição; com ?girar=90/270 ela é girada para TVs em pé com sistema deitado. */
+  #tela { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; transform-origin: 0 0; }
+  /* Troca seca, sem fade. */
+  .layer { position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0; }
+  /* Brilho: véu preto por cima de tudo (opacity = 1 - brilho). */
+  #dim { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: #000; opacity: 0; pointer-events: none; z-index: 9; }
+  .layer.on { opacity: 1; }
+  .layer img, .layer video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+  /* Regra das TVs: nada de faixa preta. O que chegar fora do formato delas preenche a tela. */
+  .tv-tela .layer img, .tv-tela .layer video { object-fit: cover; }
+  .tv-tela .layer img[data-src*="teste-giro"] { object-fit: contain; } /* cartão de teste: é deitado de propósito */
+  .layer iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+  #status { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #888; font-size: 2.2vw; gap: 1vw; text-align: center; }
+  #status b { color: #eee; font-size: 4vw; font-weight: 600; }
+  #status.hidden { display: none; }
+  #ident { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: none; align-items: center; justify-content: center; z-index: 10;
+           background: rgba(0,0,0,.75); color: #fff; font-size: 9vw; font-weight: 700; }
+  #ident.on { display: flex; }
+  #net { position: absolute; right: 1vw; bottom: 1vw; width: 1vw; height: 1vw; border-radius: 50%; background: #c33; z-index: 11; display: none; }
+  #net.on { display: block; }
+  #baixando { position: absolute; left: 0; right: 0; bottom: 8%; text-align: center; color: #888; font-size: 2.2vw; z-index: 8; display: none; }
+  #baixando.on { display: block; }
+</style>
+</head>
+<body>
+<div id="tela">
+<div id="a" class="layer"></div>
+<div id="b" class="layer"></div>
+<div id="status"><b id="st-name">TV Player</b><span id="st-msg">Conectando…</span><small id="st-id"></small></div>
+<div id="dim"></div>
+<div id="ident"></div>
+<div id="baixando"></div>
+</div>
+<div id="net" title="sem conexão com o servidor"></div>
+<script src="ambiente.js"></script>
+<script src="programacao-player.js"></script>
+<script>
+// Aberto como arquivo (file://) não há servidor para conectar: vai para o endereço certo.
+// Só com ?id= (uma tela de verdade); sem id viraria uma tela fantasma no servidor.
+if (location.protocol === 'file:' && /[?&]id=/.test(location.search)) location.replace('http://localhost:8080/player.html' + location.search);
+(function () {
+  var qs = new URLSearchParams(location.search);
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+
+  var id = qs.get('id') || store('tvp-id');
+  if (!id) { id = 'web-' + Math.random().toString(36).slice(2, 10); }
+  store('tvp-id', id);
+  var initialName = qs.get('name') || '';
+  var info = { model: qs.get('model') || '', app: qs.get('app') ? 'tizen' : 'browser', grupo: qs.get('grupo') || '',
+    andar: qs.get('andar') || '', ua: navigator.userAgent.slice(0, 160) };
+  if (info.app === 'tizen' || info.grupo === 'telas') document.documentElement.className += ' tv-tela';
+
+  var $ = function (s) { return document.getElementById(s); };
+  $('st-id').textContent = id;
+
+  // ---------- rotação (TV em pé com sistema deitado) ----------
+  var girar = parseInt(qs.get('girar') || '0', 10);
+  function dims() {
+    var W = window.innerWidth, H = window.innerHeight;
+    return (girar === 90 || girar === 270) ? { w: H, h: W } : { w: W, h: H };
+  }
+  function aplicarGiro() {
+    var t = $('tela'), W = window.innerWidth, H = window.innerHeight;
+    if (girar === 90) { t.style.width = H + 'px'; t.style.height = W + 'px'; t.style.transform = 'translate(' + W + 'px,0) rotate(90deg)'; }
+    else if (girar === 270) { t.style.width = H + 'px'; t.style.height = W + 'px'; t.style.transform = 'translate(0,' + H + 'px) rotate(-90deg)'; }
+    else if (girar === 180) { t.style.transform = 'translate(' + W + 'px,' + H + 'px) rotate(180deg)'; }
+  }
+  aplicarGiro();
+  window.addEventListener('resize', aplicarGiro);
+
+  // ---------- relógio sincronizado com o servidor ----------
+  var offset = 0, bestRtt = Infinity;
+  // Relógio local de alta precisão: nas Samsung (Tizen) o Date.now() anda de 1 em 1 segundo,
+  // o que fazia a sincronia "pular". performance.now() é contínuo; o Date.now() só dá a base.
+  var baseData = Date.now(), basePerf = (window.performance && performance.now) ? performance.now() : 0;
+  function agoraLocal() { return (window.performance && performance.now) ? baseData + (performance.now() - basePerf) : Date.now(); }
+  function now() { return agoraLocal() + offset; }
+
+  // ---------- conexão ----------
+  var ws, retry = 1000, connected = false;
+  function connect() {
+    var proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+    ws = new WebSocket(proto + location.host + '/ws');
+    ws.onopen = function () {
+      connected = true; retry = 1000; $('net').classList.remove('on');
+      ws.send(JSON.stringify({ type: 'hello-player', id: id, name: initialName, info: info }));
+      bestRtt = Infinity; syncClock(6);
+      updateStatus();
+    };
+    ws.onmessage = function (e) {
+      var m = JSON.parse(e.data);
+      if (m.type === 'pong') {
+        var t1 = agoraLocal(), rtt = t1 - m.t0;
+        if (rtt < bestRtt) { bestRtt = rtt; offset = m.ts - (m.t0 + t1) / 2; relogioOk = true; }
+      } else if (m.type === 'welcome') { $('st-name').textContent = m.name; document.title = m.name; }
+      else if (m.type === 'content') { setContent(m.content); }
+      else if (m.type === 'identify') { identify(m.name); }
+      else if (m.type === 'precache') { todasAsCenas = m.srcs || []; preBaixar(); }
+      else if (m.type === 'velocidade') { velocidade = m.valor || 1; aplicarVelocidade(); }
+      else if (m.type === 'brilho') { $('dim').style.opacity = String(1 - Math.max(0, Math.min(1, m.valor))); }
+      else if (m.type === 'anuncio') { if (progPlayer) progPlayer.receber(m); }
+      else if (m.type === 'reload') { location.reload(); }
+    };
+    ws.onclose = function () {
+      connected = false; $('net').classList.toggle('on', !!content); updateStatus();
+      setTimeout(connect, retry); retry = Math.min(retry * 2, 15000);
+    };
+    ws.onerror = function () { try { ws.close(); } catch (e) {} };
+  }
+  function syncClock(n) {
+    for (var i = 0; i < n; i++) setTimeout(function () {
+      if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'ping', t0: agoraLocal() }));
+    }, i * 250);
+  }
+  setInterval(function () { bestRtt = Infinity; syncClock(4); }, 60000);
+
+  // ---------- cache local (vídeos/imagens baixados para a própria tela) ----------
+  // Os vídeos 4K por streaming no Wi-Fi travavam e deixavam a TV preta. Agora cada arquivo é
+  // baixado inteiro para o IndexedDB da tela e toca de lá. Os caminhos de /media/ têm versão
+  // (/media/v123/x.mp4), então arquivo novo = chave nova. Sem IndexedDB, volta ao streaming.
+  var LIMITE_CACHE = 2.5 * 1024 * 1024 * 1024; // bytes
+  var db = null, urls = {}, baixando = {}, progresso = {};
+  var dbPronto = new Promise(function (ok) {
+    try {
+      var r = indexedDB.open('tvp-cache', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('arquivos', { keyPath: 'src' }); };
+      r.onsuccess = function () { db = r.result; ok(); };
+      r.onerror = r.onblocked = function () { ok(); };
+    } catch (e) { ok(); }
+  });
+
+  function lerCache(src) {
+    return new Promise(function (ok) {
+      try {
+        var tx = db.transaction('arquivos', 'readwrite'), st = tx.objectStore('arquivos'), g = st.get(src);
+        g.onsuccess = function () {
+          var reg = g.result;
+          if (reg) { reg.usado = Date.now(); st.put(reg); }
+          ok(reg ? reg.blob : null);
+        };
+        g.onerror = function () { ok(null); };
+      } catch (e) { ok(null); }
+    });
+  }
+
+  function gravarCache(src, blob) {
+    return new Promise(function (ok, falha) {
+      try {
+        var tx = db.transaction('arquivos', 'readwrite');
+        tx.objectStore('arquivos').put({ src: src, blob: blob, tamanho: blob.size, usado: Date.now() });
+        tx.oncomplete = ok; tx.onerror = tx.onabort = function () { falha(tx.error); };
+      } catch (e) { falha(e); }
+    });
+  }
+
+  function listarCache() {
+    return new Promise(function (ok) {
+      try {
+        var lista = [], c = db.transaction('arquivos').objectStore('arquivos').openCursor();
+        c.onsuccess = function () {
+          var k = c.result;
+          if (!k) return ok(lista);
+          lista.push({ src: k.value.src, tamanho: k.value.tamanho, usado: k.value.usado }); k.continue();
+        };
+        c.onerror = function () { ok(lista); };
+      } catch (e) { ok([]); }
+    });
+  }
+
+  // Apaga os arquivos usados há mais tempo até caber `extra` bytes (nunca os da cena atual).
+  function liberarEspaco(extra) {
+    return listarCache().then(function (lista) {
+      var emUso = arquivosProtegidos(), total = 0;
+      lista.forEach(function (a) { total += a.tamanho; });
+      lista.sort(function (a, b) { return a.usado - b.usado; });
+      var tx = db.transaction('arquivos', 'readwrite'), st = tx.objectStore('arquivos');
+      for (var i = 0; i < lista.length && total + extra > LIMITE_CACHE; i++) {
+        if (emUso.indexOf(lista[i].src) >= 0) continue;
+        st.delete(lista[i].src); total -= lista[i].tamanho;
+        if (urls[lista[i].src]) { URL.revokeObjectURL(urls[lista[i].src]); delete urls[lista[i].src]; }
+      }
+      return new Promise(function (ok) { tx.oncomplete = tx.onerror = tx.onabort = ok; });
+    });
+  }
+
+  function baixar(src) {
+    if (baixando[src]) return baixando[src];
+    baixando[src] = new Promise(function (ok, falha) {
+      var x = new XMLHttpRequest();
+      x.open('GET', src); x.responseType = 'blob';
+      x.onprogress = function (e) { if (e.lengthComputable) { progresso[src] = e.loaded / e.total; mostrarBaixando(); } };
+      x.onload = function () { x.status === 200 ? ok(x.response) : falha(new Error('HTTP ' + x.status)); };
+      x.onerror = x.ontimeout = function () { falha(new Error('rede')); };
+      x.send();
+    }).then(function (blob) {
+      return liberarEspaco(blob.size)
+        .then(function () { return gravarCache(src, blob); })
+        .then(function () { return blob; }, function () { return blob; }); // sem espaço: usa só desta vez
+    });
+    baixando[src].then(fim, fim);
+    function fim() { delete baixando[src]; delete progresso[src]; mostrarBaixando(); }
+    return baixando[src];
+  }
+
+  // URL local do arquivo (blob:), baixando se preciso. Qualquer falha → streaming normal.
+  function urlLocal(src) {
+    if (urls[src]) return Promise.resolve(urls[src]);
+    return dbPronto.then(function () {
+      if (!db) return src;
+      return lerCache(src).then(function (blob) { return blob || baixar(src); })
+        .then(function (blob) { return urls[src] || (urls[src] = URL.createObjectURL(blob)); },
+              function () { return src; });
+    });
+  }
+
+  function srcsDoConteudo() {
+    if (!content || !content.items) return [];
+    return content.items.filter(function (i) { return i.kind === 'video' || i.kind === 'image'; })
+      .map(function (i) { return versaoDaTela(i.src); });
+  }
+
+  // Arquivos de todas as cenas desta tela (o servidor manda em 'precache').
+  var todasAsCenas = [];
+  function arquivosProtegidos() {
+    return srcsDoConteudo().concat(todasAsCenas.map(function (s) { return versaoDaTela(s); }));
+  }
+
+  // Baixa, um de cada vez, primeiro a cena no ar e depois todas as outras: assim toda troca
+  // de cena já encontra o arquivo na tela. Uma fila só, mesmo se chamada várias vezes.
+  var filaAtiva = false;
+  function preBaixar() {
+    if (filaAtiva) { preBaixar.denovo = true; return; }
+    filaAtiva = true; preBaixar.denovo = false;
+    var fila = arquivosProtegidos();
+    (function proximo() {
+      if (!fila.length) { filaAtiva = false; if (preBaixar.denovo) preBaixar(); return; }
+      urlLocal(fila.shift()).then(proximo, proximo);
+    })();
+  }
+
+  function mostrarBaixando() {
+    var el = $('baixando'), ks = Object.keys(progresso);
+    // O aviso só aparece com a tela vazia; com conteúdo no ar, baixa em silêncio.
+    if (!ks.length || front.classList.contains('on')) { el.classList.remove('on'); return; }
+    var p = 0; ks.forEach(function (k) { p += progresso[k]; });
+    el.textContent = 'Baixando conteúdo… ' + Math.round(p / ks.length * 100) + '%';
+    el.classList.add('on');
+  }
+
+  // ---------- exibição ----------
+  var content = null, current = -1, currentKey = '', front = $('a'), back = $('b');
+
+  function updateStatus() {
+    $('status').classList.toggle('hidden', !!content);
+    $('st-msg').textContent = connected ? 'Aguardando conteúdo' : 'Conectando ao servidor…';
+  }
+
+  function identify(name) {
+    var el = $('ident'); el.textContent = name; el.classList.add('on');
+    clearTimeout(identify.t); identify.t = setTimeout(function () { el.classList.remove('on'); }, 6000);
+  }
+
+  function setContent(c) {
+    // Ao reconectar (Wi-Fi caiu, servidor reiniciou) o servidor reenvia o mesmo conteúdo:
+    // se já é o que está na tela, não reinicia o vídeo (evita salto no loop).
+    if (content && c && JSON.stringify(c) === JSON.stringify(content)) { updateStatus(); return; }
+    content = c; current = -1; currentKey = '';
+    if (progPlayer && (!c || c.kind !== 'ambiente')) progPlayer.parar();
+    if (progPlayer && c && c.kind === 'ambiente') { progPlayer.mostrar(c); updateStatus(); return; }
+    if (!c || c.kind === 'blank') { clearLayer(front); clearLayer(back); front.classList.remove('on'); back.classList.remove('on'); }
+    if (c && c.kind === 'logo') { mostrarLogo(c); updateStatus(); return; }
+    updateStatus(); preBaixar(); tick();
+  }
+
+  // ---------- velocidade (controle do celular) ----------
+  var velocidade = 1, animacoes = [];
+  function aplicarVelocidade() {
+    var v = front.querySelector('video'); if (v) v.playbackRate = velocidade;
+    animacoes = animacoes.filter(function (a) { return a.playState !== 'finished'; });
+    animacoes.forEach(function (a) { try { a.playbackRate = velocidade; } catch (e) {} });
+  }
+
+  // ---------- modo "logo + cor" (desenhado ao vivo) ----------
+  // Painel de LED: faixa lógica 4472x86 dobrada em 2752x172 (mesma geometria dos vídeos).
+  var DOBRA_LED = { w: 4472, h: 86, saidaW: 2752, saidaH: 172,
+    seg: [ { sx: 0, len: 1720, dx: 1032, dy: 0 }, { sx: 1720, len: 2752, dx: 0, dy: 86 } ] };
+  // Marcas disponíveis: arquivo (usado como máscara, então qualquer cor serve), proporção,
+  // altura/espaço no painel de LED e altura relativa nas TVs.
+  var MARCAS = {
+    clube: { arquivo: 'logo_clube.png', aspecto: 2200 / 539, ledAltura: 60, ledEspaco: 500, tvAltura: 0.22 },
+    noalto: { arquivo: 'logo_noalto.png', aspecto: 1835 / 1001, ledAltura: 80, ledEspaco: 420, tvAltura: 0.5 }
+  };
+  var COR_LOGO = { branco: '#ffffff', preto: '#000000',
+    metal: 'linear-gradient(90deg,#6f6f6f,#ffffff,#9d9d9d,#cfd0d1,#8a8a8a,#e1e2e3,#6f6f6f)' };
+
+  // Faixa de logos que anda exatamente um período por volta → loop sem emenda visível.
+  function faixaLogo(c, w, h, logoH, gap, pxPorSeg, t0) {
+    var marca = MARCAS[c.marca] || MARCAS.clube;
+    var logoW = logoH * marca.aspecto, periodo = logoW + gap;
+    var mascara = 'url(' + marca.arquivo + ') center/100% 100% no-repeat';
+    var faixa = document.createElement('div');
+    faixa.style.cssText = 'position:absolute;left:0;top:0;overflow:hidden;width:' + w + 'px;height:' + h + 'px;background:' + c.fundo;
+    var trilho = document.createElement('div');
+    trilho.style.cssText = 'position:absolute;left:0;top:0;height:' + h + 'px;display:flex;align-items:center;will-change:transform';
+    var n = Math.ceil(w / periodo) + 1;
+    for (var i = 0; i < n; i++) {
+      var slot = document.createElement('div');
+      slot.style.cssText = 'flex:0 0 ' + periodo + 'px;height:' + h + 'px;display:flex;align-items:center;justify-content:center';
+      var logo = document.createElement('div');
+      logo.style.cssText = 'width:' + logoW + 'px;height:' + logoH + 'px;background:' + COR_LOGO[c.logo] +
+        ';-webkit-mask:' + mascara + ';mask:' + mascara;
+      slot.appendChild(logo); trilho.appendChild(slot);
+    }
+    faixa.appendChild(trilho);
+    var anim = trilho.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + (-periodo) + 'px)' }],
+      { duration: periodo / pxPorSeg * 1000, iterations: Infinity, easing: 'linear' });
+    if (t0 !== null) anim.startTime = t0; // todas as cópias com o mesmo relógio
+    anim.playbackRate = velocidade; animacoes.push(anim);
+    return faixa;
+  }
+
+  // Versão vertical: coluna de logos subindo, anda exatamente um período por volta.
+  function colunaLogo(c, w, h, t0) {
+    var marca = MARCAS[c.marca] || MARCAS.clube;
+    var logoW = Math.round(w * 0.8), logoH = logoW / marca.aspecto;
+    var slot = logoH + Math.max(logoH * 0.9, h * 0.1);
+    var mascara = 'url(' + marca.arquivo + ') center/100% 100% no-repeat';
+    var faixa = document.createElement('div');
+    faixa.style.cssText = 'position:absolute;left:0;top:0;overflow:hidden;width:' + w + 'px;height:' + h + 'px;background:' + c.fundo;
+    var trilho = document.createElement('div');
+    trilho.style.cssText = 'position:absolute;left:0;top:0;width:' + w + 'px;will-change:transform';
+    var n = Math.ceil(h / slot) + 1;
+    for (var i = 0; i < n; i++) {
+      var s = document.createElement('div');
+      s.style.cssText = 'height:' + slot + 'px;display:flex;align-items:center;justify-content:center';
+      var logo = document.createElement('div');
+      logo.style.cssText = 'width:' + logoW + 'px;height:' + logoH + 'px;background:' + COR_LOGO[c.logo] +
+        ';-webkit-mask:' + mascara + ';mask:' + mascara;
+      s.appendChild(logo); trilho.appendChild(s);
+    }
+    faixa.appendChild(trilho);
+    var anim = trilho.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(' + (-slot) + 'px)' }],
+      { duration: slot / (h * 0.07) * 1000, iterations: Infinity, easing: 'linear' });
+    if (t0 !== null) anim.startTime = t0;
+    anim.playbackRate = velocidade; animacoes.push(anim);
+    return faixa;
+  }
+
+  function mostrarLogo(c) {
+    animacoes = []; // as da tela anterior saem junto com ela
+    var el = document.createElement('div');
+    el.style.cssText = 'position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;background:#000';
+    var t0 = document.timeline ? document.timeline.currentTime : null;
+    var tam = dims();
+    if (info.grupo === 'led' || id.indexOf('led') === 0) {
+      var d = DOBRA_LED, s = tam.w / d.saidaW;
+      var quadro = document.createElement('div');
+      quadro.style.cssText = 'position:absolute;left:0;top:0;width:' + d.saidaW + 'px;height:' + d.saidaH +
+        'px;transform-origin:0 0;transform:scale(' + s + ')';
+      d.seg.forEach(function (g) {
+        var janela = document.createElement('div');
+        janela.style.cssText = 'position:absolute;overflow:hidden;left:' + g.dx + 'px;top:' + g.dy + 'px;width:' + g.len + 'px;height:' + d.h + 'px';
+        var mc = MARCAS[c.marca] || MARCAS.clube;
+        var f = faixaLogo(c, d.w, d.h, mc.ledAltura, mc.ledEspaco, 200, t0);
+        f.style.left = (-g.sx) + 'px';
+        janela.appendChild(f); quadro.appendChild(janela);
+      });
+      el.appendChild(quadro);
+    } else if ((info.grupo === 'telas' || info.app === 'tizen') && tam.w > tam.h) {
+      // TVs montadas em pé com o sistema deitado (The Frame): desenha em pé e gira −90°,
+      // no mesmo sentido dos vídeos (que já vêm girados no arquivo).
+      var pe = document.createElement('div');
+      pe.style.cssText = 'position:absolute;left:0;top:0;width:' + tam.h + 'px;height:' + tam.w + 'px;transform-origin:0 0;' +
+        'transform:translate(0px,' + tam.h + 'px) rotate(-90deg)';
+      pe.appendChild(colunaLogo(c, tam.h, tam.w, t0));
+      el.appendChild(pe);
+    } else if (tam.h > tam.w) {
+      el.appendChild(colunaLogo(c, tam.w, tam.h, t0)); // TV em pé: logos sobem
+    } else {
+      var W = tam.w, H = tam.h;
+      var lh = Math.round(H * (MARCAS[c.marca] || MARCAS.clube).tvAltura);
+      el.appendChild(faixaLogo(c, W, H, lh, lh * 2, lh * 3.3, t0));
+    }
+    clearLayer(back); back.appendChild(el);
+    back.classList.add('on'); front.classList.remove('on');
+    var old = front; front = back; back = old;
+    setTimeout(function () { if (!back.classList.contains('on')) clearLayer(back); }, 100);
+  }
+
+  // Programação circadiana e anúncios (programacao-player.js).
+  // Se der erro aqui (navegador antigo), a tela segue tocando as cenas normais em vez de apagar.
+  var progPlayer = null;
+  try {
+    if (window.ProgPlayer && window.Ambiente) progPlayer = ProgPlayer.criar({
+      $: $, now: now, dims: dims, info: info, id: id, urlLocal: urlLocal, versaoDaTela: versaoDaTela, DOBRA_LED: DOBRA_LED,
+      camadaAtual: function () { return front; },
+      trocarCamada: function (el) {
+        clearLayer(back); back.appendChild(el);
+        back.classList.add('on'); front.classList.remove('on');
+        var old = front; front = back; back = old;
+        setTimeout(function () { if (!back.classList.contains('on')) clearLayer(back); }, 100);
+      }
+    });
+  } catch (e) { progPlayer = null; }
+
+  function clearLayer(l) {
+    var v = l.querySelector('video'); if (v) { v.pause(); v.removeAttribute('src'); v.load(); }
+    l.innerHTML = '';
+  }
+
+  // Posição atual na playlist a partir de startAt: todos os players calculam o mesmo índice
+  function position() {
+    var items = content.items, t = now() - content.startAt;
+    if (t < 0) return { index: 0, offset: t };
+    if (items.length === 1) return { index: 0, offset: t };
+    var total = 0; items.forEach(function (i) { total += dur(i); });
+    if (!content.loop && t >= total) return { index: items.length - 1, offset: dur(items[items.length - 1]) };
+    t = t % total;
+    for (var k = 0; k < items.length; k++) { if (t < dur(items[k])) return { index: k, offset: t }; t -= dur(items[k]); }
+    return { index: 0, offset: 0 };
+  }
+  function dur(i) { return Math.max(1000, (i.duration || 10) * 1000); }
+
+  // Artes das TVs existem em duas versões: em pé (tv-x.mp4/.jpg) e girada para navegador
+  // deitado (tv-x-deitado.mp4/.jpg). Se esta TV está com a tela deitada, usa a girada.
+  function versaoDaTela(src) {
+    var d = dims();
+    if ((info.app === 'tizen' || info.grupo === 'telas') && d.w > d.h && /\/tv-[^\/]+\.(mp4|jpg)$/.test(src) && !/-deitado\.(mp4|jpg)$/.test(src)) {
+      return src.replace(/\.(mp4|jpg)$/, '-deitado.$1');
+    }
+    return src;
+  }
+
+  // Baixa (ou pega do cache) antes de exibir; enquanto isso a tela anterior continua no ar.
+  function preparar(item, key) {
+    if (item.kind !== 'video' && item.kind !== 'image') return show(item, position().offset);
+    urlLocal(versaoDaTela(item.src)).then(function (url) {
+      if (key !== currentKey || !content) return; // a cena mudou enquanto baixava
+      show(item, position().offset, url);
+    });
+  }
+
+  function show(item, offsetMs, url) {
+    var el;
+    var original = versaoDaTela(item.src || '');
+    if (item.kind === 'video' || item.kind === 'image') item = { kind: item.kind, src: url || original, duration: item.duration, muted: item.muted };
+    if (item.kind === 'image') { el = document.createElement('img'); el.src = item.src; }
+    else if (item.kind === 'video') {
+      el = document.createElement('video');
+      el.src = item.src; el.autoplay = true; el.playsInline = true;
+      el.muted = !!item.muted;
+      el.loop = content.items.length === 1;
+      el.addEventListener('loadedmetadata', function () { seekVideo(el, offsetMs); el.playbackRate = velocidade; });
+      el.addEventListener('playing', function () { el.playbackRate = velocidade; });
+      el.play().catch(function () { el.muted = true; el.play().catch(function () {}); });
+    } else { el = document.createElement('iframe'); el.src = item.src; el.allow = 'autoplay; fullscreen'; }
+
+    el.setAttribute('data-src', original); // nome real do arquivo (o src pode ser blob:)
+    clearLayer(back); back.appendChild(el);
+    // reveal pode ser disparado por 'playing', onerror e pelo timer de segurança;
+    // só a primeira chamada vale (a segunda destrocaria as camadas e apagaria o item).
+    var revealed = false;
+    var reveal = function () {
+      if (revealed || el.parentNode !== back) return;
+      revealed = true;
+      back.classList.add('on'); front.classList.remove('on');
+      var old = front; front = back; back = old;
+      setTimeout(function () { if (!back.classList.contains('on')) clearLayer(back); }, 100);
+    };
+    if (item.kind === 'image') { el.onload = reveal; el.onerror = reveal; }
+    else if (item.kind === 'video') { el.addEventListener('playing', reveal, { once: true }); el.onerror = reveal; setTimeout(reveal, 4000); }
+    else { el.onload = reveal; setTimeout(reveal, 4000); }
+  }
+
+  // Mantém o vídeo alinhado ao relógio comum (só corrige se desviar > 0,4 s)
+  function seekVideo(v, offsetMs) {
+    if (!v.duration || !isFinite(v.duration) || offsetMs <= 0) return;
+    var target = (offsetMs / 1000) % v.duration;
+    if (Math.abs(v.currentTime - target) > 0.4) v.currentTime = target;
+  }
+
+  // Só começa um vídeo sincronizado depois de acertar o relógio com o servidor (senão ele
+  // começa no ponto errado e precisa de um pulo de correção logo depois).
+  var relogioOk = false;
+  setTimeout(function () { relogioOk = true; }, 5000); // sem resposta em 5 s, segue mesmo assim
+  function tick() {
+    if (!content || !content.items || !content.items.length) return;
+    if (content.sync && !relogioOk) return;
+    var pos = position();
+    if (pos.offset < 0) return; // ainda não chegou a hora de começar
+    var item = content.items[pos.index];
+    var key = content.startAt + ':' + pos.index;
+    // Sem correção de tempo durante a reprodução: um seek no meio do loop aparece
+    // como salto na tela. O vídeo só é alinhado uma vez, ao carregar.
+    if (key !== currentKey) { currentKey = key; current = pos.index; preparar(item, key); }
+  }
+  setInterval(tick, 100);
+
+  // ---------- sincronia fina (cenas) ----------
+  // Todas as telas de uma cena tocam arquivos com a mesma duração a partir do mesmo startAt
+  // (relógio do servidor). Se esta tela desviar, ajusta a velocidade (±5%, imperceptível)
+  // até alinhar — sem pulo. Só faz seek se o desvio passar de 1 s (ex.: travou carregando).
+  var desvioMs = null, ultimoSeek = 0;
+  setInterval(function () {
+    // Com velocidade diferente de 1× não há relógio comum para seguir: só mantém a velocidade.
+    if (velocidade !== 1) { var vv = front.querySelector('video'); if (vv && vv.playbackRate !== velocidade) vv.playbackRate = velocidade; desvioMs = null; return; }
+    if (!content || !content.sync || !content.items || content.items.length !== 1) { desvioMs = null; return; }
+    var v = front.querySelector('video');
+    if (!v || v.paused || !v.duration || !isFinite(v.duration)) return;
+    var dur = v.duration, decorrido = (now() - content.startAt) / 1000;
+    if (decorrido < 0) return;
+    var d = v.currentTime - (decorrido % dur);
+    if (d > dur / 2) d -= dur; else if (d < -dur / 2) d += dur; // perto da emenda do loop
+    // Pulo só com desvio grande e no máximo 1x a cada 10 s: TVs lentas levam ~1 s para
+    // retomar depois de um seek, e pular toda hora as deixava presas no começo do vídeo.
+    if (Math.abs(d) > 2 && Date.now() - ultimoSeek > 10000) { ultimoSeek = Date.now(); v.currentTime = decorrido % dur; v.playbackRate = 1; }
+    else if (Math.abs(d) > 2) v.playbackRate = 1;
+    else if (Math.abs(d) > 0.03) v.playbackRate = Math.max(0.95, Math.min(1.05, 1 - d * 0.5));
+    else v.playbackRate = 1;
+    desvioMs = Math.round(d * 1000);
+  }, 1000);
+
+  // Diagnóstico: conta ao servidor o que está realmente na tela (a cada 5 s).
+  setInterval(function () {
+    if (!ws || ws.readyState !== 1) return;
+    var v = front.querySelector('video');
+    ws.send(JSON.stringify({ type: 'status', status: {
+      tipo: content ? (content.kind || '?') : 'nada',
+      anuncio: progPlayer ? progPlayer.anuncioNoAr() : null,
+      video: v ? (v.getAttribute('data-src') || v.currentSrc || v.src || '').split('/').pop() : null,
+      tempo: v ? Math.round(v.currentTime * 10) / 10 : null,
+      pausado: v ? v.paused : null,
+      erro: v && v.error ? v.error.code : null,
+      tamanho: v ? v.videoWidth + 'x' + v.videoHeight : null,
+      janela: window.innerWidth + 'x' + window.innerHeight,
+      desvioMs: desvioMs,
+      velocidade: v ? v.playbackRate : null,
+      local: v ? /^blob:/.test(v.currentSrc || v.src || '') : null, // tocando do cache da tela?
+      cache: db ? 'ok' : 'sem IndexedDB',
+      baixando: Object.keys(progresso).map(function (k) { return k.split('/').pop() + ' ' + Math.round(progresso[k] * 100) + '%'; }),
+      brilho: $('dim').style.opacity || '0'
+    } }));
+  }, 5000);
+
+  updateStatus();
+  connect();
+})();
+</script>
+</body>
+</html>

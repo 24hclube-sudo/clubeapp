@@ -1,0 +1,21 @@
+{
+  "reto": {
+    "nome": "Painel inteiro, sem dobra (saída Spout para o MadMapper)",
+    "painel": { "largura": 1032, "altura": 5676 },
+    "saida": { "largura": 1032, "altura": 5676 },
+    "confirmado": true,
+    "segmentos": [{ "x": 0, "y": 0, "w": 1032, "h": 5676, "destinoX": 0, "destinoY": 0 }]
+  },
+  "pista5": {
+    "nome": "LED Pista 5º andar (P1.8)",
+    "painel": { "largura": 1032, "altura": 5676 },
+    "saida": { "largura": 3840, "altura": 2160 },
+    "confirmado": false,
+    "obs": "Dobra provisória em 3 colunas de 1892 px. Confirmar com a cena 'Teste de mapa (saída)' e uma foto do painel.",
+    "segmentos": [
+      { "x": 0, "y": 0, "w": 1032, "h": 1892, "destinoX": 0, "destinoY": 0 },
+      { "x": 0, "y": 1892, "w": 1032, "h": 1892, "destinoX": 1032, "destinoY": 0 },
+      { "x": 0, "y": 3784, "w": 1032, "h": 1892, "destinoX": 2064, "destinoY": 0 }
+    ]
+  }
+}

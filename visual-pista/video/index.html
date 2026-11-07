@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Vídeo no LED</title>
+<style>
+  html, body { margin: 0; background: #000; }
+  body { position: relative; width: 1032px; height: 5676px; overflow: hidden; }
+  video { position: absolute; left: 0; top: 0; width: 1032px; height: 5676px; object-fit: fill; }
+</style>
+</head>
+<body>
+<video id="v" muted loop autoplay playsinline></video>
+<script src="../assets/letreiros-dom.js"></script>
+<script type="module">
+// Vídeo do H3 de painel inteiro (?v=<arquivo em perspectiva/saidas>). O vídeo é fixo; quem ouve o som são os letreiros.
+import { criarSom, R, Q } from '../pista-quente/nucleo.js';
+const v = document.getElementById('v');
+const arquivo = (Q.get('v') || '').replace(/[^\w.-]/g, '');
+v.src = '../perspectiva/saidas/' + arquivo;
+const atualizar = criarSom({});
+let ultimo = performance.now(), ultimoEstado = 0;
+(function quadro(agora) {
+  atualizar(Math.min((agora - ultimo) / 1000 || 0, 0.05));
+  ultimo = agora;
+  if (agora - ultimoEstado > 500 && v.readyState >= 2) {
+    ultimoEstado = agora;
+    window.__estado = { visual: 'video', arquivo, tempo: +v.currentTime.toFixed(1), erros: [] };
+  }
+  requestAnimationFrame(quadro);
+})(performance.now());
+window.__painel = { R };
+Letreiros('../assets/letreiros/', () => ({ bumbo: R.bumbo, fase: R.fase }));
+</script>
+</body>
+</html>

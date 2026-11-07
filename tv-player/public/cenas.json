@@ -1,0 +1,249 @@
+[
+  {
+    "id": "tudo",
+    "nome": "Tudo",
+    "video": "clube-tudo.mp4",
+    "thumb": "cenas/clube-tudo.png",
+    "preview": "cenas/clube-tudo.mp4",
+    "tv": "tv-clube-tudo.mp4",
+    "duracao": 57.9,
+    "balcao": {
+      "partes": [
+        {
+          "duracao": 14.9,
+          "efeito": "cometas",
+          "cores": [
+            "metal",
+            "vermelho",
+            "verde",
+            "azul"
+          ]
+        },
+        {
+          "duracao": 14.7,
+          "efeito": "faixas",
+          "cor": "metal",
+          "k": 4,
+          "n": 19
+        },
+        {
+          "duracao": 14.7,
+          "efeito": "degrade",
+          "k": 4,
+          "n": 19
+        },
+        {
+          "duracao": 13.6,
+          "cinza": true,
+          "efeito": "degrade",
+          "k": 4,
+          "n": 18
+        }
+      ]
+    }
+  },
+  {
+    "id": "noalto",
+    "nome": "No Alto",
+    "video": "noalto.mp4",
+    "thumb": "cenas/noalto.png",
+    "preview": "cenas/noalto.mp4",
+    "tv": "tv-noalto.mp4",
+    "duracao": 5.7,
+    "balcao": {
+      "k": 2,
+      "cor": "branco",
+      "efeito": "faixas",
+      "n": 2
+    }
+  },
+  {
+    "id": "logo",
+    "nome": "Logo colorido",
+    "video": "clube-logo.mp4",
+    "thumb": "cenas/clube-logo.png",
+    "preview": "cenas/clube-logo.mp4",
+    "tv": "tv-clube-logo.mp4",
+    "duracao": 14.9,
+    "balcao": {
+      "cores": [
+        "metal",
+        "vermelho",
+        "verde",
+        "azul"
+      ],
+      "efeito": "cometas"
+    }
+  },
+  {
+    "id": "sem-fundo",
+    "nome": "Sem fundo",
+    "video": "clube-sem-fundo.mp4",
+    "thumb": "cenas/clube-sem-fundo.png",
+    "preview": "cenas/clube-sem-fundo.mp4",
+    "tv": "tv-clube-sem-fundo.mp4",
+    "duracao": 14.7,
+    "balcao": {
+      "k": 4,
+      "cor": "metal",
+      "efeito": "faixas",
+      "n": 19
+    }
+  },
+  {
+    "id": "com-fundo",
+    "nome": "Com fundo",
+    "video": "clube-com-fundo.mp4",
+    "thumb": "cenas/clube-com-fundo.png",
+    "preview": "cenas/clube-com-fundo.mp4",
+    "tv": "tv-clube-com-fundo.mp4",
+    "duracao": 14.7,
+    "balcao": {
+      "k": 4,
+      "efeito": "degrade",
+      "n": 19
+    }
+  },
+  {
+    "id": "preto-branco",
+    "nome": "Preto e branco",
+    "video": "clube-preto-branco.mp4",
+    "thumb": "cenas/clube-preto-branco.png",
+    "preview": "cenas/clube-preto-branco.mp4",
+    "tv": "tv-clube-preto-branco.mp4",
+    "duracao": 13.6,
+    "balcao": {
+      "k": 4,
+      "cinza": true,
+      "efeito": "degrade",
+      "n": 18
+    }
+  },
+  {
+    "id": "logo-vermelho",
+    "nome": "Logo vermelho",
+    "video": "clube-logo-vermelho.mp4",
+    "thumb": "cenas/clube-logo-vermelho.png",
+    "preview": "cenas/clube-logo-vermelho.mp4",
+    "tv": "tv-clube-logo-vermelho.mp4",
+    "duracao": 14.9,
+    "balcao": {
+      "cores": [
+        "vermelho",
+        "metal",
+        "vermelho",
+        "metal"
+      ],
+      "efeito": "cometas"
+    }
+  },
+  {
+    "id": "logo-verde",
+    "nome": "Logo verde",
+    "video": "clube-logo-verde.mp4",
+    "thumb": "cenas/clube-logo-verde.png",
+    "preview": "cenas/clube-logo-verde.mp4",
+    "tv": "tv-clube-logo-verde.mp4",
+    "duracao": 14.9,
+    "balcao": {
+      "cores": [
+        "verde",
+        "metal",
+        "verde",
+        "metal"
+      ],
+      "efeito": "cometas"
+    }
+  },
+  {
+    "id": "logo-azul",
+    "nome": "Logo azul",
+    "video": "clube-logo-azul.mp4",
+    "thumb": "cenas/clube-logo-azul.png",
+    "preview": "cenas/clube-logo-azul.mp4",
+    "tv": "tv-clube-logo-azul.mp4",
+    "duracao": 14.9,
+    "balcao": {
+      "cores": [
+        "azul",
+        "metal",
+        "azul",
+        "metal"
+      ],
+      "efeito": "cometas"
+    }
+  },
+  {
+    "id": "figuras",
+    "nome": "Figuras",
+    "video": "clube-figuras.mp4",
+    "thumb": "cenas/clube-figuras.png",
+    "preview": "cenas/clube-figuras.mp4",
+    "tv": "tv-clube-figuras.mp4",
+    "duracao": 14.333333,
+    "balcao": {
+      "k": 4,
+      "cor": "metal",
+      "efeito": "faixas",
+      "n": 21
+    }
+  },
+  {
+    "id": "letreiro",
+    "nome": "Letreiro",
+    "video": "letreiro.mp4",
+    "thumb": "cenas/letreiro.png",
+    "preview": "cenas/letreiro.mp4",
+    "tv": "tv-letreiro.mp4",
+    "duracao": 24.2,
+    "balcao": {
+      "k": 1,
+      "cor": "branco",
+      "efeito": "faixas",
+      "n": 1
+    }
+  },
+  {
+    "id": "mensagens",
+    "nome": "Mensagens",
+    "video": "mensagens.mp4",
+    "thumb": "cenas/mensagens.png",
+    "preview": "cenas/mensagens.mp4",
+    "tv": "tv-mensagens.mp4",
+    "duracao": 15,
+    "balcao": {
+      "cor": "laranja",
+      "efeito": "mensagens",
+      "n": 3
+    }
+  },
+  {
+    "id": "faixa-led-1",
+    "nome": "Faixa LED 1",
+    "video": "painel-faixa-led-1.mp4",
+    "thumb": "cenas/painel-faixa-led-1.png",
+    "preview": "cenas/painel-faixa-led-1.mp4",
+    "duracao": 20
+  },
+  {
+    "id": "soft-opening-letreiro",
+    "nome": "Soft opening · letreiro",
+    "video": "painel-soft-opening-letreiro.mp4",
+    "thumb": "cenas/painel-soft-opening-letreiro.png",
+    "preview": "cenas/painel-soft-opening-letreiro.mp4",
+    "duracao": 45.3
+  },
+  {
+    "id": "akin-letreiro",
+    "nome": "Pista Quente · Akin",
+    "video": "painel-akin-letreiro.mp4",
+    "thumb": "cenas/painel-akin-letreiro.png",
+    "preview": "cenas/painel-akin-letreiro.mp4",
+    "duracao": 31.267
+  },
+  {
+    "id": "apagar",
+    "nome": "Apagar",
+    "apagar": true
+  }
+]

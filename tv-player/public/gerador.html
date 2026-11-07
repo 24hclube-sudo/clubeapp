@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Gerador LED</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; cursor: none; }
+  canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+  #teste { display: none; }
+  #aviso { position: absolute; left: 16px; bottom: 16px; color: #fff; font: 600 20px system-ui; background: rgba(0,0,0,.6);
+    padding: 10px 14px; border-radius: 10px; display: none; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<canvas id="teste"></canvas>
+<div id="aviso"></div>
+<script>
+// Gerador do painel de LED: cenas generativas (shaders) desenhadas ao vivo na GPU deste PC,
+// direto na saída de vídeo que vai para a controladora NovaStar. Sem vídeo pré-gravado e sem
+// rede no caminho da imagem: o atraso é o de um quadro da placa de vídeo + o da controladora.
+//
+// Cada cena é desenhada na resolução real do painel (ex.: 1032×5676) e depois "dobrada" nos
+// pedaços que a controladora espera dentro da entrada 3840×2160 (mapas-led.json).
+//
+//   gerador.html?id=painel-5&name=Painel%20Pista&grupo=painel&andar=5&mapa=pista5
+//   &previa      → mostra o painel inteiro (deitado) na janela, em vez da saída dobrada
+//   &miniaturas  → gera ícones/prévias das cenas para o app (usa o estudio-servidor, porta 8090)
+'use strict';
+const Q = new URLSearchParams(location.search);
+const ID = Q.get('id') || 'painel-5', NOME = Q.get('name') || 'Painel Pista';
+const GRUPO = Q.get('grupo') || 'painel', ANDAR = Q.get('andar') || '5';
+const MINIATURAS = Q.has('miniaturas');
+const PREVIA = Q.has('previa') || MINIATURAS;
+const SERVIDOR = location.origin + '/';
+
+const PALETAS = {
+  vermelho: ['#ff8564', '#ff4c2c', '#ff0016'],
+  azul: ['#54b7dc', '#009edd', '#006eaa'],
+  verde: ['#00bd64', '#00ae40', '#007529'],
+  prata: ['#9c9d9d', '#ffffff', '#5a5a5a'],
+  ambar: ['#ffd6a1', '#ffaf32', '#ff7a1a'],
+};
+const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+
+// ---------- estado (vem do servidor) ----------
+const E = {
+  cena: null, especial: null, apagado: true, startAt: 0,
+  paleta: null,              // escolhida no app (null = a da cena)
+  velocidade: 1, brilho: 1, bpm: 120, batidaAt: 0,
+  logo: { fundo: '#000000', cor: 'branco', marca: 'clube' },
+};
+
+// ---------- WebGL ----------
+const cv = document.getElementById('gl');
+const gl = cv.getContext('webgl2', { antialias: false, alpha: false, depth: false, powerPreference: 'high-performance', preserveDrawingBuffer: MINIATURAS });
+if (!gl) aviso('Este navegador não tem WebGL2', true);
+
+const VERT = `#version 300 es
+in vec2 aPos; in vec2 aTex; out vec2 vTex;
+void main() { vTex = aTex; gl_Position = vec4(aPos, 0.0, 1.0); }`;
+
+const CABECA = `#version 300 es
+precision highp float;
+uniform vec2 uRes; uniform float uT, uBeat, uBeatN;
+uniform vec3 uC0, uC1, uC2;
+uniform sampler2D uLogo; uniform vec2 uLogoTam;
+uniform vec3 uFundo, uCorLogo; uniform float uMetal;
+// áudio ao vivo (0..1): faixas, "bumbo" (salta a cada batida detectada e cai) e o espectro/onda em textura
+uniform float uGrave, uMedio, uAgudo, uNivel, uBumbo;
+uniform sampler2D uEspectro, uOnda;
+out vec4 cor;
+float ASP;
+const float TAU = 6.2831853;
+float h11(float n) { return fract(sin(n * 127.1) * 43758.5453); }
+float h21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float ruido(vec2 p) {
+  vec2 i = floor(p), f = fract(p), u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(h21(i), h21(i + vec2(1, 0)), u.x), mix(h21(i + vec2(0, 1)), h21(i + vec2(1, 1)), u.x), u.y);
+}
+float fbm(vec2 p) { float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { s += a * ruido(p); p = p * 2.03 + 17.1; a *= 0.5; } return s; }
+// paleta cíclica (c0 → c1 → c2 → c0) e o degradê da marca (paradas em 0, .55 e .91)
+vec3 paleta(float t) { t = fract(t); return t < 1.0/3.0 ? mix(uC0, uC1, t * 3.0) : t < 2.0/3.0 ? mix(uC1, uC2, t * 3.0 - 1.0) : mix(uC2, uC0, t * 3.0 - 2.0); }
+vec3 marca(float t) { t = clamp(t, 0.0, 1.0); return t < 0.55 ? mix(uC0, uC1, t / 0.55) : mix(uC1, uC2, min(1.0, (t - 0.55) / 0.36)); }
+vec3 tela(vec3 a, vec3 b) { return 1.0 - (1.0 - a) * (1.0 - b); }
+float queda(float k) { return exp(-uBeat * k); }   // decai depois de cada batida
+float golpe(float k) { return max(queda(k), uBumbo); }
+float espectro(float f) { return texture(uEspectro, vec2(clamp(f, 0.0, 1.0), 0.5)).r; }   // 0 = grave, 1 = agudo
+float onda(float x) { return texture(uOnda, vec2(clamp(x, 0.0, 1.0), 0.5)).r * 2.0 - 1.0; }
+// Logo passando pelo eixo comprido (lendo de baixo p/ cima; num painel deitado, da esquerda p/ direita).
+float logoFaixa(vec2 u, float alt, float vel, float folga) {
+  float len = alt * uLogoTam.x / uLogoTam.y, per = len + folga;
+  float s = mod(u.y - uT * vel, per) / len;
+  float t = 1.0 - (u.x - (0.5 - alt * 0.5)) / alt;
+  if (s > 1.0 || t < 0.0 || t > 1.0) return 0.0;
+  return texture(uLogo, vec2(s, t)).a;
+}
+`;
+
+// Cada cena recebe u: x de 0 a 1 no lado curto, y de 0 a ASP no comprido (unidade = largura do painel).
+const CENAS = {
+  // Grade editorial da identidade: faixas com bordas que respiram, degradê da marca e luz passeando.
+  grade: `vec3 cena(vec2 u) {
+    const int N = 7;
+    float t = uT * 0.06, y = u.y / ASP, ant = 0.0, y0 = 0.0, y1 = 1.0; int k = N - 1;
+    for (int i = 1; i <= N; i++) {
+      float b = i == N ? 1.0 : float(i) / float(N) + (0.3 + 0.15 * uGrave) / float(N) * sin(TAU * (t + float(i) * 0.37));
+      if (y < b) { k = i - 1; y0 = ant; y1 = b; break; }
+      ant = b;
+    }
+    float cx = 0.5 + 0.27 * sin(TAU * (t * 0.7 + float(k) * 0.23));
+    bool esq = u.x < cx;
+    float x0 = esq ? 0.0 : cx, x1 = esq ? cx : 1.0, id = float(k) * 2.0 + (esq ? 0.0 : 1.0);
+    vec2 c = vec2(x0 + x1, (y0 + y1) * ASP) * 0.5, tam = vec2(x1 - x0, (y1 - y0) * ASP);
+    float ang = h11(id + 3.0) * TAU + 0.35 * sin(TAU * (t * 0.5 + h11(id)));
+    vec2 d = vec2(cos(ang), sin(ang)), rel = (u - c) / max(tam, vec2(1e-3));
+    vec3 col = marca(dot(rel, d) * 0.8 + 0.5 + 0.16 * sin(TAU * (t * 0.6 + h11(id + 9.0))));
+    vec2 lp = c + tam * 0.22 * vec2(sin(TAU * (t * 0.4 + h11(id + 1.0))), cos(TAU * (t * 0.33 + h11(id + 2.0))));
+    float l = 1.0 - smoothstep(0.0, max(tam.x, tam.y) * 0.95, length(u - lp));
+    return tela(col, vec3((0.2 * l * l + 0.07 * l) * (1.0 + 2.5 * uGrave)));
+  }`,
+  // Fluxo lento de cor (ruído dobrado sobre si mesmo).
+  mare: `vec3 cena(vec2 u) {
+    float t = uT * 0.045;
+    vec2 p = u * vec2(1.3, 0.8);
+    vec2 w = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, -t * 0.8)));
+    float n = fbm(p + 1.8 * w + vec2(t * 0.3, t));
+    return paleta(n * 1.1 + t * 0.2) * (0.3 + 0.8 * smoothstep(0.2, 0.8, n)) * (0.8 + 0.5 * uNivel);
+  }`,
+  // Pontos acendendo e apagando devagar sobre um degradê bem escuro.
+  constelacao: `vec3 cena(vec2 u) {
+    vec2 g = u * 16.0, i = floor(g), f = fract(g);
+    float h = h21(i);
+    vec2 pos = vec2(h21(i + 7.0), h21(i + 13.0)) * 0.6 + 0.2;
+    float d = length(f - pos);
+    float pisca = 0.5 + 0.5 * sin(TAU * (uT * 0.12 * (0.5 + h) + h * 10.0));
+    float estrela = step(0.7, h) * exp(-d * d * 90.0) * pisca * pisca * (1.0 + 3.0 * uAgudo * step(0.85, h));
+    return marca(u.y / ASP) * 0.07 + mix(vec3(1.0), uC1, 0.35) * estrela * 1.6;
+  }`,
+  // Listras cromadas finas (a textura das figuras da marca) com brilho descendo.
+  cromo: `vec3 cena(vec2 u) {
+    float t = uT * 0.25;
+    float fino = abs(fract(u.x * 40.0) - 0.5) * 2.0;
+    float metal = 0.55 + 0.45 * cos(fino * 3.1416);
+    vec2 cel = floor(vec2(u.x * 5.0, u.y * 5.0));
+    float liga = smoothstep(0.3 - 0.3 * uBumbo, 0.7, 0.5 + 0.5 * sin(TAU * (t * 0.18 + h21(cel))));
+    float brilho = exp(-pow((fract(u.y / ASP - t * 0.12) - 0.5) * 7.0, 2.0)) * (1.0 + 1.5 * uMedio);
+    vec3 prata = mix(vec3(0.4), vec3(1.0), metal) * (0.3 + 0.7 * brilho);
+    return mix(marca(u.y / ASP) * 0.18, prata * mix(vec3(1.0), uC1, 0.18), liga);
+  }`,
+  // Faixas das três cores correndo pelo comprimento.
+  faixas: `vec3 cena(vec2 u) {
+    float y = u.y * 1.4 - uT * 0.5;
+    float k = mod(floor(y), 3.0), f = fract(y);
+    vec3 c = k < 0.5 ? uC0 : k < 1.5 ? uC1 : uC2;
+    float borda = smoothstep(0.0, 0.015, f) * smoothstep(1.0, 0.985, f);
+    return c * borda * (0.8 + 0.2 * sin(TAU * (u.x * 0.5 + uT * 0.1))) * (0.7 + 0.6 * uGrave);
+  }`,
+  // Grade da marca com o logo CLUBE passando.
+  clube: `vec3 cena(vec2 u) {
+    float t = uT * 0.05;
+    vec3 fundo = marca(0.5 + 0.45 * sin(TAU * (u.y / ASP * 0.8 - t)) * cos(TAU * (u.x * 0.3 + t * 0.7))) * (0.8 + 0.4 * uGrave);
+    float a = logoFaixa(u, 0.62, 0.28, 0.9);
+    return mix(fundo, vec3(1.0), a);
+  }`,
+  // Pista: uma onda sai do centro a cada batida.
+  pulso: `vec3 cena(vec2 u) {
+    float d = abs(u.y - ASP * 0.5), r = uBeat * ASP * 0.62;
+    float anel = exp(-pow((d - r) * 3.0, 2.0)) * (1.0 - uBeat);
+    float miolo = exp(-d * 1.4) * golpe(5.0);
+    vec3 c = mod(uBeatN, 2.0) < 0.5 ? uC1 : uC2;
+    return c * (anel * 1.2 + miolo) + uC0 * 0.05;
+  }`,
+  // Pista: uma barra atravessa o painel por batida (vai e volta).
+  scanner: `vec3 cena(vec2 u) {
+    bool ida = mod(uBeatN, 2.0) < 0.5;
+    float pos = (ida ? uBeat : 1.0 - uBeat) * ASP, d = u.y - pos;
+    float barra = exp(-d * d * 40.0);
+    float rastro = (ida ? step(d, 0.0) : step(0.0, d)) * exp(-abs(d) * 2.5) * 0.45;
+    return mix(uC2, uC1, barra) * (barra + rastro) * (0.7 + 0.5 * uNivel);
+  }`,
+  // Pista: anéis que abrem do centro no ritmo.
+  aneis: `vec3 cena(vec2 u) {
+    float d = length(u - vec2(0.5, ASP * 0.5));
+    float fase = d * 1.4 - (uBeatN + uBeat) * 0.5;
+    float f = fract(fase);
+    float anel = smoothstep(0.0, 0.06, f) * smoothstep(0.32, 0.06, f);
+    vec3 c = mod(floor(fase), 2.0) < 0.5 ? uC1 : uC2;
+    return c * anel * (0.35 + 0.65 * golpe(3.0));
+  }`,
+  // Áudio: espectro ao vivo, graves no meio do painel e agudos nas pontas; a largura acesa é o volume da faixa.
+  espectro: `vec3 cena(vec2 u) {
+    float y = abs(u.y / ASP - 0.5) * 2.0, n = 48.0;
+    float faixa = floor(y * n) / n, v = espectro(faixa);
+    float aceso = step(abs(u.x - 0.5) * 2.0, v);
+    float f = fract(y * n), borda = smoothstep(0.0, 0.12, f) * smoothstep(1.0, 0.88, f);
+    vec3 c = marca(faixa);
+    return c * aceso * borda * (0.45 + 0.55 * v) + c * 0.04;
+  }`,
+  // Áudio: a forma de onda do som desenhada ao longo do painel, como um osciloscópio.
+  onda: `vec3 cena(vec2 u) {
+    float y = u.y / ASP;
+    float a = onda(y) * 0.45 * (0.6 + uNivel);
+    float d = abs(u.x - 0.5 - a);
+    float linha = exp(-d * d * 900.0) + 0.35 * exp(-d * d * 60.0);
+    return mix(uC1, vec3(1.0), 0.3) * linha + marca(y) * 0.05 * (1.0 + 3.0 * uGrave);
+  }`,
+  // Áudio: o degradê da marca acende a cada bumbo e ondula com o grave.
+  bumbo: `vec3 cena(vec2 u) {
+    float d = length(u - vec2(0.5, ASP * 0.5));
+    float ond = 0.5 + 0.5 * sin(d * 6.0 - uT * 2.0 - uBumbo * 3.0);
+    vec3 c = marca(0.5 + 0.5 * sin(u.y / ASP * 3.0 + uT * 0.2));
+    return c * (0.12 + 0.9 * golpe(6.0) * exp(-d * 0.45) + 0.35 * uGrave * ond);
+  }`,
+  // Pista: o painel inteiro pisca na batida, trocando de cor a cada uma.
+  flash: `vec3 cena(vec2 u) {
+    vec3 c = paleta(floor(uBeatN) / 3.0);
+    return c * queda(8.0) * (0.85 + 0.15 * sin(u.y * 3.0));
+  }`,
+  // Modo "logo + cor" do app: logos passando sobre a cor de fundo.
+  logoCor: `vec3 cena(vec2 u) {
+    float alt = 0.62, len = alt * uLogoTam.x / uLogoTam.y;
+    float a = logoFaixa(u, alt, 0.3, 0.9);
+    vec3 cl = uCorLogo;
+    if (uMetal > 0.5) { float s = mod(u.y - uT * 0.3, len + 0.9) / len; cl = vec3(0.62 + 0.38 * sin(s * 19.0 + 1.3) * sin(s * 7.0)); }
+    return mix(uFundo, cl, a);
+  }`,
+};
+
+const PE = `
+void main() {
+  vec2 p = gl_FragCoord.xy / uRes;
+  vec2 q = uRes.y >= uRes.x ? p : vec2(1.0 - p.y, p.x); // eixo comprido sempre "para cima"
+  ASP = max(uRes.x, uRes.y) / min(uRes.x, uRes.y);
+  cor = vec4(clamp(cena(vec2(q.x, q.y * ASP)), 0.0, 1.0), 1.0);
+}`;
+
+// Cópia de textura (testes e vídeos) e a dobra final para a saída.
+const COPIA = `#version 300 es
+precision highp float;
+uniform sampler2D uTex; uniform vec2 uRes; out vec4 cor;
+void main() { cor = texture(uTex, gl_FragCoord.xy / uRes); }`;
+const DOBRA = `#version 300 es
+precision highp float;
+in vec2 vTex; uniform sampler2D uTex; uniform float uBrilho; out vec4 cor;
+void main() { cor = vec4(texture(uTex, vTex).rgb * uBrilho, 1.0); }`;
+
+function compilar(fonteFrag) {
+  const sh = (tipo, src) => {
+    const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  };
+  const p = gl.createProgram();
+  gl.attachShader(p, sh(gl.VERTEX_SHADER, VERT));
+  gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fonteFrag));
+  gl.bindAttribLocation(p, 0, 'aPos'); gl.bindAttribLocation(p, 1, 'aTex');
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  const u = {};
+  for (let i = 0, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); i < n; i++) {
+    const nome = gl.getActiveUniform(p, i).name; u[nome] = gl.getUniformLocation(p, nome);
+  }
+  return { p, u };
+}
+const programas = {};
+for (const [nome, src] of Object.entries(CENAS)) {
+  try { programas[nome] = compilar(CABECA + src + PE); } catch (e) { console.error('cena ' + nome, e.message); }
+}
+const progCopia = compilar(COPIA), progDobra = compilar(DOBRA);
+
+// Geometria: um retângulo que cobre tudo (cenas) e os retângulos da dobra (saída).
+const vaoTudo = gl.createVertexArray(), vaoDobra = gl.createVertexArray();
+function geometria(vao, dados) {
+  gl.bindVertexArray(vao);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dados), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
+  gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
+  return dados.length / 4;
+}
+geometria(vaoTudo, [-1, -1, 0, 0, 1, -1, 1, 0, -1, 1, 0, 1, -1, 1, 0, 1, 1, -1, 1, 0, 1, 1, 1, 1]);
+let nDobra = 0;
+
+// ---------- mapa do painel ----------
+let MAPA = null, PW = 1032, PH = 5676, fbo = null, texPainel = null;
+function criarPainel(w, h) {
+  PW = w; PH = h;
+  const max = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+  if (w > max || h > max) aviso(`Painel ${w}×${h} maior que a GPU aceita (${max})`, true);
+  texPainel = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texPainel);
+  gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, w, h);
+  // 1 pixel do painel = 1 pixel da saída: sem suavizar (na prévia a janela é menor, aí suaviza)
+  const filtro = PREVIA ? gl.LINEAR : gl.NEAREST;
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filtro);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filtro);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  fbo = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texPainel, 0);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+}
+
+// Retângulos da saída. Coordenadas do painel e da saída com origem no canto de cima à esquerda.
+function montarDobra() {
+  const v = [];
+  const quad = (x0, y0, x1, y1, s00, t00, s10, t10, s01, t01, s11, t11) => v.push(
+    x0, y0, s00, t00, x1, y0, s10, t10, x0, y1, s01, t01,
+    x0, y1, s01, t01, x1, y0, s10, t10, x1, y1, s11, t11);
+  if (PREVIA) {
+    // Prévia: painel inteiro deitado (topo do painel à direita), cabendo na janela.
+    const W = cv.width, H = cv.height, deitar = PH > PW && W > H;
+    const pw = deitar ? PH : PW, ph = deitar ? PW : PH, k = Math.min(W / pw, H / ph);
+    const x0 = -pw * k / W, x1 = pw * k / W, y0 = ph * k / H, y1 = -ph * k / H; // y0 = em cima
+    if (deitar) quad(x0, y0, x1, y1, 0, 0, 0, 1, 1, 0, 1, 1);
+    else quad(x0, y0, x1, y1, 0, 1, 1, 1, 0, 0, 1, 0);
+  } else {
+    const OW = MAPA.saida.largura, OH = MAPA.saida.altura;
+    for (const s of MAPA.segmentos) {
+      const X0 = s.destinoX / OW * 2 - 1, X1 = (s.destinoX + s.w) / OW * 2 - 1;
+      const Y0 = 1 - s.destinoY / OH * 2, Y1 = 1 - (s.destinoY + s.h) / OH * 2;
+      const S0 = s.x / PW, S1 = (s.x + s.w) / PW, T0 = 1 - s.y / PH, T1 = 1 - (s.y + s.h) / PH;
+      quad(X0, Y0, X1, Y1, S0, T0, S1, T0, S0, T1, S1, T1);
+    }
+  }
+  nDobra = geometria(vaoDobra, v);
+}
+
+function ajustarTela() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
+  if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; if (MAPA) montarDobra(); }
+  if (!PREVIA && MAPA && (w !== MAPA.saida.largura || h !== MAPA.saida.altura))
+    aviso(`Janela ${w}×${h}, a controladora espera ${MAPA.saida.largura}×${MAPA.saida.altura} (escala do Windows ≠ 100%?)`);
+}
+addEventListener('resize', ajustarTela);
+
+// ---------- logos ----------
+const logos = {};
+function carregarLogo(marca, arquivo) {
+  const img = new Image();
+  img.onload = () => {
+    const t = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    logos[marca] = { t, w: img.naturalWidth, h: img.naturalHeight };
+  };
+  img.src = arquivo;
+}
+carregarLogo('clube', 'gerador/logo-clube.png');
+carregarLogo('noalto', 'gerador/logo-noalto.png');
+
+// ---------- testes de mapa (desenhados em 2D) ----------
+const cvTeste = document.getElementById('teste');
+// Saída: grade numerada na resolução da entrada da controladora. A foto do painel mostra
+// quais pedaços da saída aparecem onde — é assim que se descobre a dobra real.
+function desenharTesteSaida() {
+  const OW = MAPA.saida.largura, OH = MAPA.saida.altura;
+  cvTeste.width = OW; cvTeste.height = OH;
+  const c = cvTeste.getContext('2d');
+  const cw = 320, ch = 360, cols = Math.ceil(OW / cw), lins = Math.ceil(OH / ch);
+  for (let j = 0; j < lins; j++) for (let i = 0; i < cols; i++) {
+    c.fillStyle = `hsl(${(i * 47 + j * 97) % 360} 85% ${j % 2 ? 38 : 48}%)`;
+    c.fillRect(i * cw, j * ch, cw, ch);
+    c.fillStyle = '#fff'; c.font = 'bold 110px system-ui'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(String.fromCharCode(65 + j) + (i + 1), i * cw + cw / 2, j * ch + ch / 2 - 30);
+    c.font = '38px system-ui';
+    c.fillText(`${i * cw},${j * ch}`, i * cw + cw / 2, j * ch + ch / 2 + 60);
+  }
+  c.strokeStyle = '#fff'; c.lineWidth = 2;
+  for (let x = 0; x <= OW; x += 172) { c.beginPath(); c.moveTo(x + 0.5, 0); c.lineTo(x + 0.5, OH); c.stroke(); }
+  c.strokeStyle = '#f00'; c.lineWidth = 6; c.strokeRect(3, 3, OW - 6, OH - 6);
+}
+// Painel: faixas numeradas de cima para baixo, já passando pela dobra — confere se o mapa está certo.
+const texTeste = gl.createTexture();
+function desenharTestePainel() {
+  const t = document.createElement('canvas'); t.width = PW; t.height = PH;
+  const c = t.getContext('2d'), n = 11, fh = PH / n;
+  for (let i = 0; i < n; i++) {
+    c.fillStyle = i % 2 ? '#0a3d62' : '#b71540'; c.fillRect(0, i * fh, PW, fh);
+    c.fillStyle = '#fff'; c.font = `bold ${Math.round(Math.min(PW, fh) * 0.45)}px system-ui`;
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), PW / 2, i * fh + fh / 2);
+  }
+  c.font = `bold ${Math.round(Math.min(PW, PH) * 0.12)}px system-ui`;
+  c.textAlign = 'left'; c.fillText('E', 20, 90); c.textAlign = 'right'; c.fillText('D', PW - 20, 90);
+  c.textAlign = 'center'; c.fillText('▲ TOPO', PW / 2, 90);
+  c.strokeStyle = '#ff0'; c.lineWidth = 8; c.strokeRect(4, 4, PW - 8, PH - 8);
+  gl.bindTexture(gl.TEXTURE_2D, texTeste);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, t);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+}
+
+// ---------- relógio do servidor (para a batida cair junto com as fitas e o app) ----------
+let desvio = 0, melhorRtt = 1e9;
+const agoraServidor = () => performance.now() + desvio;
+
+// ---------- áudio ao vivo ----------
+// Entrada de som do PC (linha da mesa do DJ, placa USB ou microfone), analisada a cada quadro:
+// energia de graves/médios/agudos, espectro em 48 faixas, forma de onda e os bumbos. O BPM sai
+// dos intervalos entre bumbos, e a fase da batida é puxada para cada bumbo (as cenas de pista
+// entram no tempo da música sem ninguém tocar no ritmo). Sem som confiável, vale o BPM do app.
+const NF = 48, NO = 512;
+const A = {
+  ctx: null, an: null, stream: null, freq: null, tempo: null, estado: 'desligado', entrada: '', ganho: 1,
+  grave: 0, medio: 0, agudo: 0, nivel: 0, bumbo: 0,
+  picos: [1e-9, 1e-9, 1e-9], picoFaixa: 1e-9, faixas: new Float32Array(NF),
+  anterior: 0, fluxos: [], onsets: [], acertos: [], ultimoOnset: 0,
+  bpm: 0, candidato: 0, insiste: 0, fase: 0, confianca: 0,
+  espectro: new Uint8Array(NF), onda: new Uint8Array(NO).fill(128),
+};
+const texEspectro = gl.createTexture(), texOnda = gl.createTexture();
+for (const [t, dados] of [[texEspectro, A.espectro], [texOnda, A.onda]]) {
+  gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, dados.length, 1, 0, gl.RED, gl.UNSIGNED_BYTE, dados);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+async function ligarAudio() {
+  if (A.ctx) return;
+  const pedido = (Q.get('audio') || '').toLowerCase();
+  try {
+    let stream = null;
+    if (pedido !== 'teste') {
+      const base = { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
+      stream = await navigator.mediaDevices.getUserMedia({ audio: base });
+      if (pedido) { // ?audio=<parte do nome da entrada>
+        const d = (await navigator.mediaDevices.enumerateDevices()).find(d => d.kind === 'audioinput' && d.label.toLowerCase().includes(pedido));
+        if (d) { stream.getTracks().forEach(t => t.stop()); stream = await navigator.mediaDevices.getUserMedia({ audio: { ...base, deviceId: { exact: d.deviceId } } }); }
+      }
+    }
+    A.ctx = new AudioContext({ latencyHint: 'interactive' });
+    A.an = A.ctx.createAnalyser(); A.an.fftSize = 2048; A.an.smoothingTimeConstant = 0;
+    const mudo = A.ctx.createGain(); mudo.gain.value = 0; A.an.connect(mudo).connect(A.ctx.destination);
+    if (stream) { A.stream = stream; A.ctx.createMediaStreamSource(stream).connect(A.an); A.entrada = stream.getAudioTracks()[0].label || 'entrada de áudio'; }
+    else { somDeTeste(A.ctx, A.an, 124); A.entrada = 'som de teste (124 BPM)'; }
+    A.freq = new Float32Array(A.an.frequencyBinCount); A.tempo = new Float32Array(A.an.fftSize);
+    A.estado = 'ouvindo';
+    if (A.ctx.state === 'suspended') A.ctx.resume().catch(() => {});
+  } catch (e) {
+    A.ctx = null; A.estado = 'sem entrada de áudio (' + (e.name || e.message) + ')';
+  }
+}
+function desligarAudio() {
+  if (A.stream) A.stream.getTracks().forEach(t => t.stop());
+  if (A.ctx) A.ctx.close().catch(() => {});
+  Object.assign(A, { ctx: null, an: null, stream: null, estado: 'desligado', entrada: '', bpm: 0, confianca: 0, onsets: [], acertos: [] });
+}
+
+// Batida sintética (bumbo, chimbal e baixo) para testar sem ninguém tocar música.
+function somDeTeste(ctx, destino, bpm) {
+  const sr = ctx.sampleRate, batida = 60 / bpm, n = Math.round(sr * batida * 8);
+  const buf = ctx.createBuffer(1, n, sr), d = buf.getChannelData(0);
+  for (let b = 0; b < 8; b++) {
+    const i0 = Math.round(b * batida * sr);
+    for (let i = 0; i < sr * 0.35 && i0 + i < n; i++) {           // bumbo: seno que desce de 120 a 45 Hz
+      const t = i / sr; d[i0 + i] += Math.sin(2 * Math.PI * (45 * t + 75 * (1 - Math.exp(-t * 30)) / 30)) * Math.exp(-t * 9) * 0.9;
+    }
+    const i1 = Math.round((b + 0.5) * batida * sr);
+    for (let i = 0; i < sr * 0.05 && i1 + i < n; i++) d[i1 + i] += (Math.random() * 2 - 1) * Math.exp(-i / sr * 80) * 0.25; // chimbal
+    for (let i = 0; i < sr * batida * 0.4 && i1 + i < n; i++) { const t = i / sr; d[i1 + i] += ((55 * t) % 1 - 0.5) * 0.2 * Math.exp(-t * 6); } // baixo
+  }
+  const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(destino); src.start();
+}
+
+const suave = (atual, alvo, dt, sobe, desce) => atual + (alvo - atual) * (1 - Math.exp(-dt * (alvo > atual ? sobe : desce)));
+// Sons desligados no app (reacoes.html), só quando o Gerador é a saída do LED. A análise segue com os valores de verdade.
+const SONS = { bumbo: true, grave: true, medio: true, agudo: true };
+if (new URLSearchParams(location.search).has('saidaled')) {
+  (function buscarSons() {
+    fetch('/api/reacoes', { cache: 'no-store' }).then(r => r.json())
+      .then(j => { Object.assign(SONS, j.outros); setTimeout(buscarSons, 1000); })
+      .catch(() => setTimeout(buscarSons, 8000));
+  })();
+}
+const CRU_SOM = { ativo: false, g: 0, m: 0, a: 0, f: new Float32Array(NF) };
+function analisarAudio(dt) {
+  if (CRU_SOM.ativo) { A.grave = CRU_SOM.g; A.medio = CRU_SOM.m; A.agudo = CRU_SOM.a; A.faixas.set(CRU_SOM.f); CRU_SOM.ativo = false; }
+  analisarCru(dt);
+  if (SONS.grave && SONS.medio && SONS.agudo) return;
+  CRU_SOM.g = A.grave; CRU_SOM.m = A.medio; CRU_SOM.a = A.agudo; CRU_SOM.f.set(A.faixas); CRU_SOM.ativo = true;
+  if (!SONS.grave) A.grave = 0;
+  if (!SONS.medio) A.medio = 0;
+  if (!SONS.agudo) A.agudo = 0;
+  A.nivel = (A.grave + A.medio + A.agudo) / 3;
+  for (let b = 0; b < NF; b++) {
+    if (b < 14 ? SONS.grave : b < 33 ? SONS.medio : SONS.agudo) continue;
+    A.faixas[b] = 0; A.espectro[b] = 0;
+  }
+}
+function analisarCru(dt) {
+  A.bumbo *= Math.exp(-dt * 7);
+  if (A.bpm) A.fase += dt * A.bpm / 60;
+  if (!A.an) { A.grave = A.medio = A.agudo = A.nivel = 0; return; }
+  A.an.getFloatFrequencyData(A.freq);
+  A.an.getFloatTimeDomainData(A.tempo);
+  const hz = A.ctx.sampleRate / A.an.fftSize, ultimo = A.freq.length - 1;
+  const potencia = (f0, f1) => {
+    let s = 0, n = 0;
+    for (let i = Math.max(1, Math.floor(f0 / hz)); i <= Math.min(ultimo, Math.ceil(f1 / hz)); i++) { s += Math.pow(10, A.freq[i] / 10); n++; }
+    return n ? s / n : 0;
+  };
+  const bruto = [potencia(30, 150), potencia(150, 2000), potencia(2000, 12000)];
+  const silencio = bruto[0] + bruto[1] + bruto[2] < 1e-9;
+  // ganho automático: cada faixa em relação ao próprio pico recente (que cai pela metade a cada 8 s)
+  const v = bruto.map((e, i) => {
+    A.picos[i] = Math.max(A.picos[i] * Math.pow(0.5, dt / 8), e, 1e-9);
+    return silencio ? 0 : Math.min(1, Math.sqrt(e / A.picos[i]) * A.ganho);
+  });
+  A.grave = suave(A.grave, v[0], dt, 40, 8);
+  A.medio = suave(A.medio, v[1], dt, 40, 6);
+  A.agudo = suave(A.agudo, v[2], dt, 50, 10);
+  A.nivel = (A.grave + A.medio + A.agudo) / 3;
+
+  // espectro em 48 faixas (30 Hz a 16 kHz, escala logarítmica)
+  let maior = 0;
+  const p = new Float32Array(NF);
+  for (let b = 0; b < NF; b++) { p[b] = potencia(30 * Math.pow(16000 / 30, b / NF), 30 * Math.pow(16000 / 30, (b + 1) / NF)); maior = Math.max(maior, p[b]); }
+  A.picoFaixa = Math.max(A.picoFaixa * Math.pow(0.5, dt / 6), maior, 1e-9);
+  for (let b = 0; b < NF; b++) {
+    A.faixas[b] = suave(A.faixas[b], silencio ? 0 : Math.min(1, Math.sqrt(p[b] / A.picoFaixa) * A.ganho), dt, 45, 7);
+    A.espectro[b] = Math.round(A.faixas[b] * 255);
+  }
+  // forma de onda (~32 ms) a partir de um cruzamento do zero (imagem parada, sem tremer)
+  const passo = 3;
+  let z = 0;
+  while (z < A.tempo.length - NO * passo - 1 && !(A.tempo[z] <= 0 && A.tempo[z + 1] > 0)) z++;
+  let amp = 0.02;
+  for (let i = 0; i < NO; i++) amp = Math.max(amp, Math.abs(A.tempo[z + i * passo] || 0));
+  for (let i = 0; i < NO; i++) A.onda[i] = Math.round(128 + ((A.tempo[z + i * passo] || 0) / amp) * 120);
+
+  // bumbo: subida brusca do grave acima do normal dos últimos ~1,5 s
+  const g = Math.sqrt(bruto[0]), fluxo = Math.max(0, g - A.anterior);
+  A.anterior = g;
+  A.fluxos.push(fluxo); if (A.fluxos.length > 90) A.fluxos.shift();
+  const media = A.fluxos.reduce((s, x) => s + x, 0) / A.fluxos.length;
+  const desvio = Math.sqrt(A.fluxos.reduce((s, x) => s + (x - media) ** 2, 0) / A.fluxos.length);
+  const agora = performance.now();
+  if (!silencio && fluxo > media + 1.5 * desvio && fluxo > 1e-4 && v[0] > 0.3 && agora - A.ultimoOnset > 280) bumbo(agora);
+}
+
+function bumbo(agora) {
+  A.bumbo = SONS.bumbo ? 1 : 0;
+  A.ultimoOnset = agora;
+  A.onsets.push(agora); if (A.onsets.length > 24) A.onsets.shift();
+  estimarBpm();
+  if (!A.bpm) return;
+  const erro = A.fase - Math.round(A.fase);
+  A.acertos.push(Math.abs(erro) < 0.15); if (A.acertos.length > 16) A.acertos.shift();
+  A.confianca = A.acertos.filter(Boolean).length / A.acertos.length;
+  if (Math.abs(erro) < 0.3) A.fase -= erro * 0.35;      // puxa a batida para o bumbo
+  else if (A.confianca < 0.3) A.fase = Math.round(A.fase); // perdeu o passo: recomeça no bumbo
+}
+
+// BPM: todos os intervalos entre bumbos recentes votam (dobrando/dividindo para 85–170 BPM).
+function estimarBpm() {
+  const t = A.onsets;
+  if (t.length < 6) return;
+  const votos = new Float32Array(171);
+  for (let i = 1; i < t.length; i++) for (let j = i - 1; j >= 0; j--) {
+    const s = (t[i] - t[j]) / 1000;
+    if (s > 2.1) break;
+    if (s < 0.3) continue;
+    let b = 60 / s;
+    while (b < 85) b *= 2;
+    while (b > 170) b /= 2;
+    const peso = 1 / (i - j) * (0.5 + 0.5 * i / t.length);
+    for (let k = Math.max(85, Math.floor(b) - 3); k <= Math.min(170, Math.ceil(b) + 3); k++) votos[k] += peso * Math.exp(-((k - b) ** 2) / 2);
+  }
+  let pico = 0;
+  for (let k = 85; k <= 170; k++) if (votos[k] > votos[pico]) pico = k;
+  if (!pico) return;
+  // afina entre as casas vizinhas (média ponderada dos votos em volta do pico)
+  let soma = 0, peso = 0;
+  for (let k = Math.max(85, pico - 2); k <= Math.min(170, pico + 2); k++) { soma += k * votos[k]; peso += votos[k]; }
+  const melhor = peso ? soma / peso : pico;
+  if (!A.bpm) { A.bpm = melhor; A.fase = 0; return; }
+  // mudança pequena: acompanha aos poucos; grande (troca de música): só depois de 4 bumbos seguidos
+  if (Math.abs(melhor - A.bpm) < 3) A.bpm += (melhor - A.bpm) * 0.2;
+  else if (Math.abs(melhor - A.candidato) < 2 && ++A.insiste >= 4) { A.bpm = melhor; A.insiste = 0; }
+  else if (Math.abs(melhor - A.candidato) >= 2) { A.candidato = melhor; A.insiste = 1; }
+}
+const audioNoComando = () => A.an && A.bpm && A.confianca >= 0.5;
+
+// ---------- desenho ----------
+let tCena = 0, ultimo = performance.now(), quadros = 0, fps = 0, relogioFps = performance.now();
+function cores() {
+  const nome = (E.paleta && PALETAS[E.paleta]) ? E.paleta : (E.cena && E.cena.paleta) || 'vermelho';
+  return (PALETAS[nome] || PALETAS.vermelho).map(rgb);
+}
+// A batida do áudio é prevista (não espera o bumbo chegar): adianta pelo atraso da imagem até o
+// LED (placa de vídeo + controladora, ~60 ms; ajustável com ?atraso=ms) e o pulso cai junto com o som.
+const ATRASO = (Number(Q.get('atraso')) || 60) / 1000;
+function batida() {
+  if (audioNoComando()) { const f = A.fase + ATRASO * A.bpm / 60; return [f - Math.floor(f), Math.floor(f)]; }
+  const f = Math.max(0, (agoraServidor() - E.batidaAt) * (E.bpm || 120) / 60000);
+  return [f - Math.floor(f), Math.floor(f)];
+}
+
+function desenharCena(prog, w, h, t, b) {
+  const u = prog.u;
+  gl.useProgram(prog.p);
+  gl.uniform2f(u.uRes, w, h);
+  gl.uniform1f(u.uT, t);
+  if (u.uBeat) gl.uniform1f(u.uBeat, b[0]);
+  if (u.uBeatN) gl.uniform1f(u.uBeatN, b[1]);
+  const [c0, c1, c2] = cores();
+  if (u.uC0) gl.uniform3fv(u.uC0, c0); if (u.uC1) gl.uniform3fv(u.uC1, c1); if (u.uC2) gl.uniform3fv(u.uC2, c2);
+  const lg = logos[E.logo.marca] || logos.clube;
+  if (u.uLogo && lg) {
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, lg.t);
+    gl.uniform1i(u.uLogo, 0); gl.uniform2f(u.uLogoTam, lg.w, lg.h);
+  }
+  if (u.uFundo) gl.uniform3fv(u.uFundo, rgb(E.logo.fundo));
+  if (u.uCorLogo) gl.uniform3fv(u.uCorLogo, E.logo.cor === 'preto' ? [0, 0, 0] : [1, 1, 1]);
+  if (u.uMetal) gl.uniform1f(u.uMetal, E.logo.cor === 'metal' ? 1 : 0);
+  if (u.uGrave) gl.uniform1f(u.uGrave, A.grave);
+  if (u.uMedio) gl.uniform1f(u.uMedio, A.medio);
+  if (u.uAgudo) gl.uniform1f(u.uAgudo, A.agudo);
+  if (u.uNivel) gl.uniform1f(u.uNivel, A.nivel);
+  if (u.uBumbo) gl.uniform1f(u.uBumbo, A.bumbo);
+  if (u.uEspectro) {
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texEspectro);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, NF, 1, gl.RED, gl.UNSIGNED_BYTE, A.espectro);
+    gl.uniform1i(u.uEspectro, 1);
+  }
+  if (u.uOnda) {
+    gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, texOnda);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, NO, 1, gl.RED, gl.UNSIGNED_BYTE, A.onda);
+    gl.uniform1i(u.uOnda, 2);
+  }
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindVertexArray(vaoTudo);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
+function quadro() {
+  const agora = performance.now();
+  const dt = Math.min(0.1, (agora - ultimo) / 1000); ultimo = agora;
+  tCena += dt * (E.velocidade || 1);
+  analisarAudio(dt);
+  quadros++;
+  if (agora - relogioFps > 1000) { fps = quadros * 1000 / (agora - relogioFps); quadros = 0; relogioFps = agora; }
+
+  const teste = E.especial === 'teste-saida';
+  cvTeste.style.display = teste ? 'block' : 'none';
+  if (!teste) {
+    // 1) cena na resolução do painel
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.viewport(0, 0, PW, PH);
+    const prog = E.apagado ? null : E.especial === 'logo' ? programas.logoCor : E.cena && programas[E.cena.shader];
+    if (E.especial === 'teste-painel') {
+      gl.useProgram(progCopia.p);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texTeste);
+      gl.uniform1i(progCopia.u.uTex, 0); gl.uniform2f(progCopia.u.uRes, PW, PH);
+      gl.bindVertexArray(vaoTudo); gl.drawArrays(gl.TRIANGLES, 0, 6);
+    } else if (prog) desenharCena(prog, PW, PH, tCena, batida());
+    else { gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
+    // 2) dobra para a saída (ou prévia), com o brilho
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, cv.width, cv.height);
+    gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(progDobra.p);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texPainel);
+    gl.uniform1i(progDobra.u.uTex, 0);
+    gl.uniform1f(progDobra.u.uBrilho, E.brilho);
+    gl.bindVertexArray(vaoDobra);
+    gl.drawArrays(gl.TRIANGLES, 0, nDobra);
+  }
+  if (!MINIATURAS) requestAnimationFrame(quadro);
+}
+
+// ---------- conteúdo vindo do servidor ----------
+let listaCenas = [];
+function aplicarConteudo(c) {
+  E.apagado = !c || c.kind === 'blank';
+  E.especial = null;
+  if (!c || E.apagado) return;
+  if (c.kind === 'gerador' && c.cena) {
+    E.cena = listaCenas.find(x => x.id === c.cena.id) || c.cena;
+    E.especial = E.cena.especial || null;
+    if (!E.cena.shader && !E.especial) E.apagado = true;
+    tCena = 0;
+    if (E.especial === 'teste-saida') desenharTesteSaida();
+    if (E.especial === 'teste-painel') desenharTestePainel();
+  } else if (c.kind === 'logo') {
+    E.especial = 'logo';
+    E.logo = { fundo: c.fundo || '#000000', cor: c.logo || 'branco', marca: c.marca || 'clube' };
+  } else {
+    E.apagado = true; // vídeo/imagem avulsos ainda não passam pelo gerador
+  }
+}
+
+// ---------- conexão ----------
+let ws = null, espera = 1000;
+function conectar() {
+  ws = new WebSocket(SERVIDOR.replace(/^http/, 'ws') + 'ws');
+  ws.onopen = () => {
+    espera = 1000;
+    ws.send(JSON.stringify({ type: 'hello-player', id: ID, name: NOME,
+      info: { grupo: GRUPO, andar: ANDAR, app: 'gerador', tela: `${cv.width}x${cv.height}` } }));
+    for (let i = 0; i < 5; i++) setTimeout(ping, i * 300);
+  };
+  ws.onmessage = ev => {
+    let m; try { m = JSON.parse(ev.data); } catch { return; }
+    if (m.type === 'pong') {
+      const rtt = performance.now() - m.t0;
+      if (rtt <= melhorRtt * 1.5) { desvio = m.ts - (m.t0 + rtt / 2); melhorRtt = Math.min(melhorRtt, rtt); }
+    } else if (m.type === 'content') aplicarConteudo(m.content);
+    else if (m.type === 'brilho') E.brilho = Math.max(0, Math.min(1, Number(m.valor)));
+    else if (m.type === 'velocidade') E.velocidade = Number(m.valor) || 1;
+    else if (m.type === 'bpm') { E.bpm = Number(m.bpm) || 120; if (m.batidaAt) E.batidaAt = Number(m.batidaAt); }
+    else if (m.type === 'paleta') E.paleta = m.paleta || null;
+    else if (m.type === 'audio') {
+      A.ganho = Math.max(0.2, Math.min(4, Number(m.ganho) || 1));
+      if (m.ligado) ligarAudio(); else if (!Q.get('audio')) desligarAudio();
+    }
+    else if (m.type === 'reload') location.reload();
+    else if (m.type === 'identify') aviso(m.name || NOME, false, 5000);
+  };
+  ws.onclose = () => { setTimeout(conectar, espera); espera = Math.min(10000, espera * 2); };
+  ws.onerror = () => ws.close();
+}
+function ping() { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'ping', t0: performance.now() })); }
+setInterval(ping, 30000);
+setInterval(() => {
+  if (!ws || ws.readyState !== 1) return;
+  ws.send(JSON.stringify({ type: 'status', status: {
+    tipo: 'gerador', video: E.apagado ? null : E.especial === 'logo' ? 'logo + cor' : E.cena && E.cena.nome,
+    tempo: Math.round(tCena), pausado: false, erro: null, tamanho: `${PW}x${PH}`,
+    janela: `${cv.width}x${cv.height}`, desvioMs: null, velocidade: E.velocidade, brilho: E.brilho.toFixed(2),
+    fps: Math.round(fps), mapa: MAPA && MAPA.confirmado ? 'confirmado' : 'provisório',
+    audio: { estado: A.estado, entrada: A.entrada, bpm: A.bpm ? Math.round(A.bpm * 10) / 10 : null,
+      confianca: Math.round(A.confianca * 100), comandando: !!audioNoComando(), nivel: Math.round(A.nivel * 100) } } }));
+}, 5000);
+
+let avisoTimer = null;
+function aviso(txt, fixo, ms) {
+  const a = document.getElementById('aviso');
+  a.textContent = txt; a.style.display = 'block';
+  clearTimeout(avisoTimer);
+  if (!fixo) avisoTimer = setTimeout(() => { a.style.display = 'none'; }, ms || 8000);
+}
+
+// ---------- miniaturas para o app ----------
+// Renderiza cada cena a 480×270 por 3 s e manda os quadros ao estudio-servidor, que monta
+// o ícone (png) e a prévia animada (mp4) em public/cenas/gp-<id>.*
+async function gerarMiniaturas() {
+  const EST = 'http://localhost:8090';
+  const w = 480, h = 270, fpsM = 20, n = 60;
+  cv.width = w; cv.height = h; cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  criarPainel(w, h); montarDobra();
+  const tmp = document.createElement('canvas'); tmp.width = w; tmp.height = h;
+  const tc = tmp.getContext('2d');
+  E.apagado = false; E.bpm = 120; E.batidaAt = 0;
+  const feitas = [];
+  for (const c of listaCenas.filter(c => c.shader)) {
+    const job = 'gp-' + c.id;
+    E.cena = c; E.especial = null;
+    await fetch(`${EST}/inicio?job=${job}`, { method: 'POST' });
+    for (let i = 0; i < n; i++) {
+      // cenas de áudio: o som de teste toca de verdade enquanto grava (?miniaturas&audio=teste)
+      if (A.an) { await new Promise(r => setTimeout(r, 1000 / fpsM)); analisarAudio(1 / fpsM); }
+      const t = i / fpsM + 4;
+      // batida: 2 batidas por segundo (120 BPM) no tempo da prévia
+      const f = t * 2;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo); gl.viewport(0, 0, w, h);
+      desenharCena(programas[c.shader], w, h, c.categoria === 'calma' ? t * 3 : t, [f - Math.floor(f), Math.floor(f)]);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, w, h);
+      gl.useProgram(progDobra.p); gl.bindTexture(gl.TEXTURE_2D, texPainel); gl.uniform1f(progDobra.u.uBrilho, 1);
+      gl.bindVertexArray(vaoDobra); gl.drawArrays(gl.TRIANGLES, 0, nDobra);
+      tc.drawImage(cv, 0, 0);
+      const blob = await new Promise(ok => tmp.toBlob(ok, 'image/jpeg', 0.9));
+      await fetch(`${EST}/quadro?job=${job}&n=${i}`, { method: 'POST', body: blob });
+    }
+    const r = await (await fetch(`${EST}/previa?job=${job}&fps=${fpsM}&nome=${job}`, { method: 'POST' })).json();
+    feitas.push(c.id + (r.ok ? ' ok' : ' erro'));
+  }
+  document.title = 'miniaturas: ' + feitas.join(', ');
+  return feitas;
+}
+
+// ---------- início ----------
+Promise.all([
+  fetch(SERVIDOR + 'mapas-led.json', { cache: 'no-store' }).then(r => r.json()),
+  fetch(SERVIDOR + 'cenas-gerador.json', { cache: 'no-store' }).then(r => r.json()),
+]).then(([mapas, cenas]) => {
+  listaCenas = cenas;
+  MAPA = mapas[Q.get('mapa') || 'pista5'] || Object.values(mapas)[0];
+  if (MINIATURAS) { window.gerarMiniaturas = gerarMiniaturas; if (Q.get('audio')) ligarAudio(); return; }
+  criarPainel(MAPA.painel.largura, MAPA.painel.altura);
+  ajustarTela(); montarDobra();
+  if (!MAPA.confirmado && !PREVIA) aviso('Mapa do painel provisório — confirmar com o teste de mapa');
+  // prévia sem servidor: ?cena=g-grade
+  if (Q.get('cena')) aplicarConteudo({ kind: 'gerador', cena: cenas.find(c => c.id === Q.get('cena')) });
+  requestAnimationFrame(quadro);
+  if (Q.get('audio')) ligarAudio();   // entrada fixada no endereço (ou "teste")
+  if (!Q.has('solto')) conectar();
+  // Na saída para o LED (mesa\saida): avisa que está desenhando e põe os letreiros por cima.
+  if (Q.has('saidaled')) {
+    window.__painel = { A, E };
+    const s = document.createElement('script');
+    s.src = 'visuais/letreiros-dom.js';
+    s.onload = () => { document.body.style.cssText += ';position:relative;overflow:hidden'; Letreiros('visuais/letreiros/', () => ({ bumbo: A.bumbo || 0 })); };
+    document.head.appendChild(s);
+  }
+}).catch(e => aviso('Erro ao iniciar: ' + e.message, true));
+</script>
+</body>
+</html>

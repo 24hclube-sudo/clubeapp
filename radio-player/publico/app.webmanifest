@@ -1,0 +1,17 @@
+{
+  "name": "Rádio CLUBE",
+  "short_name": "Rádio CLUBE",
+  "description": "A rádio do CLUBE, na Rua da Consolação, 1813, em São Paulo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icones/192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icones/512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icones/192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icones/512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
