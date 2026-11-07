@@ -1,8 +1,11 @@
-// Personagens da marca na parede do DJ, com o logo atrás. É uma camada transparente por cima de qualquer visual do LED: a página do visual não sabe que ela existe.
+// Personagens da marca na parede do DJ, atrás do logo. É uma camada transparente por cima de qualquer visual do LED.
+// O app escolhe o lugar (item personagemLugar). Atrás: nos visuais que contam onde está o logo (window.__logoTela), as letras abrem um buraco na camada e o logo de verdade continua à frente. Nos outros, e com Na frente, o corpo fica por cima.
 // Entra por mesa\saida\flash-pagina.js e só carrega a malha quando alguém liga o botão no app.
 // Eles viram com ease, um de cada vez. A troca acontece no instante em que o corpo está de perfil, escondida por um clarão.
 import { REACOES } from '../js/reacoes.js';
 import { A, audioVivo } from '../js/audio.js';
+// o teto de concreto do app entra por aqui, para valer sem reiniciar a saída do LED
+import(new URL('../teto/camada.js', import.meta.url).href).catch(e => console.error('teto: ' + e.message));
 
 const TESTE = window.__personagensTeste || null;
 const Q = new URLSearchParams(location.search);
@@ -31,6 +34,7 @@ class Mola {
 
 // ---------- ligado? ----------
 const ligado = () => (TESTE ? TESTE.ligado !== false : REACOES.led.personagens === 'ligado');
+const querAtras = () => ((TESTE && TESTE.lugar) || REACOES.led.personagemLugar || 'atras') !== 'frente';
 const segundos = () => (TESTE && TESTE.tempo) || parseFloat(REACOES.led.personagemTempo) || 12;
 
 let motor = null, abrindo = false, falhou = false;
@@ -70,6 +74,13 @@ async function criarMotor() {
       gpu.queue.copyExternalImageToTexture({ source: q }, { texture: texFig, mipLevel: n, origin: [0, 0, i] }, [s, s]);
       if (n) q.close();
     }
+  }));
+
+  const NOMES_LET = ['clube', 'pista', 'millos'];
+  const texLet = gpu.createTexture({ size: [2048, 720, 3], format: 'rgba8unorm', usage: T.TEXTURE_BINDING | T.COPY_DST | T.RENDER_ATTACHMENT });
+  await Promise.all(NOMES_LET.map(async (n, i) => {
+    const b = await createImageBitmap(await (await fetch(aqui('../espaco/dados/letreiro-' + n + '.png'))).blob(), op);
+    gpu.queue.copyExternalImageToTexture({ source: b }, { texture: texLet, origin: [0, 0, i] }, [2048, 720]);
   }));
 
   // a camada cobre a parede, as últimas 688 das 5676 linhas
@@ -192,7 +203,35 @@ struct S { @builtin(position) pos: vec4f, @location(0) uv: vec2f };
 @group(0) @binding(2) var c: texture_2d<f32>;
 @group(0) @binding(3) var s: sampler;
 @group(0) @binding(4) var<uniform> P: vec4f;
+@group(1) @binding(0) var sdf: texture_2d_array<f32>;
+@group(1) @binding(1) var<uniform> LG: array<vec4f, 3>;   // [0]: x, y, z, meia largura (0 = visual sem logo). [1]: profundidade, letreiro, próximo, mistura. [2]: centro da parede no mundo daquele visual
 fn px() -> vec2f { return 1. / vec2f(textureDimensions(a)); }
+// de um ponto da parede para o quadro do logo, numa profundidade z: a mesma perspectiva dos visuais em pé, com o olho na origem
+fn noLogo(uv: vec2f, z: f32) -> vec2f {
+  let k = z / ${ZF};
+  let xw = (LG[2].x + (uv.x - .5) * 1.92) * k; let yw = (LG[2].y + (.5 - uv.y) * 1.28) * k;
+  return vec2f((xw - LG[0].x) / (2. * LG[0].w * ${(2048 / 1720).toFixed(6)}) + .5, .5 - (yw - LG[0].y) / (2. * LG[0].w * ${(720 / 1720).toFixed(6)}));
+}
+fn longeLogo(q: vec2f) -> f32 {
+  if (q.x < 0. || q.x > 1. || q.y < 0. || q.y > 1.) { return 256.; }
+  return mix(textureSampleLevel(sdf, s, q, i32(LG[1].y), 0.).g, textureSampleLevel(sdf, s, q, i32(LG[1].z), 0.).g, LG[1].w) * 512. - 256.;
+}
+fn pertoLogo(q: vec2f) -> f32 {
+  if (LG[1].w > .001) { return longeLogo(q); }
+  if (q.x < 0. || q.x > 1. || q.y < 0. || q.y > 1.) { return 24.; }
+  return textureSampleLevel(sdf, s, q, i32(LG[1].y), 0.).r * 48. - 24.;
+}
+// tira da camada a frente e a espessura das letras, e deixa uma sombra em volta: é o que descola o logo do corpo
+fn atrasDoLogo(t: vec4f, uv: vec2f) -> vec4f {
+  if (LG[0].w <= 0.) { return t; }
+  var cobre = 0.;
+  for (var k = 0; k < 4; k++) {
+    let d = pertoLogo(noLogo(uv, LG[0].z + f32(k) / 3. * LG[1].x));
+    cobre = max(cobre, 1. - smoothstep(-3., 3., d));
+  }
+  let sombra = mix(.3, 1., smoothstep(0., 60., max(longeLogo(noLogo(uv, LG[0].z)), 0.)));
+  return vec4f(t.rgb * sombra * (1. - cobre), t.a * (1. - cobre));
+}
 // só o que passa do branco vira brilho
 @fragment fn claro(i: S) -> @location(0) vec4f {
   let d = px() * .5;
@@ -240,9 +279,9 @@ fn junta(uv: vec2f) -> vec4f {
     t += (junta(i.uv - d * 2.) + junta(i.uv + d * 2.)) * .084;
     t -= (junta(i.uv - d * 3.) + junta(i.uv + d * 3.)) * .0245;
     t -= (junta(i.uv - d * 4.) + junta(i.uv + d * 4.)) * .0226;
-    return clamp(t, vec4f(0.), vec4f(1.));
+    return atrasDoLogo(clamp(t, vec4f(0.), vec4f(1.)), i.uv);
   }
-  return junta(i.uv);
+  return atrasDoLogo(junta(i.uv), i.uv);
 }
 `;
   const mp = gpu.createShaderModule({ code: WGSL_POS });
@@ -262,7 +301,14 @@ fn junta(uv: vec2f) -> vec4f {
   ] });
   const layoutP = gpu.createPipelineLayout({ bindGroupLayouts: [pl] });
   const criaP = async (ep, fmt, blend) => gpu.createRenderPipelineAsync({ layout: layoutP, vertex: { module: mp, entryPoint: 'vs' }, fragment: { module: mp, entryPoint: ep, targets: [{ format: fmt, blend }] } });
-  const [pClaro, pDesce, pSobe, pRastro, pFinal] = await Promise.all([criaP('claro', FB), criaP('desce', FB), criaP('sobe', FB), criaP('rastro', FB), criaP('saida', formato)]);
+  const plLogo = gpu.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: GPUShaderStage.FRAGMENT, texture: { viewDimension: '2d-array' } },
+    { binding: 1, visibility: GPUShaderStage.FRAGMENT, buffer: {} },
+  ] });
+  const bufLogo = gpu.createBuffer({ size: 48, usage: U.UNIFORM | U.COPY_DST });
+  const gLogo = gpu.createBindGroup({ layout: plLogo, entries: [{ binding: 0, resource: texLet.createView({ dimension: '2d-array' }) }, { binding: 1, resource: { buffer: bufLogo } }] });
+  const [pClaro, pDesce, pSobe, pRastro, pFinal] = await Promise.all([criaP('claro', FB), criaP('desce', FB), criaP('sobe', FB), criaP('rastro', FB),
+    gpu.createRenderPipelineAsync({ layout: gpu.createPipelineLayout({ bindGroupLayouts: [pl, plLogo] }), vertex: { module: mp, entryPoint: 'vs' }, fragment: { module: mp, entryPoint: 'saida', targets: [{ format: formato }] } })]);
   const bufP = gpu.createBuffer({ size: 16, usage: U.UNIFORM | U.COPY_DST });
   const bufR1 = gpu.createBuffer({ size: 16, usage: U.UNIFORM | U.COPY_DST });
   const bufR2 = gpu.createBuffer({ size: 16, usage: U.UNIFORM | U.COPY_DST });
@@ -376,6 +422,8 @@ fn junta(uv: vec2f) -> vec4f {
     fU.set([tempo, nivel, clarao * 1.0, risco], 32);
     fU.set([LETRAS.indexOf(atual), E, f.largura, esc * (0.92 + 0.08 * entra)], 36);
     gpu.queue.writeBuffer(bufU, 0, fU);
+    const lt = querAtras() ? window.__logoTela : null;
+    gpu.queue.writeBuffer(bufLogo, 0, new Float32Array(lt ? [lt.cx, lt.cy, lt.z, lt.meia, lt.prof ?? 0.16, lt.a, lt.b, lt.m, lt.xc ?? 0, lt.yc ?? HT - 0.64, 0, 0] : new Array(12).fill(0)));
     gpu.queue.writeBuffer(bufP, 0, new Float32Array([0, 0.5 + 0.95 * nivel + clarao * 2.6, 0.22 + 0.5 * nivel + clarao * 1.6, entra]));
     teto.style.opacity = (entra * (0.06 + 0.2 * nivel + 0.7 * clarao)).toFixed(3);
 
@@ -393,7 +441,7 @@ fn junta(uv: vec2f) -> vec4f {
     passar(enc, pRastro, gR1, texR1);
     passar(enc, pRastro, gR2, texR2);
     const fim = enc.beginRenderPass({ colorAttachments: [{ view: contexto.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store', clearValue: [0, 0, 0, 0] }] });
-    fim.setPipeline(pFinal); fim.setBindGroup(0, gFinal); fim.draw(3); fim.end();
+    fim.setPipeline(pFinal); fim.setBindGroup(0, gFinal); fim.setBindGroup(1, gLogo); fim.draw(3); fim.end();
     gpu.queue.submit([enc.finish()]);
     window.__personagens = { atual, yaw: +yawFinal.toFixed(2), nivel: +nivel.toFixed(2), presenca: +presenca.toFixed(2), trocando: +trocando.toFixed(2) };
     requestAnimationFrame(quadro);

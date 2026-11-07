@@ -55,3 +55,6 @@ antes-*/
 *credencia*
 *senha*
 *secret*
+
+# cartão Projeção: tem a chave que troca a cena
+/tv-player/public/projecao-app.js

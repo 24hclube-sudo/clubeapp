@@ -300,6 +300,8 @@ function letreiros(dt) {
   // o contorno preto separa a letra do concreto que estiver atrás
   const contorno = (e, cy, largMax, altMax) => { const S = tamanhoPara(e, largMax, altMax) * 1.025; laje(516, cy, S, S, { tom: 0, eros: 0, cam: e.i }); };
   contorno(el.clube, CY, 900, 320);
+  // para os personagens passarem atrás das letras (personagens\camada.js): logo plano, na própria parede
+  window.__logoTela = { cx: 0, cy: 0, z: 4.39, meia: el.clube.largura * tamanhoPara(el.clube, 900, 320) * 1.92 / 1032, a: 0, b: 0, m: 0, prof: 0, xc: 0, yc: 0 };
   fatiasDe(el.clube, CY, 900, 320, 7, 16, 0.98, 1400, golpeLetra, sinalLetra);
   const b = R.fase % 16;
   if (b >= 13) return;

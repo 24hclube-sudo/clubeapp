@@ -1,11 +1,12 @@
-// Criações das barras do 5º: guarda, troca e apaga os modelos feitos na tela public/criador-barras.html.
-// Os modelos ficam em public/animacoes-barras.json, categoria "audio", grupo "minhas", como qualquer outra cena.
+// Criações das fitas: guarda, troca e apaga os modelos feitos no Estúdio (public/estudio.html).
+// Os modelos ficam em public/animacoes-barras.json ou animacoes-balcoes.json, categoria "audio", grupo "minhas", como qualquer outra cena.
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const receita = require('./efeitos-criador');
 
 const ID = /^m-[a-z0-9]{4,24}$/;
+const SENTIDOS = ['centro', 'fecha', 'direita', 'esquerda', 'blocos'];
 const COR = /^#[0-9a-fA-F]{6}$/;
 const numero = (v, min, max, padrao) => { const n = Number(v); return Number.isFinite(n) ? Math.max(min, Math.min(max, n)) : padrao; };
 const cor = (v, padrao) => (typeof v === 'string' && COR.test(v) ? v.toLowerCase() : padrao);
@@ -46,7 +47,7 @@ function limpar(b, temEfeito) {
       efeito: c.efeito, nome: String(c.nome || '').slice(0, 40), cena: String(c.cena || '').slice(0, 40), p: parametros(c.p),
       duracao: numero(c.duracao, 0.5, 300, 8), batidas: c.batidas ? numero(c.batidas, 1, 64, 4) : undefined,
       mistura: receita.MISTURAS[c.mistura] ? c.mistura : 'cima', opacidade: numero(c.opacidade, 0, 1, 1),
-      paleta: paleta(c.paleta) || undefined, duck: !!c.duck, virar: !!c.virar, espelhar: !!c.espelhar,
+      paleta: paleta(c.paleta) || undefined, duck: !!c.duck, virar: !!c.virar, espelhar: !!c.espelhar, oculta: !!c.oculta, nativa: !!c.nativa,
     });
   }
   const d = b.duck || {};
@@ -54,16 +55,21 @@ function limpar(b, temEfeito) {
     ligado: !!d.ligado, fonte: Math.round(numero(d.fonte, 0, 4, 0)), modo: d.modo === 'nivel' ? 'nivel' : 'golpe',
     quantidade: numero(d.quantidade, 0, 1, 0.7), soltura: numero(d.soltura, 0.03, 2, 0.25), limiar: numero(d.limiar, 0, 1, 0.4), inverso: !!d.inverso,
   };
-  return { efeito: 'composicao', fundo, camadas, duck, paletaPropria: paleta(b.paletaPropria) && Array.isArray(b.paletaPropria) ? paleta(b.paletaPropria) : undefined };
+  const brilhos = [];
+  for (const br of Array.isArray(b.brilhos) ? b.brilhos.slice(0, 12) : []) {
+    if (!br || !receita.BRILHOS[br.tipo] || brilhos.length >= 5 || brilhos.some(x => x.tipo === br.tipo)) continue;
+    brilhos.push({ tipo: br.tipo, fonte: Math.round(numero(br.fonte, 0, 3, receita.BRILHOS[br.tipo].fonte)), forca: numero(br.forca, 0, 1, 0.85), qtd: numero(br.qtd, 0, 1, 0.5), cor: cor(br.cor, '#ffffff') });
+  }
+  return { efeito: 'composicao', sentido: SENTIDOS.includes(b.sentido) ? b.sentido : undefined, fundo, camadas, duck, brilhos, paletaPropria: paleta(b.paletaPropria) && Array.isArray(b.paletaPropria) ? paleta(b.paletaPropria) : undefined };
 }
 
-function criarCriacoes({ dir, publico, temEfeito, avisar }) {
-  const ARQ = path.join(publico, 'animacoes-barras.json');
-  const ler = () => JSON.parse(fs.readFileSync(ARQ, 'utf8'));
-  function gravar(lista) {
-    const tmp = `${ARQ}.${process.pid}.tmp`;
+function criarCriacoes({ dir, publico, temEfeito, avisar, noAr }) {
+  const ARQS = { barras: path.join(publico, 'animacoes-barras.json'), balcoes: path.join(publico, 'animacoes-balcoes.json') };
+  const ler = (qual = 'barras') => JSON.parse(fs.readFileSync(ARQS[qual], 'utf8'));
+  function gravar(lista, qual = 'barras') {
+    const tmp = `${ARQS[qual]}.${process.pid}.tmp`;
     fs.writeFileSync(tmp, JSON.stringify(lista, null, 2));
-    fs.renameSync(tmp, ARQ);
+    fs.renameSync(tmp, ARQS[qual]);
   }
 
   // Miniaturas uma de cada vez, fora do processo que manda as fitas.
@@ -73,14 +79,14 @@ function criarCriacoes({ dir, publico, temEfeito, avisar }) {
   function proximaMiniatura() {
     if (gerando || !fila.length) return;
     gerando = true;
-    const id = fila.shift();
+    const { id, qual } = fila.shift();
     const filho = spawn(process.execPath, [path.join(dir, 'gerar-previas-fitas.js')], {
-      cwd: dir, windowsHide: true, stdio: 'ignore', env: { ...process.env, PREVIA_ID: id, FORCAR: '1' },
+      cwd: dir, windowsHide: true, stdio: 'ignore', env: { ...process.env, PREVIA_ID: id, PREVIA_LISTA: qual, FORCAR: '1' },
     });
     const fim = () => {
       gerando = false;
       // Apagado enquanto a miniatura era feita: ela não pode ficar para trás.
-      try { if (!ler().some(c => c.id === id)) tirarArquivos(id); } catch {}
+      try { if (!ler(qual).some(c => c.id === id)) tirarArquivos(id); } catch {}
       avisar();
       proximaMiniatura();
     };
@@ -103,7 +109,14 @@ function criarCriacoes({ dir, publico, temEfeito, avisar }) {
     if (p === '/api/criacoes/catalogo' && req.method === 'GET') {
       const paletas = {};
       for (const [k, v] of Object.entries(receita.PALETAS)) paletas[k] = { nome: v.nome, cores: v.c };
-      sendJson(res, 200, { paletas, misturas: receita.MISTURAS, fundos: receita.FUNDOS });
+      const brilhos = {};
+      for (const [k, v] of Object.entries(receita.BRILHOS)) brilhos[k] = { nome: v.nome, fonte: v.fonte };
+      sendJson(res, 200, { paletas, misturas: receita.MISTURAS, fundos: receita.FUNDOS, brilhos });
+      return true;
+    }
+    // A composição que está nas barras, para outro aparelho continuar dela.
+    if (p === '/api/criacoes/no-ar' && req.method === 'GET') {
+      sendJson(res, 200, noAr ? noAr(new URL(req.url, 'http://x').searchParams.get('z')) : {});
       return true;
     }
     if (p === '/api/criacoes' && req.method === 'POST') {
@@ -113,7 +126,8 @@ function criarCriacoes({ dir, publico, temEfeito, avisar }) {
         const balcao = limpar(m.balcao, temEfeito);
         if (!balcao) return sendJson(res, 400, { erro: 'Essa criação não dá para salvar' });
         if (!balcao.camadas.length && balcao.fundo.tipo === 'preto') return sendJson(res, 400, { erro: 'Ponha pelo menos uma camada ou um fundo' });
-        const lista = ler();
+        const qual = m.lista === 'balcoes' ? 'balcoes' : 'barras';
+        const lista = ler(qual);
         const v = Date.now().toString(36);
         const antiga = ID.test(String(m.id)) ? lista.findIndex(c => c.id === m.id && c.criada) : -1;
         const id = antiga >= 0 ? m.id : 'm-' + v;
@@ -121,9 +135,10 @@ function criarCriacoes({ dir, publico, temEfeito, avisar }) {
           id, nome, duracao: 8, balcao, categoria: 'audio', grupo: 'minhas', criada: true,
           thumb: `cenas/anim-${id}.png?v=${v}`, preview: `cenas/anim-${id}.mp4?v=${v}`,
         };
-        if (antiga >= 0) lista[antiga] = item; else lista.push(item);
-        gravar(lista);
-        if (!fila.includes(id)) fila.push(id);
+        const iApagar = qual === 'balcoes' ? lista.findIndex(c => c.apagar) : -1; // "apagar" fica sempre por último nos balcões
+        if (antiga >= 0) lista[antiga] = item; else if (iApagar >= 0) lista.splice(iApagar, 0, item); else lista.push(item);
+        gravar(lista, qual);
+        if (!fila.some(f => f.id === id)) fila.push({ id, qual });
         proximaMiniatura();
         avisar();
         sendJson(res, 200, { ok: true, id, nome });
@@ -132,11 +147,10 @@ function criarCriacoes({ dir, publico, temEfeito, avisar }) {
     }
     const apagar = /^\/api\/criacoes\/(m-[a-z0-9]{4,24})$/.exec(p);
     if (apagar && req.method === 'DELETE') {
-      const lista = ler();
-      const resto = lista.filter(c => !(c.id === apagar[1] && c.criada));
-      if (resto.length === lista.length) { sendJson(res, 404, { erro: 'Esse modelo não existe' }); return true; }
-      gravar(resto);
-      fila = fila.filter(id => id !== apagar[1]);
+      const qual = ['barras', 'balcoes'].find(q => ler(q).some(c => c.id === apagar[1] && c.criada));
+      if (!qual) { sendJson(res, 404, { erro: 'Esse modelo não existe' }); return true; }
+      gravar(ler(qual).filter(c => !(c.id === apagar[1] && c.criada)), qual);
+      fila = fila.filter(f => f.id !== apagar[1]);
       tirarArquivos(apagar[1]);
       avisar();
       sendJson(res, 200, { ok: true });

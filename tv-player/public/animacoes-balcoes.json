@@ -453,16 +453,3263 @@
     "batidas": 1,
     "balcao": {
       "partes": [
-        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" },
-        { "duracao": 0.071, "efeito": "preto" },
-        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" },
-        { "duracao": 0.071, "efeito": "preto" },
-        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" },
-        { "duracao": 0.071, "efeito": "preto" },
-        { "duracao": 0.05, "efeito": "solido", "cor": "#ffffff" }
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        },
+        {
+          "duracao": 0.071,
+          "efeito": "preto"
+        },
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        },
+        {
+          "duracao": 0.071,
+          "efeito": "preto"
+        },
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        },
+        {
+          "duracao": 0.071,
+          "efeito": "preto"
+        },
+        {
+          "duracao": 0.05,
+          "efeito": "solido",
+          "cor": "#ffffff"
+        }
       ]
     },
     "categoria": "pista"
+  },
+  {
+    "id": "ba-auto",
+    "nome": "Automático",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "auto",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAuto",
+          "nome": "Automático",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-auto"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-auto.png",
+    "preview": "cenas/anim-ba-auto.mp4"
+  },
+  {
+    "id": "ba-auto-aceso",
+    "nome": "Automático aceso",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "auto",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAutoAceso",
+          "nome": "Automático aceso",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-auto-aceso"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-auto-aceso.png",
+    "preview": "cenas/anim-ba-auto-aceso.mp4"
+  },
+  {
+    "id": "ba-auto-calmo",
+    "nome": "Automático calmo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "auto",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAutoCalmo",
+          "nome": "Automático calmo",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-auto-calmo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-auto-calmo.png",
+    "preview": "cenas/anim-ba-auto-calmo.mp4"
+  },
+  {
+    "id": "ba-aceso-bumbo",
+    "nome": "Pulso no bumbo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Pulso no bumbo",
+          "p": {
+            "fonte": "bumbo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-bumbo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-bumbo.png",
+    "preview": "cenas/anim-ba-aceso-bumbo.mp4"
+  },
+  {
+    "id": "ba-aceso-grave",
+    "nome": "Sobe com o grave",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Sobe com o grave",
+          "p": {
+            "fonte": "grave"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-grave"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-grave.png",
+    "preview": "cenas/anim-ba-aceso-grave.mp4"
+  },
+  {
+    "id": "ba-aceso-volume",
+    "nome": "Sobe com o volume",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Sobe com o volume",
+          "p": {
+            "fonte": "volume"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-volume"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-volume.png",
+    "preview": "cenas/anim-ba-aceso-volume.mp4"
+  },
+  {
+    "id": "ba-aceso-agudo",
+    "nome": "Brilho no agudo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Brilho no agudo",
+          "p": {
+            "fonte": "agudo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-agudo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-agudo.png",
+    "preview": "cenas/anim-ba-aceso-agudo.mp4"
+  },
+  {
+    "id": "ba-aceso-banda",
+    "nome": "Uma banda por fileira",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Uma banda por fileira",
+          "p": {
+            "fonte": "banda"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-banda"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-banda.png",
+    "preview": "cenas/anim-ba-aceso-banda.mp4"
+  },
+  {
+    "id": "ba-aceso-faixa",
+    "nome": "Uma faixa por fileira",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Uma faixa por fileira",
+          "p": {
+            "fonte": "faixa"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-faixa"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-faixa.png",
+    "preview": "cenas/anim-ba-aceso-faixa.mp4"
+  },
+  {
+    "id": "ba-aceso-medidor",
+    "nome": "Medidor aceso",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioMedidorAceso",
+          "nome": "Medidor aceso",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-medidor"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-medidor.png",
+    "preview": "cenas/anim-ba-aceso-medidor.mp4"
+  },
+  {
+    "id": "ba-aceso-ambar",
+    "nome": "Âmbar aceso",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAceso",
+          "nome": "Âmbar aceso",
+          "p": {
+            "fonte": "grave",
+            "cor": "#ffc465"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-ambar"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-ambar.png",
+    "preview": "cenas/anim-ba-aceso-ambar.mp4"
+  },
+  {
+    "id": "ba-aceso-varia",
+    "nome": "Intensidade variada",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastroAceso",
+          "nome": "Intensidade variada",
+          "p": {
+            "dir": "varia"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-varia"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-varia.png",
+    "preview": "cenas/anim-ba-aceso-varia.mp4"
+  },
+  {
+    "id": "ba-aceso-golpe-varia",
+    "nome": "Golpe variado",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrenteAcesa",
+          "nome": "Golpe variado",
+          "p": {
+            "dir": "varia"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-golpe-varia"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-aceso-golpe-varia.png",
+    "preview": "cenas/anim-ba-aceso-golpe-varia.mp4"
+  },
+  {
+    "id": "ba-aceso-abre",
+    "nome": "Intensidade abre",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastroAceso",
+          "nome": "Intensidade abre",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-abre"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-aceso-abre.png",
+    "preview": "cenas/anim-ba-aceso-abre.mp4"
+  },
+  {
+    "id": "ba-aceso-fecha",
+    "nome": "Intensidade fecha",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "fecha",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastroAceso",
+          "nome": "Intensidade fecha",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-fecha"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-aceso-fecha.png",
+    "preview": "cenas/anim-ba-aceso-fecha.mp4"
+  },
+  {
+    "id": "ba-aceso-direita",
+    "nome": "Intensidade para a direita",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastroAceso",
+          "nome": "Intensidade para a direita",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-direita"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-aceso-direita.png",
+    "preview": "cenas/anim-ba-aceso-direita.mp4"
+  },
+  {
+    "id": "ba-aceso-esquerda",
+    "nome": "Intensidade para a esquerda",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "esquerda",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastroAceso",
+          "nome": "Intensidade para a esquerda",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-esquerda"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-aceso-esquerda.png",
+    "preview": "cenas/anim-ba-aceso-esquerda.mp4"
+  },
+  {
+    "id": "ba-aceso-fileiras",
+    "nome": "Intensidade nas fileiras",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "aceso",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "blocos",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastroAceso",
+          "nome": "Intensidade nas fileiras",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-aceso-fileiras"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-aceso-fileiras.png",
+    "preview": "cenas/anim-ba-aceso-fileiras.mp4"
+  },
+  {
+    "id": "ba-dir-abre",
+    "nome": "Bumbo abre",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo abre",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-abre"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-abre.png",
+    "preview": "cenas/anim-ba-dir-abre.mp4"
+  },
+  {
+    "id": "ba-dir-fecha",
+    "nome": "Bumbo fecha",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "fecha",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo fecha",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-fecha"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-fecha.png",
+    "preview": "cenas/anim-ba-dir-fecha.mp4"
+  },
+  {
+    "id": "ba-dir-direita",
+    "nome": "Bumbo para a direita",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo para a direita",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-direita"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-direita.png",
+    "preview": "cenas/anim-ba-dir-direita.mp4"
+  },
+  {
+    "id": "ba-dir-esquerda",
+    "nome": "Bumbo para a esquerda",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "esquerda",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo para a esquerda",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-esquerda"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-esquerda.png",
+    "preview": "cenas/anim-ba-dir-esquerda.mp4"
+  },
+  {
+    "id": "ba-dir-sobe-fileiras",
+    "nome": "Bumbo sobe as fileiras",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "blocos",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo sobe as fileiras",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-sobe-fileiras"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-sobe-fileiras.png",
+    "preview": "cenas/anim-ba-dir-sobe-fileiras.mp4"
+  },
+  {
+    "id": "ba-dir-desce-fileiras",
+    "nome": "Bumbo desce as fileiras",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "blocos",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo desce as fileiras",
+          "p": {
+            "dir": "desce"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-desce-fileiras"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-desce-fileiras.png",
+    "preview": "cenas/anim-ba-dir-desce-fileiras.mp4"
+  },
+  {
+    "id": "ba-dir-cruza",
+    "nome": "Bumbo cruza as fileiras",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Bumbo cruza as fileiras",
+          "p": {
+            "dir": "direita"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-cruza"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-cruza.png",
+    "preview": "cenas/anim-ba-dir-cruza.mp4"
+  },
+  {
+    "id": "ba-dir-diagonal",
+    "nome": "Diagonal",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Diagonal",
+          "p": {
+            "dir": "diagonal"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-diagonal"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-diagonal.png",
+    "preview": "cenas/anim-ba-dir-diagonal.mp4"
+  },
+  {
+    "id": "ba-dir-inversa",
+    "nome": "Diagonal inversa",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Diagonal inversa",
+          "p": {
+            "dir": "inversa"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-inversa"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-inversa.png",
+    "preview": "cenas/anim-ba-dir-inversa.mp4"
+  },
+  {
+    "id": "ba-dir-alterna",
+    "nome": "Uma abre, outra fecha",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Uma abre, outra fecha",
+          "p": {
+            "dir": "alterna"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-alterna"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-alterna.png",
+    "preview": "cenas/anim-ba-dir-alterna.mp4"
+  },
+  {
+    "id": "ba-dir-vaivem",
+    "nome": "Vai e volta",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Vai e volta",
+          "p": {
+            "dir": "vaivem"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-vaivem"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-vaivem.png",
+    "preview": "cenas/anim-ba-dir-vaivem.mp4"
+  },
+  {
+    "id": "ba-dir-abrefecha",
+    "nome": "Abre e fecha",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Abre e fecha",
+          "p": {
+            "dir": "sobedesce"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-abrefecha"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-abrefecha.png",
+    "preview": "cenas/anim-ba-dir-abrefecha.mp4"
+  },
+  {
+    "id": "ba-dir-varia",
+    "nome": "Direção variada",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Direção variada",
+          "p": {
+            "dir": "varia"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-varia"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-varia.png",
+    "preview": "cenas/anim-ba-dir-varia.mp4"
+  },
+  {
+    "id": "ba-dir-medio",
+    "nome": "Médio fecha",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Médio fecha",
+          "p": {
+            "dir": "desce",
+            "faixa": 2,
+            "cor": "#00c44a"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-medio"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-medio.png",
+    "preview": "cenas/anim-ba-dir-medio.mp4"
+  },
+  {
+    "id": "ba-dir-agudo",
+    "nome": "Chimbal para a direita",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFrente",
+          "nome": "Chimbal para a direita",
+          "p": {
+            "dir": "sobe",
+            "faixa": 3,
+            "cor": "#00a0e6",
+            "vel": 3.4
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-agudo"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-agudo.png",
+    "preview": "cenas/anim-ba-dir-agudo.mp4"
+  },
+  {
+    "id": "ba-dir-rastro-abre",
+    "nome": "Rastro abre",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastro",
+          "nome": "Rastro abre",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-rastro-abre"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-rastro-abre.png",
+    "preview": "cenas/anim-ba-dir-rastro-abre.mp4"
+  },
+  {
+    "id": "ba-dir-rastro-lado",
+    "nome": "Rastro para o lado",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastro",
+          "nome": "Rastro para o lado",
+          "p": {
+            "dir": "sobe"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-rastro-lado"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-rastro-lado.png",
+    "preview": "cenas/anim-ba-dir-rastro-lado.mp4"
+  },
+  {
+    "id": "ba-dir-rastro-varia",
+    "nome": "Rastro variado",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "direcao",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRastro",
+          "nome": "Rastro variado",
+          "p": {
+            "dir": "varia"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-dir-rastro-varia"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-dir-rastro-varia.png",
+    "preview": "cenas/anim-ba-dir-rastro-varia.mp4"
+  },
+  {
+    "id": "ba-f-velas",
+    "nome": "Velas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas",
+          "p": {
+            "paleta": "vela"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas.png",
+    "preview": "cenas/anim-ba-f-velas.mp4"
+  },
+  {
+    "id": "ba-f-velas-ambar",
+    "nome": "Velas âmbar",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas âmbar",
+          "p": {
+            "paleta": "ambar"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-ambar"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas-ambar.png",
+    "preview": "cenas/anim-ba-f-velas-ambar.mp4"
+  },
+  {
+    "id": "ba-f-velas-cera",
+    "nome": "Velas com cera",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas com cera",
+          "p": {
+            "paleta": "vela",
+            "cera": 0.24,
+            "alt": 0.45
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-cera"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas-cera.png",
+    "preview": "cenas/anim-ba-f-velas-cera.mp4"
+  },
+  {
+    "id": "ba-f-velas-altas",
+    "nome": "Velas altas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas altas",
+          "p": {
+            "paleta": "vela",
+            "alt": 0.82,
+            "audio": 0.2
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-altas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas-altas.png",
+    "preview": "cenas/anim-ba-f-velas-altas.mp4"
+  },
+  {
+    "id": "ba-f-velas-gas",
+    "nome": "Velas de gás",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas de gás",
+          "p": {
+            "paleta": "gas"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-gas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas-gas.png",
+    "preview": "cenas/anim-ba-f-velas-gas.mp4"
+  },
+  {
+    "id": "ba-f-velas-verde",
+    "nome": "Velas esmeralda",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas esmeralda",
+          "p": {
+            "paleta": "esmeralda"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-verde"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas-verde.png",
+    "preview": "cenas/anim-ba-f-velas-verde.mp4"
+  },
+  {
+    "id": "ba-f-velas-roxa",
+    "nome": "Velas ametista",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas ametista",
+          "p": {
+            "paleta": "ametista"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-roxa"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-velas-roxa.png",
+    "preview": "cenas/anim-ba-f-velas-roxa.mp4"
+  },
+  {
+    "id": "ba-f-fogueira",
+    "nome": "Fogueira",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-fogueira.png",
+    "preview": "cenas/anim-ba-f-fogueira.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-alta",
+    "nome": "Fogueira alta",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira alta",
+          "p": {
+            "paleta": "fogo",
+            "frio": 0.34
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-alta"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-fogueira-alta.png",
+    "preview": "cenas/anim-ba-f-fogueira-alta.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-baixa",
+    "nome": "Fogueira baixa",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira baixa",
+          "p": {
+            "paleta": "brasa",
+            "frio": 0.95
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-baixa"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-fogueira-baixa.png",
+    "preview": "cenas/anim-ba-f-fogueira-baixa.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-gas",
+    "nome": "Fogueira de gás",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira de gás",
+          "p": {
+            "paleta": "gas"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-gas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-fogueira-gas.png",
+    "preview": "cenas/anim-ba-f-fogueira-gas.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-verde",
+    "nome": "Fogueira esmeralda",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira esmeralda",
+          "p": {
+            "paleta": "esmeralda"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-verde"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-fogueira-verde.png",
+    "preview": "cenas/anim-ba-f-fogueira-verde.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-roxa",
+    "nome": "Fogueira ametista",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira ametista",
+          "p": {
+            "paleta": "ametista"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-roxa"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-fogueira-roxa.png",
+    "preview": "cenas/anim-ba-f-fogueira-roxa.mp4"
+  },
+  {
+    "id": "ba-f-brasas",
+    "nome": "Brasas subindo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioBrasas",
+          "nome": "Brasas subindo",
+          "p": {
+            "paleta": "brasa"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-brasas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-f-brasas.png",
+    "preview": "cenas/anim-ba-f-brasas.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-duck",
+    "nome": "Fogueira com duck",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "brasas",
+        "k": 0.5,
+        "duck": true,
+        "paleta": "brasa"
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira",
+          "cena": "",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": true,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": true,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.55,
+        "soltura": 0.3,
+        "limiar": 0.4,
+        "inverso": false
+      },
+      "sentido": "centro"
+    },
+    "thumb": "cenas/anim-ba-f-fogueira-duck.png",
+    "preview": "cenas/anim-ba-f-fogueira-duck.mp4"
+  },
+  {
+    "id": "ba-f-velas-faiscas",
+    "nome": "Velas e brasas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "vertical",
+        "k": 0.8,
+        "duck": true,
+        "c1": "#3a1000",
+        "c2": "#000000"
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas",
+          "cena": "",
+          "p": {
+            "paleta": "vela"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "audioBrasas",
+          "nome": "Brasas",
+          "cena": "",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "somar",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": false,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.7,
+        "soltura": 0.25,
+        "limiar": 0.4,
+        "inverso": false
+      },
+      "sentido": "centro"
+    },
+    "thumb": "cenas/anim-ba-f-velas-faiscas.png",
+    "preview": "cenas/anim-ba-f-velas-faiscas.mp4"
+  },
+  {
+    "id": "ba-f-velas-blocos",
+    "nome": "Velas ao longo do balcão",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "blocos",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas ao longo do balcão",
+          "p": {
+            "paleta": "vela"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-velas-blocos"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-f-velas-blocos.png",
+    "preview": "cenas/anim-ba-f-velas-blocos.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-blocos",
+    "nome": "Fogueira ao longo do balcão",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "blocos",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogueira ao longo do balcão",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-blocos"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-f-fogueira-blocos.png",
+    "preview": "cenas/anim-ba-f-fogueira-blocos.mp4"
+  },
+  {
+    "id": "ba-f-fogueira-direita",
+    "nome": "Fogo de uma ponta à outra",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fogo",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "direita",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFogueira",
+          "nome": "Fogo de uma ponta à outra",
+          "p": {
+            "paleta": "fogo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-f-fogueira-direita"
+        }
+      ]
+    },
+    "sentidoProprio": true,
+    "thumb": "cenas/anim-ba-f-fogueira-direita.png",
+    "preview": "cenas/anim-ba-f-fogueira-direita.mp4"
+  },
+  {
+    "id": "ba-g-bolinhas",
+    "nome": "Bolinhas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisBolinhas",
+          "nome": "Bolinhas",
+          "p": {
+            "paleta": "prata"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-bolinhas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-bolinhas.png",
+    "preview": "cenas/anim-ba-g-bolinhas.mp4"
+  },
+  {
+    "id": "ba-g-molas",
+    "nome": "Molas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisMolas",
+          "nome": "Molas",
+          "p": {
+            "paleta": "gelo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-molas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-molas.png",
+    "preview": "cenas/anim-ba-g-molas.mp4"
+  },
+  {
+    "id": "ba-g-corda",
+    "nome": "Corda",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisCorda",
+          "nome": "Corda",
+          "p": {
+            "paleta": "prata"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-corda"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-corda.png",
+    "preview": "cenas/anim-ba-g-corda.mp4"
+  },
+  {
+    "id": "ba-g-agua",
+    "nome": "Água",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisAgua",
+          "nome": "Água",
+          "p": {
+            "paleta": "gas"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-agua"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-agua.png",
+    "preview": "cenas/anim-ba-g-agua.mp4"
+  },
+  {
+    "id": "ba-g-pendulo",
+    "nome": "Pêndulo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisPendulo",
+          "nome": "Pêndulo",
+          "p": {
+            "paleta": "ambar"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-pendulo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-pendulo.png",
+    "preview": "cenas/anim-ba-g-pendulo.mp4"
+  },
+  {
+    "id": "ba-g-fogos",
+    "nome": "Fogos",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisFogos",
+          "nome": "Fogos",
+          "p": {
+            "paleta": "marca"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-fogos"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-fogos.png",
+    "preview": "cenas/anim-ba-g-fogos.mp4"
+  },
+  {
+    "id": "ba-g-bolhas",
+    "nome": "Bolhas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisBolhas",
+          "nome": "Bolhas",
+          "p": {
+            "paleta": "gelo"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-bolhas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-bolhas.png",
+    "preview": "cenas/anim-ba-g-bolhas.mp4"
+  },
+  {
+    "id": "ba-g-areia",
+    "nome": "Areia",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "fisAreia",
+          "nome": "Areia",
+          "p": {
+            "paleta": "ambar"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-g-areia"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-g-areia.png",
+    "preview": "cenas/anim-ba-g-areia.mp4"
+  },
+  {
+    "id": "ba-g-agua-bolhas",
+    "nome": "Água com bolhas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "preto",
+        "k": 0.3,
+        "duck": true
+      },
+      "camadas": [
+        {
+          "efeito": "fisAgua",
+          "nome": "Água",
+          "cena": "",
+          "p": {
+            "paleta": "gas"
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "fisBolhas",
+          "nome": "Bolhas",
+          "cena": "",
+          "p": {
+            "paleta": "gelo"
+          },
+          "duracao": 8,
+          "mistura": "somar",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": false,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.7,
+        "soltura": 0.25,
+        "limiar": 0.4,
+        "inverso": false
+      },
+      "sentido": "centro"
+    },
+    "thumb": "cenas/anim-ba-g-agua-bolhas.png",
+    "preview": "cenas/anim-ba-g-agua-bolhas.mp4"
+  },
+  {
+    "id": "ba-g-fogos-velas",
+    "nome": "Fogos sobre velas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "fisica",
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "preto",
+        "k": 0.3,
+        "duck": true
+      },
+      "camadas": [
+        {
+          "efeito": "audioVelas",
+          "nome": "Velas",
+          "cena": "",
+          "p": {
+            "paleta": "ambar",
+            "alt": 0.4
+          },
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 0.7,
+          "duck": true,
+          "virar": false,
+          "espelhar": false
+        },
+        {
+          "efeito": "fisFogos",
+          "nome": "Fogos",
+          "cena": "",
+          "p": {
+            "paleta": "marca"
+          },
+          "duracao": 8,
+          "mistura": "tela",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": true,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.5,
+        "soltura": 0.35,
+        "limiar": 0.4,
+        "inverso": false
+      },
+      "sentido": "centro"
+    },
+    "thumb": "cenas/anim-ba-g-fogos-velas.png",
+    "preview": "cenas/anim-ba-g-fogos-velas.mp4"
+  },
+  {
+    "id": "ba-faixas",
+    "nome": "Faixas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFaixas",
+          "nome": "Faixas",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-faixas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-faixas.png",
+    "preview": "cenas/anim-ba-faixas.mp4"
+  },
+  {
+    "id": "ba-espectro",
+    "nome": "Espectro",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioEspectro",
+          "nome": "Espectro",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-espectro"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-espectro.png",
+    "preview": "cenas/anim-ba-espectro.mp4"
+  },
+  {
+    "id": "ba-camadas",
+    "nome": "Camadas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioCamadas",
+          "nome": "Camadas",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-camadas"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-camadas.png",
+    "preview": "cenas/anim-ba-camadas.mp4"
+  },
+  {
+    "id": "ba-espelho",
+    "nome": "Espelho",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioEspelho",
+          "nome": "Espelho",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-espelho"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-espelho.png",
+    "preview": "cenas/anim-ba-espelho.mp4"
+  },
+  {
+    "id": "ba-teto",
+    "nome": "Das pontas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioTeto",
+          "nome": "Das pontas",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-teto"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-teto.png",
+    "preview": "cenas/anim-ba-teto.mp4"
+  },
+  {
+    "id": "ba-cascata",
+    "nome": "Cascata",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioCascata",
+          "nome": "Cascata",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-cascata"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-cascata.png",
+    "preview": "cenas/anim-ba-cascata.mp4"
+  },
+  {
+    "id": "ba-trilha",
+    "nome": "Trilha do bumbo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioTrilha",
+          "nome": "Trilha do bumbo",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-trilha"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-trilha.png",
+    "preview": "cenas/anim-ba-trilha.mp4"
+  },
+  {
+    "id": "ba-temperatura",
+    "nome": "Temperatura",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioTemperatura",
+          "nome": "Temperatura",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-temperatura"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-temperatura.png",
+    "preview": "cenas/anim-ba-temperatura.mp4"
+  },
+  {
+    "id": "ba-cortina",
+    "nome": "Cortina",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioCortina",
+          "nome": "Cortina",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-cortina"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-cortina.png",
+    "preview": "cenas/anim-ba-cortina.mp4"
+  },
+  {
+    "id": "ba-duelo",
+    "nome": "Grave x agudo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "faixa",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioDuelo",
+          "nome": "Grave x agudo",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-duelo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-duelo.png",
+    "preview": "cenas/anim-ba-duelo.mp4"
+  },
+  {
+    "id": "ba-bumbo",
+    "nome": "Bumbo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioBumbo",
+          "nome": "Bumbo",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-bumbo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-bumbo.png",
+    "preview": "cenas/anim-ba-bumbo.mp4"
+  },
+  {
+    "id": "ba-flash",
+    "nome": "Flash seco",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFlash",
+          "nome": "Flash seco",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-flash"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-flash.png",
+    "preview": "cenas/anim-ba-flash.mp4"
+  },
+  {
+    "id": "ba-onda",
+    "nome": "Onda do bumbo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioOnda",
+          "nome": "Onda do bumbo",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-onda"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-onda.png",
+    "preview": "cenas/anim-ba-onda.mp4"
+  },
+  {
+    "id": "ba-foguetes",
+    "nome": "Foguetes",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFoguetes",
+          "nome": "Foguetes",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-foguetes"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-foguetes.png",
+    "preview": "cenas/anim-ba-foguetes.mp4"
+  },
+  {
+    "id": "ba-chuva",
+    "nome": "Chuva de chimbal",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioChuva",
+          "nome": "Chuva de chimbal",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-chuva"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-chuva.png",
+    "preview": "cenas/anim-ba-chuva.mp4"
+  },
+  {
+    "id": "ba-encontro",
+    "nome": "Encontro",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioEncontro",
+          "nome": "Encontro",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-encontro"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-encontro.png",
+    "preview": "cenas/anim-ba-encontro.mp4"
+  },
+  {
+    "id": "ba-sorteio",
+    "nome": "Fileira sorteada",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioSorteio",
+          "nome": "Fileira sorteada",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-sorteio"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-sorteio.png",
+    "preview": "cenas/anim-ba-sorteio.mp4"
+  },
+  {
+    "id": "ba-alternado",
+    "nome": "Alternado",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAlternado",
+          "nome": "Alternado",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-alternado"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-alternado.png",
+    "preview": "cenas/anim-ba-alternado.mp4"
+  },
+  {
+    "id": "ba-troca-cor",
+    "nome": "Cor no bumbo",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioTrocaCor",
+          "nome": "Cor no bumbo",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-troca-cor"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-troca-cor.png",
+    "preview": "cenas/anim-ba-troca-cor.mp4"
+  },
+  {
+    "id": "ba-acumula",
+    "nome": "Acumula",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioAcumula",
+          "nome": "Acumula",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-acumula"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-acumula.png",
+    "preview": "cenas/anim-ba-acumula.mp4"
+  },
+  {
+    "id": "ba-faisca",
+    "nome": "Faíscas",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "golpe",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioFaisca",
+          "nome": "Faíscas",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-faisca"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-faisca.png",
+    "preview": "cenas/anim-ba-faisca.mp4"
+  },
+  {
+    "id": "ba-passo",
+    "nome": "Passo na batida",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "batida",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioPasso",
+          "nome": "Passo na batida",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-passo"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-passo.png",
+    "preview": "cenas/anim-ba-passo.mp4"
+  },
+  {
+    "id": "ba-varredura",
+    "nome": "Varredura",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "batida",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioVarredura",
+          "nome": "Varredura",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-varredura"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-varredura.png",
+    "preview": "cenas/anim-ba-varredura.mp4"
+  },
+  {
+    "id": "ba-escada",
+    "nome": "Escada",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "batida",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioEscada",
+          "nome": "Escada",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-escada"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-escada.png",
+    "preview": "cenas/anim-ba-escada.mp4"
+  },
+  {
+    "id": "ba-serpente",
+    "nome": "Serpente",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "batida",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioSerpente",
+          "nome": "Serpente",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-serpente"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-serpente.png",
+    "preview": "cenas/anim-ba-serpente.mp4"
+  },
+  {
+    "id": "ba-quatro",
+    "nome": "Quatro por quatro",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "batida",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioQuatro",
+          "nome": "Quatro por quatro",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-quatro"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-quatro.png",
+    "preview": "cenas/anim-ba-quatro.mp4"
+  },
+  {
+    "id": "ba-respira",
+    "nome": "Respiração",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "calma",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioRespira",
+          "nome": "Respiração",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-respira"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-respira.png",
+    "preview": "cenas/anim-ba-respira.mp4"
+  },
+  {
+    "id": "ba-nivel",
+    "nome": "Nível d'água",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "calma",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioNivel",
+          "nome": "Nível d'água",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-nivel"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-nivel.png",
+    "preview": "cenas/anim-ba-nivel.mp4"
+  },
+  {
+    "id": "ba-chama",
+    "nome": "Chama",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "calma",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioChama",
+          "nome": "Chama",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-chama"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-chama.png",
+    "preview": "cenas/anim-ba-chama.mp4"
+  },
+  {
+    "id": "ba-brasa-viva",
+    "nome": "Brasa viva",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "calma",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioBrasaViva",
+          "nome": "Brasa viva",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-brasa-viva"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-brasa-viva.png",
+    "preview": "cenas/anim-ba-brasa-viva.mp4"
+  },
+  {
+    "id": "ba-constelacao",
+    "nome": "Constelação viva",
+    "duracao": 8,
+    "categoria": "audio",
+    "grupo": "calma",
+    "balcao": {
+      "efeito": "composicao",
+      "sentido": "centro",
+      "fundo": {
+        "tipo": "preto"
+      },
+      "brilhos": [],
+      "duck": {
+        "ligado": false
+      },
+      "camadas": [
+        {
+          "efeito": "audioConstelacao",
+          "nome": "Constelação viva",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "cena": "ba-constelacao"
+        }
+      ]
+    },
+    "thumb": "cenas/anim-ba-constelacao.png",
+    "preview": "cenas/anim-ba-constelacao.mp4"
   },
   {
     "id": "apagar",

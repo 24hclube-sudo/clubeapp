@@ -1811,5 +1811,54 @@
     "criada": true,
     "thumb": "cenas/anim-m-mw5sjn2g.png?v=mw5sjn2g",
     "preview": "cenas/anim-m-mw5sjn2g.mp4?v=mw5sjn2g"
+  },
+  {
+    "id": "m-mw5u2ifk",
+    "nome": "luz de trabalho",
+    "duracao": 8,
+    "balcao": {
+      "efeito": "composicao",
+      "fundo": {
+        "tipo": "cor",
+        "c1": "#c77e00",
+        "c2": "#000000",
+        "paleta": "brasa",
+        "k": 1,
+        "duck": true
+      },
+      "camadas": [
+        {
+          "efeito": "audioEspelho",
+          "nome": "Espelho",
+          "cena": "a-espelho",
+          "p": {},
+          "duracao": 8,
+          "mistura": "cima",
+          "opacidade": 1,
+          "duck": false,
+          "virar": false,
+          "espelhar": false
+        }
+      ],
+      "duck": {
+        "ligado": false,
+        "fonte": 0,
+        "modo": "golpe",
+        "quantidade": 0.7,
+        "soltura": 0.25,
+        "limiar": 0.4,
+        "inverso": false
+      },
+      "paletaPropria": [
+        "#3a0058",
+        "#ff3388",
+        "#ffe2a8"
+      ]
+    },
+    "categoria": "audio",
+    "grupo": "minhas",
+    "criada": true,
+    "thumb": "cenas/anim-m-mw5u2ifk.png?v=mw5u2ifk",
+    "preview": "cenas/anim-m-mw5u2ifk.mp4?v=mw5u2ifk"
   }
 ]

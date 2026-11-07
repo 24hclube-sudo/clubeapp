@@ -101,6 +101,8 @@ const DIAGONAL = 0.07; // cada linha um pouco atrasada → movimento sequencial 
 
 // Som do quadro atual, para as cenas de áudio. O motor atualiza a cada quadro.
 let AU = audioVazio();
+// Qual fita está sendo desenhada: cada uma guarda o próprio estado das simulações.
+let ZONA_DESENHO = '';
 // Um efeito devolve a cor [r,g,b] (0–255) do pixel (x: 0–1, linha) na fase (0–1) do ciclo.
 const EFEITOS = {
   preto: () => [0, 0, 0],
@@ -320,7 +322,7 @@ function carregarEfeitosAudio() {
       if (m === efeitosEm.get(arq)) continue;
       efeitosEm.set(arq, m);
       delete require.cache[require.resolve(arq)];
-      const novos = require(arq)({ au: () => AU, cor, hex, mix, escala, degrade, frac, hash01, onda01, MARCA, efeitos: EFEITOS });
+      const novos = require(arq)({ au: () => AU, cor, hex, mix, escala, degrade, frac, hash01, onda01, MARCA, efeitos: EFEITOS, zona: () => ZONA_DESENHO });
       Object.assign(EFEITOS, novos);
       console.log('Áudio das barras: ' + Object.keys(novos).length + ' animações carregadas de ' + path.basename(arq));
     } catch (e) {
@@ -401,7 +403,7 @@ function fatoresDoFiltro(fl) {
 
 const CORES_TESTE = [[255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 255], [255, 255, 0], [255, 0, 255], [0, 255, 255], [255, 128, 0]];
 
-function criarBalcao({ estado, brilho, flash, corFlash }) {
+function criarBalcao({ estado, brilho, flash, corFlash, forcaFlash }) {
   // balcao.json: saída ligada/desligada por instalação.
   let config = {};
   try { config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')); } catch {}
@@ -464,6 +466,7 @@ function criarBalcao({ estado, brilho, flash, corFlash }) {
       return;
     }
     const z = estado(i.id);
+    ZONA_DESENHO = i.id;
     const { fn, p, fase = 0 } = efeitoDe(z.ativo, agora, { velocidade: z.velocidade || 1, bpm: z.bpm || 120 });
     const k = brilho(i.andar, i.grupo);
     // "Cor da saída" da zona (como o Group Settings do MadMapper): opacidade × R/G/B, 0–100 cada,
@@ -477,8 +480,9 @@ function criarBalcao({ estado, brilho, flash, corFlash }) {
     }
     // Botão de flash do app (luz-show.js): por cima de qualquer cena, sem passar pelo dimmer. A trava de potência continua valendo no envio.
     const nivelFlash = flash ? flash(i.id, agora) : 0;
-    if (nivelFlash < 0) q.fill(0);
-    else if (nivelFlash > 0) { const c = corFlash ? corFlash() : [255, 255, 255]; for (let o = 0; o < q.length; o++) q[o] += (c[o % 3] - q[o]) * nivelFlash; }
+    const fF = forcaFlash ? forcaFlash() : 1;
+    if (nivelFlash < 0) { for (let o = 0; o < q.length; o++) q[o] *= 1 - fF; }
+    else if (nivelFlash > 0) { const c = corFlash ? corFlash() : [255, 255, 255]; for (let o = 0; o < q.length; o++) q[o] += (c[o % 3] - q[o]) * nivelFlash * fF; }
   }
 
   // ArtDmx (OpCode 0x5000) para um universo.
@@ -515,6 +519,9 @@ function criarBalcao({ estado, brilho, flash, corFlash }) {
       s.celulas.forEach(([x, r], n) => {
         const o = (r * i.colunas + x) * 3;
         const v = rgbParaRgbw(gama(q[o]), gama(q[o + 1]), gama(q[o + 2]));
+        // Brilho pontual (efeitos-criador.js): acima de 100% nos três canais, o pixel acende todos os LEDs. A trava de potência continua valendo.
+        const alem = Math.min(q[o], q[o + 1], q[o + 2]) - 255;
+        if (alem > 0 && i.id !== 'terreo') { const t = Math.min(1, alem / 255); for (let c = 0; c < 4; c++) v[c] += (255 - v[c]) * t; }
         for (let c = 0; c < 4; c++) dados[n * 4 + c] = Math.floor(v['RGBW'.indexOf(i.ordem[c])] * limite);
       });
       sock.send(pacote(s.universo, dados), 6454, s.ip);
@@ -553,8 +560,9 @@ function criarBalcao({ estado, brilho, flash, corFlash }) {
       // Sem a Cor da saída: a prévia mostra a criação como ela é. A tela avisa se a saída estiver alterada.
       // Um erro aqui nunca pode derrubar o servidor nem as luzes.
       try {
-        const b = achar('barras'), z = estado('barras');
         for (const r of rascunhos.values()) {
+          const b = achar(r.inst) || achar('barras'), z = estado(b.id);
+          ZONA_DESENHO = 'r:' + b.id;
           const { fn, p, fase = 0 } = efeitoDe({ tipo: 'cena', cena: r.cena, startAt: 0 }, agora, { velocidade: 1, bpm: z.bpm || 120 });
           const px = Buffer.alloc(b.linhas * b.colunas * 3);
           for (let l = 0; l < b.linhas; l++) for (let x = 0; x < b.colunas; x++) {
@@ -564,7 +572,7 @@ function criarBalcao({ estado, brilho, flash, corFlash }) {
             px[o + 1] = Math.max(0, Math.min(255, Math.round(c[1])));
             px[o + 2] = Math.max(0, Math.min(255, Math.round(c[2])));
           }
-          r.enviar({ type: 'rascunho-previa', linhas: b.linhas, colunas: b.colunas, px: px.toString('base64') });
+          r.enviar({ type: 'rascunho-previa', id: b.id, linhas: b.linhas, colunas: b.colunas, px: px.toString('base64') });
         }
       } catch (e) { console.log('prévia do criador:', e.message); }
     }
@@ -604,9 +612,9 @@ function criarBalcao({ estado, brilho, flash, corFlash }) {
     ouvir(f) { ouvintes.add(f); return () => ouvintes.delete(f); },
     temEfeito: nome => typeof EFEITOS[nome] === 'function',
     // Liga, troca ou (cena nula) encerra a prévia de quem está criando.
-    rascunho(cliente, balcaoDaCena, enviar) {
+    rascunho(cliente, balcaoDaCena, enviar, inst = 'barras') {
       if (!balcaoDaCena) { rascunhos.delete(cliente); return; }
-      rascunhos.set(cliente, { cena: { id: 'rascunho', duracao: 8, balcao: { ...balcaoDaCena, rascunho: true } }, enviar });
+      rascunhos.set(cliente, { cena: { id: 'rascunho', duracao: 8, balcao: { ...balcaoDaCena, rascunho: true } }, enviar, inst });
     },
   };
 }

@@ -1,0 +1,449 @@
+// Personagens da marca na parede do DJ, atrás do logo. É uma camada transparente por cima de qualquer visual do LED.
+// O app escolhe o lugar (item personagemLugar). Atrás: nos visuais que contam onde está o logo (window.__logoTela), as letras abrem um buraco na camada e o logo de verdade continua à frente. Nos outros, e com Na frente, o corpo fica por cima.
+// Entra por mesa\saida\flash-pagina.js e só carrega a malha quando alguém liga o botão no app.
+// Eles viram com ease, um de cada vez. A troca acontece no instante em que o corpo está de perfil, escondida por um clarão.
+import { REACOES } from '../js/reacoes.js';
+import { A, audioVivo } from '../js/audio.js';
+
+const TESTE = window.__personagensTeste || null;
+const Q = new URLSearchParams(location.search);
+const ESCALA = parseFloat(Q.get('escala') || (Q.has('saida') ? '1' : '0.5'));
+const COM_FILTRO = Q.has('led');
+const W = Math.round(1032 * ESCALA), H = Math.round(688 * ESCALA);
+const HT = 2.3532 - 1.6, ZF = 4.39;
+// Sem O Curador (h), que segura um vinil. Ver marca\LEIA-ME.md.
+const ELENCO = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j'];
+const ALTURA = 1.17, PE = HT - 1.28 + 0.035, Z_FIG = ZF - 0.04;
+
+// ---------- curvas ----------
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const inOutQuint = t => (t < 0.5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2);
+const inCubic = t => t * t * t;
+const outQuint = t => 1 - (1 - t) ** 5;
+const outBack = t => { const c = 1.25; return 1 + (c + 1) * (t - 1) ** 3 + c * (t - 1) ** 2; };
+class Mola {
+  constructor(x = 0) { this.x = x; this.v = 0; }
+  passo(alvo, dt, w, z) {
+    const h = Math.min(dt, 1 / 30) / 2;
+    for (let i = 0; i < 2; i++) { this.v += (w * w * (alvo - this.x) - 2 * z * w * this.v) * h; this.x += this.v * h; }
+    return this.x;
+  }
+}
+
+// ---------- ligado? ----------
+const ligado = () => (TESTE ? TESTE.ligado !== false : REACOES.led.personagens === 'ligado');
+const querAtras = () => ((TESTE && TESTE.lugar) || REACOES.led.personagemLugar || 'atras') !== 'frente';
+const segundos = () => (TESTE && TESTE.tempo) || parseFloat(REACOES.led.personagemTempo) || 12;
+
+let motor = null, abrindo = false, falhou = false;
+function vigiar() {
+  if (ligado() && !motor && !abrindo && !falhou) {
+    abrindo = true;
+    criarMotor().then(m => { motor = m; }, e => { falhou = true; console.error('personagens: ' + e.message); }).finally(() => { abrindo = false; });
+  }
+  setTimeout(vigiar, 300);
+}
+vigiar();
+
+async function criarMotor() {
+  const adaptador = await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' });
+  const gpu = await adaptador.requestDevice();
+  gpu.addEventListener('uncapturederror', e => console.error('personagens: ' + e.error.message));
+  const aqui = a => new URL(a, import.meta.url);
+  const [META, BIN] = await Promise.all([
+    fetch(aqui('../marca/dados/malhas.json')).then(r => r.json()),
+    fetch(aqui('../marca/dados/malhas.bin')).then(r => r.arrayBuffer()),
+  ]);
+  const U = GPUBufferUsage, T = GPUTextureUsage;
+  const bufV = gpu.createBuffer({ size: META.bytesVertices, usage: U.VERTEX | U.COPY_DST });
+  const bufI = gpu.createBuffer({ size: BIN.byteLength - META.bytesVertices, usage: U.INDEX | U.COPY_DST });
+  gpu.queue.writeBuffer(bufV, 0, BIN, 0, META.bytesVertices);
+  gpu.queue.writeBuffer(bufI, 0, BIN, META.bytesVertices);
+  const FIG = Object.fromEntries(META.figuras.map(f => [f.nome, f]));
+
+  const op = { colorSpaceConversion: 'none', premultiplyAlpha: 'none' };
+  const LETRAS = 'abcdefghij'.split('');
+  const texFig = gpu.createTexture({ size: [1024, 1024, 10], mipLevelCount: 11, format: 'rgba8unorm', usage: T.TEXTURE_BINDING | T.COPY_DST | T.RENDER_ATTACHMENT });
+  await Promise.all(LETRAS.map(async (l, i) => {
+    const b = await createImageBitmap(await (await fetch(aqui('../marca/dados/figura-' + l + '.png'))).blob(), op);
+    for (let n = 0; n < 11; n++) {
+      const s = 1024 >> n;
+      const q = n ? await createImageBitmap(b, { ...op, resizeWidth: s, resizeHeight: s, resizeQuality: 'high' }) : b;
+      gpu.queue.copyExternalImageToTexture({ source: q }, { texture: texFig, mipLevel: n, origin: [0, 0, i] }, [s, s]);
+      if (n) q.close();
+    }
+  }));
+
+  const NOMES_LET = ['clube', 'pista', 'millos'];
+  const texLet = gpu.createTexture({ size: [2048, 720, 3], format: 'rgba8unorm', usage: T.TEXTURE_BINDING | T.COPY_DST | T.RENDER_ATTACHMENT });
+  await Promise.all(NOMES_LET.map(async (n, i) => {
+    const b = await createImageBitmap(await (await fetch(aqui('../espaco/dados/letreiro-' + n + '.png'))).blob(), op);
+    gpu.queue.copyExternalImageToTexture({ source: b }, { texture: texLet, origin: [0, 0, i] }, [2048, 720]);
+  }));
+
+  // a camada cobre a parede, as últimas 688 das 5676 linhas
+  const tela = document.createElement('canvas');
+  tela.width = W; tela.height = H;
+  tela.style.cssText = 'position:fixed!important;left:0!important;right:auto!important;bottom:0!important;top:auto!important;width:100%!important;height:12.1212%!important;margin:0!important;display:block!important;pointer-events:none;z-index:2147483646;opacity:1;';
+  document.documentElement.appendChild(tela);
+  // a luz que passa da parede para o teto, onde a tela da camada acaba
+  const teto = document.createElement('div');
+  teto.style.cssText = 'position:fixed;left:0;right:0;bottom:12.1212%;height:16%;pointer-events:none;z-index:2147483645;opacity:0;mix-blend-mode:plus-lighter;background:radial-gradient(ellipse 62% 100% at 50% 100%,rgba(255,255,255,.3) 0%,rgba(255,255,255,.08) 42%,rgba(255,255,255,0) 100%);';
+  document.documentElement.appendChild(teto);
+  const contexto = tela.getContext('webgpu');
+  const formato = navigator.gpu.getPreferredCanvasFormat();
+  contexto.configure({ device: gpu, format: formato, alphaMode: 'premultiplied' });
+
+  // mesma conta da janela da parede dos visuais em pé
+  const hw = 0.96, hh = 0.64, cy = HT - 0.64;
+  const VP = [ZF / hw, 0, 0, 0, 0, ZF / hh, 0, 0, 0, -cy / hh, 0.0001, 1, 0, 0, 0, 0];
+
+  const fU = new Float32Array(44);
+  const bufU = gpu.createBuffer({ size: fU.byteLength, usage: U.UNIFORM | U.COPY_DST });
+  const WGSL = /* wgsl */`
+struct Un {
+  vp: mat4x4f,
+  rot: mat3x3f,
+  pos: vec4f,        // xyz e altura
+  g: vec4f,          // x tempo, y som, z clarão, w risco de luz que atravessa
+  f: vec4f,          // x letra, y espelhado, z largura, w tamanho
+};
+@group(0) @binding(0) var<uniform> U: Un;
+@group(0) @binding(1) var figs: texture_2d_array<f32>;
+@group(0) @binding(2) var am: sampler;
+struct VI { @location(0) p: vec4f, @location(1) n: vec4f };
+struct VO { @builtin(position) pos: vec4f, @location(0) w: vec3f, @location(1) n: vec3f, @location(2) lf: vec3f, @location(3) nl: vec3f, @location(4) ao: f32 };
+@vertex fn vs(v: VI) -> VO {
+  let lp = v.p.xyz * U.pos.w * U.f.w;
+  let w = U.pos.xyz + vec3f(0., U.pos.w * (1. - U.f.w) * .5, 0.) + U.rot * lp;
+  var o: VO;
+  o.pos = U.vp * vec4f(w, 1.);
+  o.w = w; o.n = U.rot * v.n.xyz; o.lf = v.p.xyz; o.nl = v.n.xyz; o.ao = v.p.w;
+  return o;
+}
+// O estúdio que o metal reflete: fundo preto, três softboxes compridos que andam devagar, e a contraluz forte que vem de trás do logo.
+fn estudio(r: vec3f) -> f32 {
+  let t = U.g.x;
+  let a = atan2(r.x, -r.z);
+  let e = r.y;
+  var s = .05 + .2 * smoothstep(-.7, .35, e);
+  // luz larga, que varre o corpo inteiro quando ele vira
+  s += .75 * exp(-pow((sin(a * .5 + t * .07) - .35) / .42, 2.));
+  let b1 = sin(a * 1.0 + t * .11);
+  s += 2.1 * smoothstep(.8, .98, b1) * smoothstep(-.35, .05, e) * (1. - smoothstep(.55, .95, e));
+  let b2 = sin(a * 2.0 - t * .17 + 1.7);
+  s += .95 * smoothstep(.9, .995, b2) * smoothstep(-.6, -.1, e) * (1. - smoothstep(.2, .5, e));
+  // faixa de teto, quente de tanto brilho
+  s += 1.5 * smoothstep(.58, .78, e) * (1. - smoothstep(.86, .96, e));
+  // reflexo do chão aceso
+  s += .34 * smoothstep(-.45, -.92, e);
+  return s;
+}
+@fragment fn fs(v: VO, @builtin(front_facing) frente: bool) -> @location(0) vec4f {
+  let Ve = normalize(v.w);
+  var N = normalize(v.n);
+  if (!frente) { N = -N; }
+  let lx = v.lf.x * U.f.y / U.f.z + .5;
+  let arte = textureSample(figs, am, vec2f(lx, 1. - v.lf.y), i32(U.f.x));
+  let ndv = clamp(abs(dot(Ve, N)), 0., 1.);
+  // A malha é irregular: a normal crua vira papel-alumínio. O reflexo usa a normal puxada para a frente do corpo, e o brilho corre liso quando ele vira.
+  let eixo = U.rot[2] * select(-1., 1., dot(U.rot[2], N) > 0.);
+  let Nl = normalize(N * .3 + eixo * .7);
+  let esp = estudio(reflect(Ve, Nl));
+  let fres = .62 + .38 * pow(1. - ndv, 5.);
+  var lum = esp * fres;
+  // o desenho da marca, com caneluras e rachaduras, aceso pelo mesmo reflexo; de lado, onde a projeção estica, fica só o metal
+  let deFrente = smoothstep(.08, .42, abs(normalize(v.nl).z));
+  let k = smoothstep(.3, .65, arte.g) * deFrente;
+  let desenho = pow(arte.r, 1.25);
+  lum = mix(lum, desenho * (.72 + esp * .78), k);
+  // contraluz: a borda do corpo acende. O som é quem aumenta
+  let som = U.g.y;
+  let aro = pow(1. - ndv, 3.2);
+  lum += aro * (.42 + 1.5 * som);
+  // o risco de luz que atravessa o corpo nas viradas e nas trocas
+  let q = v.lf.x * .75 + v.lf.y * 1.15 - U.g.w;
+  lum += exp(-q * q * 150.) * (1.05 + .9 * som) * (.25 + .75 * k);
+  lum += U.g.z * (.9 + 1.8 * aro);
+  lum *= mix(.3, 1., v.ao * v.ao);
+  return vec4f(vec3f(lum), 1.);
+}
+`;
+  const m = gpu.createShaderModule({ code: WGSL });
+  const am = gpu.createSampler({ magFilter: 'linear', minFilter: 'linear', mipmapFilter: 'linear', addressModeU: 'clamp-to-edge', addressModeV: 'clamp-to-edge', maxAnisotropy: 8 });
+  const bgl = gpu.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: {} },
+    { binding: 1, visibility: GPUShaderStage.FRAGMENT, texture: { viewDimension: '2d-array' } },
+    { binding: 2, visibility: GPUShaderStage.FRAGMENT, sampler: {} },
+  ] });
+  const bgCorpo = gpu.createBindGroup({ layout: bgl, entries: [{ binding: 0, resource: { buffer: bufU } }, { binding: 1, resource: texFig.createView({ dimension: '2d-array' }) }, { binding: 2, resource: am }] });
+  const pCorpo = await gpu.createRenderPipelineAsync({
+    layout: gpu.createPipelineLayout({ bindGroupLayouts: [bgl] }),
+    multisample: { count: 4 },
+    depthStencil: { format: 'depth32float', depthWriteEnabled: true, depthCompare: 'greater' },
+    vertex: { module: m, entryPoint: 'vs', buffers: [{ arrayStride: 16, attributes: [{ shaderLocation: 0, offset: 0, format: 'snorm16x4' }, { shaderLocation: 1, offset: 8, format: 'snorm16x4' }] }] },
+    fragment: { module: m, entryPoint: 'fs', targets: [{ format: 'rgba16float' }] },
+    primitive: { topology: 'triangle-list', cullMode: 'none' },
+  });
+  const texMS = gpu.createTexture({ size: [W, H], sampleCount: 4, format: 'rgba16float', usage: T.RENDER_ATTACHMENT });
+  const texProf = gpu.createTexture({ size: [W, H], sampleCount: 4, format: 'depth32float', usage: T.RENDER_ATTACHMENT });
+  const texHDR = gpu.createTexture({ size: [W, H], format: 'rgba16float', usage: T.RENDER_ATTACHMENT | T.TEXTURE_BINDING });
+
+  // ---------- brilho: cadeia de borrões, mais um rastro comprido no sentido em que o sinal tem resolução de sobra ----------
+  const WGSL_POS = /* wgsl */`
+struct S { @builtin(position) pos: vec4f, @location(0) uv: vec2f };
+@vertex fn vs(@builtin(vertex_index) i: u32) -> S {
+  var q = array<vec2f, 3>(vec2f(-1, -1), vec2f(3, -1), vec2f(-1, 3));
+  var o: S; o.pos = vec4f(q[i], 0., 1.); o.uv = vec2f(q[i].x * .5 + .5, .5 - q[i].y * .5); return o;
+}
+@group(0) @binding(0) var a: texture_2d<f32>;
+@group(0) @binding(1) var b: texture_2d<f32>;
+@group(0) @binding(2) var c: texture_2d<f32>;
+@group(0) @binding(3) var s: sampler;
+@group(0) @binding(4) var<uniform> P: vec4f;
+@group(1) @binding(0) var sdf: texture_2d_array<f32>;
+@group(1) @binding(1) var<uniform> LG: array<vec4f, 3>;   // [0]: x, y, z, meia largura (0 = visual sem logo). [1]: profundidade, letreiro, próximo, mistura. [2]: centro da parede no mundo daquele visual
+fn px() -> vec2f { return 1. / vec2f(textureDimensions(a)); }
+// de um ponto da parede para o quadro do logo, numa profundidade z: a mesma perspectiva dos visuais em pé, com o olho na origem
+fn noLogo(uv: vec2f, z: f32) -> vec2f {
+  let k = z / ${ZF};
+  let xw = (LG[2].x + (uv.x - .5) * 1.92) * k; let yw = (LG[2].y + (.5 - uv.y) * 1.28) * k;
+  return vec2f((xw - LG[0].x) / (2. * LG[0].w * ${(2048 / 1720).toFixed(6)}) + .5, .5 - (yw - LG[0].y) / (2. * LG[0].w * ${(720 / 1720).toFixed(6)}));
+}
+fn longeLogo(q: vec2f) -> f32 {
+  if (q.x < 0. || q.x > 1. || q.y < 0. || q.y > 1.) { return 256.; }
+  return mix(textureSampleLevel(sdf, s, q, i32(LG[1].y), 0.).g, textureSampleLevel(sdf, s, q, i32(LG[1].z), 0.).g, LG[1].w) * 512. - 256.;
+}
+fn pertoLogo(q: vec2f) -> f32 {
+  if (LG[1].w > .001) { return longeLogo(q); }
+  if (q.x < 0. || q.x > 1. || q.y < 0. || q.y > 1.) { return 24.; }
+  return textureSampleLevel(sdf, s, q, i32(LG[1].y), 0.).r * 48. - 24.;
+}
+// tira da camada a frente e a espessura das letras, e deixa uma sombra em volta: é o que descola o logo do corpo
+fn atrasDoLogo(t: vec4f, uv: vec2f) -> vec4f {
+  if (LG[0].w <= 0.) { return t; }
+  var cobre = 0.;
+  for (var k = 0; k < 4; k++) {
+    let d = pertoLogo(noLogo(uv, LG[0].z + f32(k) / 3. * LG[1].x));
+    cobre = max(cobre, 1. - smoothstep(-3., 3., d));
+  }
+  let sombra = mix(.3, 1., smoothstep(0., 60., max(longeLogo(noLogo(uv, LG[0].z)), 0.)));
+  return vec4f(t.rgb * sombra * (1. - cobre), t.a * (1. - cobre));
+}
+// só o que passa do branco vira brilho
+@fragment fn claro(i: S) -> @location(0) vec4f {
+  let d = px() * .5;
+  let t = (textureSample(a, s, i.uv + d) + textureSample(a, s, i.uv - d) + textureSample(a, s, i.uv + vec2f(d.x, -d.y)) + textureSample(a, s, i.uv + vec2f(-d.x, d.y))) * .25;
+  let l = max(t.r - .95, 0.);
+  return vec4f(vec3f(l * l / (l + .35) + t.a * .028), 1.);   // a silhueta também brilha: é o halo que separa o corpo do logo
+}
+@fragment fn desce(i: S) -> @location(0) vec4f {
+  let d = px();
+  var t = textureSample(a, s, i.uv) * 4.;
+  t += textureSample(a, s, i.uv + d * vec2f(-1, -1)) + textureSample(a, s, i.uv + d * vec2f(1, -1)) + textureSample(a, s, i.uv + d * vec2f(-1, 1)) + textureSample(a, s, i.uv + d * vec2f(1, 1));
+  return t / 8.;
+}
+@fragment fn sobe(i: S) -> @location(0) vec4f {
+  let d = px();
+  var t = textureSample(a, s, i.uv) * 4.;
+  t += (textureSample(a, s, i.uv + d * vec2f(1, 0)) + textureSample(a, s, i.uv + d * vec2f(-1, 0)) + textureSample(a, s, i.uv + d * vec2f(0, 1)) + textureSample(a, s, i.uv + d * vec2f(0, -1))) * 2.;
+  t += textureSample(a, s, i.uv + d * vec2f(1, 1)) + textureSample(a, s, i.uv + d * vec2f(-1, 1)) + textureSample(a, s, i.uv + d * vec2f(1, -1)) + textureSample(a, s, i.uv + d * vec2f(-1, -1));
+  return vec4f((t / 16.).rgb + textureSample(b, s, i.uv).rgb, 1.);
+}
+@fragment fn rastro(i: S) -> @location(0) vec4f {
+  let d = px() * vec2f(P.x, 0.);
+  var t = textureSample(a, s, i.uv) * .2;
+  for (var k = 1; k <= 8; k++) {
+    let w = exp(-f32(k * k) / 24.) * .2;
+    t += (textureSample(a, s, i.uv + d * f32(k)) + textureSample(a, s, i.uv - d * f32(k))) * w;
+  }
+  return vec4f(t.rgb, 1.);
+}
+fn tom(x: f32) -> f32 { return 1. - exp(-x * 1.08); }
+fn junta(uv: vec2f) -> vec4f {
+  let h = textureSampleLevel(a, s, uv, 0.);
+  let bl = textureSampleLevel(b, s, uv, 0.).r * P.y;
+  let ra = textureSampleLevel(c, s, uv, 0.).r * P.z;
+  // o corpo cobre o que está atrás. O brilho só soma: fica com alfa zero, por isso o logo continua a aparecer através dele
+  let corpo = tom(h.r) * h.a;
+  return vec4f(vec3f(corpo + tom(bl + ra)) * P.w, h.a * P.w);
+}
+// o mesmo filtro vertical da saída do LED, ou o que está nesta camada serrilharia no corte de linhas do sinal
+@fragment fn saida(i: S) -> @location(0) vec4f {
+  let d = vec2f(0., 1. / f32(textureDimensions(a).y));
+  if (${COM_FILTRO ? 'true' : 'false'}) {
+    var t = junta(i.uv) * .3765;
+    t += (junta(i.uv - d) + junta(i.uv + d)) * .276;
+    t += (junta(i.uv - d * 2.) + junta(i.uv + d * 2.)) * .084;
+    t -= (junta(i.uv - d * 3.) + junta(i.uv + d * 3.)) * .0245;
+    t -= (junta(i.uv - d * 4.) + junta(i.uv + d * 4.)) * .0226;
+    return atrasDoLogo(clamp(t, vec4f(0.), vec4f(1.)), i.uv);
+  }
+  return atrasDoLogo(junta(i.uv), i.uv);
+}
+`;
+  const mp = gpu.createShaderModule({ code: WGSL_POS });
+  const NIVEIS = 6;
+  const FB = 'rgba16float';
+  const mipTex = [];
+  for (let i = 0; i < NIVEIS; i++) mipTex.push(gpu.createTexture({ size: [Math.max(2, W >> (i + 1)), Math.max(2, H >> (i + 1))], format: FB, usage: T.RENDER_ATTACHMENT | T.TEXTURE_BINDING }));
+  const texSobe = mipTex.map(t => gpu.createTexture({ size: [t.width, t.height], format: FB, usage: T.RENDER_ATTACHMENT | T.TEXTURE_BINDING }));
+  const texR1 = gpu.createTexture({ size: [Math.max(2, W >> 3), Math.max(2, H >> 3)], format: FB, usage: T.RENDER_ATTACHMENT | T.TEXTURE_BINDING });
+  const texR2 = gpu.createTexture({ size: [texR1.width, texR1.height], format: FB, usage: T.RENDER_ATTACHMENT | T.TEXTURE_BINDING });
+  const preto = gpu.createTexture({ size: [1, 1], format: FB, usage: T.TEXTURE_BINDING | T.RENDER_ATTACHMENT });
+  const amL = gpu.createSampler({ magFilter: 'linear', minFilter: 'linear', addressModeU: 'clamp-to-edge', addressModeV: 'clamp-to-edge' });
+  const pl = gpu.createBindGroupLayout({ entries: [
+    ...[0, 1, 2].map(b => ({ binding: b, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: 'float' } })),
+    { binding: 3, visibility: GPUShaderStage.FRAGMENT, sampler: {} },
+    { binding: 4, visibility: GPUShaderStage.FRAGMENT, buffer: {} },
+  ] });
+  const layoutP = gpu.createPipelineLayout({ bindGroupLayouts: [pl] });
+  const criaP = async (ep, fmt, blend) => gpu.createRenderPipelineAsync({ layout: layoutP, vertex: { module: mp, entryPoint: 'vs' }, fragment: { module: mp, entryPoint: ep, targets: [{ format: fmt, blend }] } });
+  const plLogo = gpu.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: GPUShaderStage.FRAGMENT, texture: { viewDimension: '2d-array' } },
+    { binding: 1, visibility: GPUShaderStage.FRAGMENT, buffer: {} },
+  ] });
+  const bufLogo = gpu.createBuffer({ size: 48, usage: U.UNIFORM | U.COPY_DST });
+  const gLogo = gpu.createBindGroup({ layout: plLogo, entries: [{ binding: 0, resource: texLet.createView({ dimension: '2d-array' }) }, { binding: 1, resource: { buffer: bufLogo } }] });
+  const [pClaro, pDesce, pSobe, pRastro, pFinal] = await Promise.all([criaP('claro', FB), criaP('desce', FB), criaP('sobe', FB), criaP('rastro', FB),
+    gpu.createRenderPipelineAsync({ layout: gpu.createPipelineLayout({ bindGroupLayouts: [pl, plLogo] }), vertex: { module: mp, entryPoint: 'vs' }, fragment: { module: mp, entryPoint: 'saida', targets: [{ format: formato }] } })]);
+  const bufP = gpu.createBuffer({ size: 16, usage: U.UNIFORM | U.COPY_DST });
+  const bufR1 = gpu.createBuffer({ size: 16, usage: U.UNIFORM | U.COPY_DST });
+  const bufR2 = gpu.createBuffer({ size: 16, usage: U.UNIFORM | U.COPY_DST });
+  gpu.queue.writeBuffer(bufR1, 0, new Float32Array([2.4, 0, 0, 0]));
+  gpu.queue.writeBuffer(bufR2, 0, new Float32Array([6.5, 0, 0, 0]));
+  const grupo = (a, b = preto, c = preto, u = bufP) => gpu.createBindGroup({ layout: pl, entries: [
+    { binding: 0, resource: a.createView() }, { binding: 1, resource: b.createView() }, { binding: 2, resource: c.createView() },
+    { binding: 3, resource: amL }, { binding: 4, resource: { buffer: u } },
+  ] });
+  const gClaro = grupo(texHDR);
+  const gDesce = mipTex.slice(0, -1).map(t => grupo(t));
+  const gSobe = mipTex.map((t, i) => (i === NIVEIS - 1 ? null : grupo(i === NIVEIS - 2 ? mipTex[NIVEIS - 1] : texSobe[i + 1], t)));
+  const gR1 = grupo(mipTex[2], preto, preto, bufR1), gR2 = grupo(texR1, preto, preto, bufR2);
+  const gFinal = grupo(texHDR, texSobe[0], texR2);
+  const passar = (enc, p, g, alvo) => {
+    const r = enc.beginRenderPass({ colorAttachments: [{ view: alvo.createView(), loadOp: 'clear', storeOp: 'store', clearValue: [0, 0, 0, 1] }] });
+    r.setPipeline(p); r.setBindGroup(0, g); r.draw(3); r.end();
+  };
+
+  // ---------- movimento ----------
+  let fila = [], atual = null;
+  const proximo = () => {
+    if (TESTE && TESTE.fig) return TESTE.fig;
+    if (!fila.length) {
+      fila = ELENCO.slice().sort(() => Math.random() - 0.5);
+      if (fila[0] === atual) fila.push(fila.shift());
+    }
+    return fila.shift();
+  };
+  atual = proximo();
+  // poses em que ele para e respira; entre uma e outra, a curva acelera e freia devagar
+  const POSES = [-0.62, 0.34, -0.2, 0.7, -0.44, 0.12];
+  let pose = 0, tPose = 0, tTroca = 0, trocando = -1, deOnde = POSES[0];
+  const DUR_POSE = 3.1, GIRO = 1.45;
+  const molaYaw = new Mola(POSES[0]), molaIncl = new Mola(0);
+  let presenca = 0, tempo = 0, ultimo = performance.now();
+  let nivel = 0, topo = 0.5, vale = 0.2, risco = -2, clarao = 0, fase = Math.random() * 10;
+
+  function nivelSom(dt) {
+    if (TESTE && TESTE.nivel !== undefined) return TESTE.nivel;
+    const fonte = REACOES.led.personagemSom || 'grave';
+    if (fonte === 'desligado' || !audioVivo() || !(A.rmsDb > REACOES.som.piso)) return 0;
+    const v = fonte === 'medio' ? A.medio : fonte === 'agudo' ? A.agudo : fonte === 'volume' ? (A.grave + A.medio + A.agudo) / 3 : A.grave;
+    topo = Math.max(v, topo - dt * 0.06);
+    vale = Math.min(v, vale + dt * 0.06);
+    return clamp((v - vale) / Math.max(topo - vale, 0.18));
+  }
+
+  function quadro(agora) {
+    const dt = TESTE && TESTE.dt ? TESTE.dt : Math.min((agora - ultimo) / 1000, 1 / 20);
+    ultimo = agora;
+    tempo += dt;
+    const quer = ligado();
+    presenca = clamp(presenca + (quer ? dt / 1.1 : -dt / 0.8));
+    if (presenca <= 0 && !quer) {
+      if (tela.style.visibility !== 'hidden') { tela.style.visibility = 'hidden'; teto.style.opacity = 0; }
+      requestAnimationFrame(quadro);
+      return;
+    }
+    if (tela.style.visibility === 'hidden') tela.style.visibility = 'visible';
+    const alvoNivel = nivelSom(dt);
+    nivel += (alvoNivel - nivel) * (1 - Math.exp(-dt * (alvoNivel > nivel ? 24 : 5)));
+
+    // virando de pose em pose
+    tPose += dt;
+    if (tPose >= DUR_POSE) { tPose -= DUR_POSE; deOnde = POSES[pose]; pose = (pose + 1) % POSES.length; risco = -0.25; }
+    let yawAlvo = deOnde + (POSES[pose] - deOnde) * inOutQuint(clamp(tPose / (DUR_POSE * 0.72)));
+    tTroca += dt;
+    // a troca: acelera até ficar de perfil, troca no meio do clarão, e o novo chega freando
+    if (trocando < 0 && tTroca >= segundos() && !(TESTE && TESTE.semTroca)) { trocando = 0; deOnde = POSES[pose]; }
+    let esc = 1;
+    if (trocando >= 0) {
+      trocando += dt / GIRO;
+      if (trocando < 0.5) {
+        const k = inCubic(trocando * 2);
+        yawAlvo = molaYaw.x * 0 + deOnde + (Math.PI / 2 - deOnde) * k;
+        esc = 1 - 0.03 * k;
+        clarao = Math.max(clarao, k * k);
+      } else {
+        if (trocando - dt / GIRO < 0.5) { atual = proximo(); molaYaw.x = -Math.PI / 2; molaYaw.v = 0; risco = -0.3; }
+        const k = outQuint((trocando - 0.5) * 2);
+        yawAlvo = -Math.PI / 2 + (POSES[pose] + Math.PI / 2) * k;
+        esc = 0.97 + 0.03 * outBack(clamp((trocando - 0.5) * 2));
+      }
+      if (trocando >= 1) { trocando = -1; tTroca = 0; tPose = DUR_POSE * 0.72; deOnde = POSES[pose]; }
+    }
+    // durante a troca a mola quase não atrasa, senão o corpo não passaria de perfil na hora do clarão
+    const yaw = trocando >= 0 ? molaYaw.passo(yawAlvo, dt, 40, 1) : molaYaw.passo(yawAlvo, dt, 7, 0.82);
+    fase += dt;
+    const incl = molaIncl.passo(molaYaw.v * -0.012, dt, 5, 0.7);
+    const pitch = -0.03 + Math.sin(fase * 0.43) * 0.022;
+    const roll = incl + Math.sin(fase * 0.31 + 1) * 0.012;
+    const yawFinal = TESTE && TESTE.yaw !== undefined ? TESTE.yaw : yaw;
+    risco += dt * 0.62;
+    clarao *= Math.exp(-dt * 5.5);
+    const entra = inOutQuint(presenca);
+
+    const f = FIG[atual];
+    const cy_ = Math.cos(yawFinal), sy = Math.sin(yawFinal), cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll);
+    // R = roll * pitch * yaw, por colunas
+    const R = [
+      cr * cy_ + sr * sp * sy, sr * cp, -cr * sy + sr * sp * cy_, 0,
+      -sr * cy_ + cr * sp * sy, cr * cp, sr * sy + cr * sp * cy_, 0,
+      cp * sy, -sp, cp * cy_, 0,
+    ];
+    const respira = Math.sin(fase * 0.9) * 0.008;
+    const E = { a: -1, b: -1, i: -1 }[atual] || 1;
+    fU.set(VP, 0);
+    fU.set(R, 16);
+    fU.set([0, PE + respira + (1 - entra) * -0.1, Z_FIG, ALTURA], 28);
+    fU.set([tempo, nivel, clarao * 1.0, risco], 32);
+    fU.set([LETRAS.indexOf(atual), E, f.largura, esc * (0.92 + 0.08 * entra)], 36);
+    gpu.queue.writeBuffer(bufU, 0, fU);
+    const lt = querAtras() ? window.__logoTela : null;
+    gpu.queue.writeBuffer(bufLogo, 0, new Float32Array(lt ? [lt.cx, lt.cy, lt.z, lt.meia, lt.prof ?? 0.16, lt.a, lt.b, lt.m, lt.xc ?? 0, lt.yc ?? HT - 0.64, 0, 0] : new Array(12).fill(0)));
+    gpu.queue.writeBuffer(bufP, 0, new Float32Array([0, 0.5 + 0.95 * nivel + clarao * 2.6, 0.22 + 0.5 * nivel + clarao * 1.6, entra]));
+    teto.style.opacity = (entra * (0.06 + 0.2 * nivel + 0.7 * clarao)).toFixed(3);
+
+    const enc = gpu.createCommandEncoder();
+    const r = enc.beginRenderPass({
+      colorAttachments: [{ view: texMS.createView(), resolveTarget: texHDR.createView(), loadOp: 'clear', storeOp: 'discard', clearValue: [0, 0, 0, 0] }],
+      depthStencilAttachment: { view: texProf.createView(), depthClearValue: 0, depthLoadOp: 'clear', depthStoreOp: 'discard' },
+    });
+    r.setPipeline(pCorpo); r.setBindGroup(0, bgCorpo); r.setVertexBuffer(0, bufV); r.setIndexBuffer(bufI, 'uint32');
+    r.drawIndexed(f.n, 1, f.primeiro, f.baseV);
+    r.end();
+    passar(enc, pClaro, gClaro, mipTex[0]);
+    for (let i = 0; i < NIVEIS - 1; i++) passar(enc, pDesce, gDesce[i], mipTex[i + 1]);
+    for (let i = NIVEIS - 2; i >= 0; i--) passar(enc, pSobe, gSobe[i], texSobe[i]);
+    passar(enc, pRastro, gR1, texR1);
+    passar(enc, pRastro, gR2, texR2);
+    const fim = enc.beginRenderPass({ colorAttachments: [{ view: contexto.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store', clearValue: [0, 0, 0, 0] }] });
+    fim.setPipeline(pFinal); fim.setBindGroup(0, gFinal); fim.setBindGroup(1, gLogo); fim.draw(3); fim.end();
+    gpu.queue.submit([enc.finish()]);
+    window.__personagens = { atual, yaw: +yawFinal.toFixed(2), nivel: +nivel.toFixed(2), presenca: +presenca.toFixed(2), trocando: +trocando.toFixed(2) };
+    requestAnimationFrame(quadro);
+  }
+  requestAnimationFrame(t => { ultimo = t; quadro(t); });
+  return { quadro };
+}

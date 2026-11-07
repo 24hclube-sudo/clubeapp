@@ -11,7 +11,7 @@ Endereço: `firmamento/?modo=lactea`, `rastros`, `aurora`, `eclipse`, `aneis` ou
 | `lactea` | `f-lactea` | Via Láctea em ruído dobrado e achatado no plano da galáxia, com filamentos de poeira. O núcleo nasce atrás do logo. Há espelho d'água abaixo da linha do horizonte. |
 | `rastros` | `f-rastros` | Arcos de longa exposição em volta do polo, que fica no teto, perto da parede. Todos cobrem o mesmo ângulo, como numa foto. O som alonga os arcos. |
 | `aurora` | `f-aurora` | Cortinas marchadas por altura, com raios verticais que convergem para o zênite. Há espelho d'água. |
-| `eclipse` | `f-eclipse` | Lua preta atrás do logo, coroa em lobos, plumas e fios, cromosfera e conta de diamante no bumbo. A luz de trás do app soma na coroa. |
+| `eclipse` | `f-eclipse` | Lua preta atrás do logo, coroa em lobos, plumas e fios, sem linha em volta da lua, e conta de diamante no bumbo. A luz de trás do app soma na coroa. |
 | `aneis` | `f-aneis` | Plano dos anéis que sobe para a parede, por isso os riscos convergem para um ponto de fuga no teto. O perfil tem 8192 pontos com mipmaps, sem moiré. O bumbo anda ao longo dos anéis. Um planeta preto nasce atrás do logo, com a atmosfera acesa. |
 | `horizonte` | `f-horizonte` | Buraco negro traçado raio a raio, até 110 passos por pixel, com disco, Doppler e anel de fótons. As estrelas nítidas passam por uma lente fina e viram duas imagens. O bumbo acende um ponto quente que orbita. |
 

@@ -1,0 +1,1850 @@
+{
+ "pecas": [
+  {
+   "id": "cap-monolito",
+   "nome": "Monólito",
+   "capitulo": "monolito",
+   "comp": {
+    "duracao": 40,
+    "led": [
+     "m-monolito"
+    ],
+    "camadas": [
+     {
+      "id": "cv",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 22,
+      "semente": 9
+     },
+     {
+      "id": "cw",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 74,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 880,
+      "copias": 5,
+      "trat": "metal",
+      "opacidade": 1,
+      "nome": "Logos",
+      "reflexo": 3,
+      "troca": "virar",
+      "trocas": 5,
+      "atraso": 0.2
+     }
+    ]
+   },
+   "hash": "1hjxyej",
+   "mudou": 1794028386057,
+   "gerado": {
+    "hash": "1hjxyej",
+    "em": 1794028413477,
+    "cena": "pe-cap-monolito"
+   }
+  },
+  {
+   "id": "cap-feixes",
+   "nome": "Feixes",
+   "capitulo": "feixes",
+   "comp": {
+    "duracao": 48,
+    "led": [
+     "r-feixes",
+     "r-nave",
+     "r-eixo",
+     "r-losango",
+     "r-lamina"
+    ],
+    "camadas": [
+     {
+      "id": "c1",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 24,
+      "semente": 21
+     },
+     {
+      "id": "c2",
+      "tipo": "efeito",
+      "efeito": "feixes",
+      "opacidade": 1,
+      "qtd": 15,
+      "ciclos": 2,
+      "abertura": 1.38
+     },
+     {
+      "id": "c3",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 310,
+      "borda": 90
+     },
+     {
+      "id": "c4",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "2aysjm",
+   "mudou": 1794027931094,
+   "gerado": {
+    "hash": "2aysjm",
+    "em": 1794027970109,
+    "cena": "pe-cap-feixes"
+   }
+  },
+  {
+   "id": "cap-relevo",
+   "nome": "Chapa gravada",
+   "capitulo": "relevo",
+   "comp": {
+    "duracao": 40,
+    "led": [
+     "placa-latao",
+     "placa-ouro",
+     "placa-prata",
+     "h3-olho",
+     "h3-abrir"
+    ],
+    "camadas": [
+     {
+      "id": "c1u",
+      "tipo": "efeito",
+      "efeito": "inox",
+      "opacidade": 1,
+      "brilho": 0.6,
+      "voltas": 2,
+      "esticar": 1100
+     },
+     {
+      "id": "c1v",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 58,
+      "y": 0.5,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 28,
+      "dir": -1,
+      "espaco": 1118,
+      "copias": 1,
+      "trat": "relevo",
+      "opacidade": 1,
+      "nome": "Logos"
+     },
+     {
+      "id": "c1w",
+      "tipo": "efeito",
+      "efeito": "reflexo",
+      "opacidade": 1,
+      "voltas": 2,
+      "largura": 700,
+      "brilho": 0.34
+     }
+    ]
+   },
+   "hash": "go33py",
+   "mudou": 1794028887794,
+   "gerado": {
+    "hash": "go33py",
+    "em": 1794028938074,
+    "cena": "pe-cap-relevo"
+   }
+  },
+  {
+   "id": "cap-astrolabio",
+   "nome": "Astrolábio",
+   "capitulo": "astrolabio",
+   "comp": {
+    "duracao": 60,
+    "led": [
+     "r-astrolabio"
+    ],
+    "camadas": [
+     {
+      "id": "c5",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 34,
+      "semente": 22
+     },
+     {
+      "id": "c6",
+      "tipo": "efeito",
+      "efeito": "aneis",
+      "opacidade": 1,
+      "x": 2236,
+      "qtd": 12,
+      "ciclos": 3,
+      "voltas": 8
+     },
+     {
+      "id": "c7",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 250,
+      "borda": 14
+     },
+     {
+      "id": "c8",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 58,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "1a5gsbi",
+   "mudou": 1794027970473,
+   "gerado": {
+    "hash": "1a5gsbi",
+    "em": 1794028019843,
+    "cena": "pe-cap-astrolabio"
+   }
+  },
+  {
+   "id": "cap-mercurio",
+   "nome": "Mercúrio",
+   "capitulo": "mercurio",
+   "comp": {
+    "duracao": 48,
+    "led": [
+     "r-mercurio"
+    ],
+    "camadas": [
+     {
+      "id": "c9",
+      "tipo": "efeito",
+      "efeito": "mercurio",
+      "opacidade": 1,
+      "qtd": 7,
+      "ciclos": 9,
+      "onda": 260,
+      "semente": 5
+     },
+     {
+      "id": "ca",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 310,
+      "borda": 80
+     },
+     {
+      "id": "cb",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "459y0s",
+   "mudou": 1794028019910,
+   "gerado": {
+    "hash": "459y0s",
+    "em": 1794028069318,
+    "cena": "pe-cap-mercurio"
+   }
+  },
+  {
+   "id": "cap-micelio",
+   "nome": "Micélio",
+   "capitulo": "micelio",
+   "comp": {
+    "duracao": 60,
+    "led": [
+     "r-micelio"
+    ],
+    "camadas": [
+     {
+      "id": "cc",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 18,
+      "semente": 23
+     },
+     {
+      "id": "cd",
+      "tipo": "efeito",
+      "efeito": "micelio",
+      "opacidade": 1,
+      "x": 2236,
+      "ciclos": 2,
+      "semente": 3
+     },
+     {
+      "id": "ce",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "cpvujn",
+   "mudou": 1794028069341,
+   "gerado": {
+    "hash": "cpvujn",
+    "em": 1794028144272,
+    "cena": "pe-cap-micelio"
+   }
+  },
+  {
+   "id": "cap-enxame",
+   "nome": "Enxame",
+   "capitulo": "enxame",
+   "comp": {
+    "duracao": 54,
+    "led": [
+     "r-enxame"
+    ],
+    "camadas": [
+     {
+      "id": "cf",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 190,
+      "cadentes": 3,
+      "semente": 24
+     },
+     {
+      "id": "cg",
+      "tipo": "arte",
+      "artes": [
+       "sol-b",
+       "sol-a",
+       "sol-j",
+       "sol-g",
+       "sol-e",
+       "sol-f",
+       "sol-i",
+       "sol-d",
+       "sol-c"
+      ],
+      "tamanho": 98,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 880,
+      "copias": 5,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Personagem",
+      "troca": "montar",
+      "trocas": 9,
+      "atraso": 0.22,
+      "celulas": 27
+     }
+    ]
+   },
+   "hash": "1ekc0b2",
+   "mudou": 1794028144959,
+   "gerado": {
+    "hash": "1ekc0b2",
+    "em": 1794028197257,
+    "cena": "pe-cap-enxame"
+   }
+  },
+  {
+   "id": "cap-colossos",
+   "nome": "Colossos",
+   "capitulo": "colossos",
+   "comp": {
+    "duracao": 90,
+    "led": [
+     "m-colossos",
+     "m-colossos-todos",
+     "m-gigante",
+     "universo"
+    ],
+    "camadas": [
+     {
+      "id": "ch",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 34,
+      "cadentes": 2,
+      "semente": 5
+     },
+     {
+      "id": "ci",
+      "tipo": "arte",
+      "artes": [
+       "sol-a",
+       "sol-i",
+       "sol-b"
+      ],
+      "tamanho": 620,
+      "y": 0.3,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 50,
+      "dir": -1,
+      "espaco": 1490,
+      "copias": 1,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Colossos",
+      "varreY": 0.5,
+      "ciclosY": 2,
+      "reflexo": 3
+     },
+     {
+      "id": "cj",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 420,
+      "borda": 200
+     },
+     {
+      "id": "ck",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "1l76miu",
+   "mudou": 1794028197371,
+   "gerado": {
+    "hash": "1l76miu",
+    "em": 1794028270438,
+    "cena": "pe-cap-colossos"
+   }
+  },
+  {
+   "id": "cap-travessia",
+   "nome": "Travessia",
+   "capitulo": "travessia",
+   "comp": {
+    "duracao": 60,
+    "led": [
+     "m-travessia",
+     "m-travessia-todos",
+     "m-desfile",
+     "m-queda"
+    ],
+    "camadas": [
+     {
+      "id": "cl",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 26,
+      "semente": 3
+     },
+     {
+      "id": "cm",
+      "tipo": "efeito",
+      "efeito": "grade",
+      "opacidade": 1,
+      "passo": 172,
+      "ciclos": 3
+     },
+     {
+      "id": "cn",
+      "tipo": "arte",
+      "artes": [
+       "sol-a",
+       "sol-b",
+       "sol-e",
+       "sol-f",
+       "sol-g",
+       "sol-j",
+       "sol-c",
+       "sol-i",
+       "sol-d"
+      ],
+      "tamanho": 95,
+      "y": 1,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 75,
+      "dir": -1,
+      "espaco": 497,
+      "copias": 1,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Elenco",
+      "balanco": 1.4,
+      "ciclosB": 48,
+      "reflexo": 2
+     }
+    ]
+   },
+   "hash": "o6w8ad",
+   "mudou": 1794028271044,
+   "gerado": {
+    "hash": "o6w8ad",
+    "em": 1794028316053,
+    "cena": "pe-cap-travessia"
+   }
+  },
+  {
+   "id": "cap-instancia",
+   "nome": "Instância",
+   "capitulo": "instancia",
+   "comp": {
+    "duracao": 54,
+    "led": [
+     "m-instancia",
+     "m-instancia-todos"
+    ],
+    "camadas": [
+     {
+      "id": "co",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 30,
+      "semente": 7
+     },
+     {
+      "id": "cp",
+      "tipo": "efeito",
+      "efeito": "grade",
+      "opacidade": 1,
+      "passo": 86,
+      "ciclos": 2
+     },
+     {
+      "id": "cq",
+      "tipo": "arte",
+      "artes": [
+       "sol-a",
+       "sol-b",
+       "sol-e",
+       "sol-f",
+       "sol-g",
+       "sol-j",
+       "sol-c",
+       "sol-i",
+       "sol-d"
+      ],
+      "tamanho": 98,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 1080,
+      "copias": 4,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Montagem",
+      "troca": "montar",
+      "trocas": 9,
+      "atraso": 0.17,
+      "celulas": 13,
+      "reflexo": 2
+     },
+     {
+      "id": "cr",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "6veviu",
+   "mudou": 1794028316423,
+   "gerado": {
+    "hash": "6veviu",
+    "em": 1794028355917,
+    "cena": "pe-cap-instancia"
+   }
+  },
+  {
+   "id": "cap-grade",
+   "nome": "Grade de inox",
+   "capitulo": "grade",
+   "comp": {
+    "duracao": 48,
+    "led": [
+     "m-grade",
+     "g-grade"
+    ],
+    "camadas": [
+     {
+      "id": "cs",
+      "tipo": "blocos",
+      "colunas": 26,
+      "linhas": 1,
+      "semente": 4,
+      "pinturas": [
+       "metal",
+       "black",
+       "deepGrey",
+       "black",
+       "metal",
+       "baseGrey",
+       "black"
+      ],
+      "modo": "varredura",
+      "quadros": 10,
+      "paradas": 8,
+      "voltas": 1,
+      "dir": -1,
+      "vao": 2,
+      "opacidade": 1,
+      "nome": "Grid",
+      "canelado": true,
+      "reflexo": 2
+     },
+     {
+      "id": "ct",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 360,
+      "borda": 24
+     },
+     {
+      "id": "cu",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 56,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "white",
+      "opacidade": 1,
+      "reflexo": 0,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "1dznthk",
+   "mudou": 1794028356781,
+   "gerado": {
+    "hash": "1dznthk",
+    "em": 1794028386020,
+    "cena": "pe-cap-grade"
+   }
+  },
+  {
+   "id": "cap-via-lactea",
+   "nome": "Via Láctea",
+   "capitulo": "via-lactea",
+   "comp": {
+    "duracao": 60,
+    "led": [
+     "f-lactea",
+     "g-constelacao"
+    ],
+    "camadas": [
+     {
+      "id": "cx",
+      "tipo": "efeito",
+      "efeito": "via",
+      "opacidade": 1,
+      "brilho": 0.9,
+      "semente": 2
+     },
+     {
+      "id": "cy",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 120,
+      "cadentes": 5,
+      "semente": 2
+     },
+     {
+      "id": "cz",
+      "tipo": "efeito",
+      "efeito": "eclipse",
+      "opacidade": 0.6,
+      "x": 2236,
+      "disco": false,
+      "raio": 24,
+      "alcance": 1100,
+      "ciclos": 3
+     },
+     {
+      "id": "c10",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "black",
+      "opacidade": 1,
+      "reflexo": 0,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "40lv8x",
+   "mudou": 1794028414304,
+   "gerado": {
+    "hash": "40lv8x",
+    "em": 1794028493861,
+    "cena": "pe-cap-via-lactea"
+   }
+  },
+  {
+   "id": "cap-rastros",
+   "nome": "Rastros",
+   "capitulo": "rastros",
+   "comp": {
+    "duracao": 45,
+    "led": [
+     "f-rastros",
+     "f-aneis",
+     "g-aneis"
+    ],
+    "camadas": [
+     {
+      "id": "c11",
+      "tipo": "efeito",
+      "efeito": "rastros",
+      "opacidade": 1,
+      "qtd": 74,
+      "voltas": 1,
+      "dir": -1,
+      "semente": 4
+     },
+     {
+      "id": "c12",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 34,
+      "semente": 8
+     },
+     {
+      "id": "c13",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 90,
+      "borda": 90
+     },
+     {
+      "id": "c14",
+      "tipo": "arte",
+      "artes": [
+       "logomark"
+      ],
+      "tamanho": 78,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "nome": "Logomark",
+      "giro": 3,
+      "reflexo": 2
+     }
+    ]
+   },
+   "hash": "1c0gmoe",
+   "mudou": 1794028494050,
+   "gerado": {
+    "hash": "1c0gmoe",
+    "em": 1794028527169,
+    "cena": "pe-cap-rastros"
+   }
+  },
+  {
+   "id": "cap-aurora",
+   "nome": "Aurora",
+   "capitulo": "aurora",
+   "comp": {
+    "duracao": 60,
+    "led": [
+     "f-aurora",
+     "g-mare"
+    ],
+    "camadas": [
+     {
+      "id": "c15",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 70,
+      "semente": 6
+     },
+     {
+      "id": "c16",
+      "tipo": "efeito",
+      "efeito": "aurora",
+      "opacidade": 1,
+      "brilho": 0.85
+     },
+     {
+      "id": "c17",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 330,
+      "borda": 240
+     },
+     {
+      "id": "c18",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 58,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "1dicgay",
+   "mudou": 1794028527374,
+   "gerado": {
+    "hash": "1dicgay",
+    "em": 1794028595506,
+    "cena": "pe-cap-aurora"
+   }
+  },
+  {
+   "id": "cap-eclipse",
+   "nome": "Eclipse",
+   "capitulo": "eclipse",
+   "comp": {
+    "duracao": 45,
+    "led": [
+     "f-eclipse",
+     "f-horizonte"
+    ],
+    "camadas": [
+     {
+      "id": "c19",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 60,
+      "semente": 11
+     },
+     {
+      "id": "c1a",
+      "tipo": "efeito",
+      "efeito": "rastros",
+      "opacidade": 0.5,
+      "qtd": 26,
+      "voltas": 1,
+      "dir": 1,
+      "semente": 9
+     },
+     {
+      "id": "c1b",
+      "tipo": "efeito",
+      "efeito": "eclipse",
+      "opacidade": 1,
+      "x": 2236,
+      "raio": 41,
+      "alcance": 1900,
+      "ciclos": 3
+     },
+     {
+      "id": "c1c",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 56,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 2300,
+      "copias": 2,
+      "trat": "metal",
+      "opacidade": 1,
+      "nome": "Logos",
+      "reflexo": 2
+     }
+    ]
+   },
+   "hash": "1lhnlus",
+   "mudou": 1794028596127,
+   "gerado": {
+    "hash": "1lhnlus",
+    "em": 1794028637692,
+    "cena": "pe-cap-eclipse"
+   }
+  },
+  {
+   "id": "cap-brise",
+   "nome": "Brise",
+   "capitulo": "brise",
+   "comp": {
+    "duracao": 54,
+    "led": [
+     "c-brise",
+     "c-camadas"
+    ],
+    "camadas": [
+     {
+      "id": "c1d",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 40,
+      "semente": 12
+     },
+     {
+      "id": "c1e",
+      "tipo": "arte",
+      "artes": [
+       "sol-b",
+       "sol-g",
+       "sol-j",
+       "sol-a"
+      ],
+      "tamanho": 300,
+      "y": 0.28,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 67,
+      "dir": -1,
+      "espaco": 900,
+      "copias": 1,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Personagens",
+      "varreY": 0.5,
+      "ciclosY": 2,
+      "reflexo": 2
+     },
+     {
+      "id": "c1f",
+      "tipo": "efeito",
+      "efeito": "brise",
+      "opacidade": 1,
+      "passo": 34,
+      "ciclos": 3,
+      "onda": 1490,
+      "brilho": 0.8
+     }
+    ]
+   },
+   "hash": "1ql5uwo",
+   "mudou": 1794028638517,
+   "gerado": {
+    "hash": "1ql5uwo",
+    "em": 1794028687299,
+    "cena": "pe-cap-brise"
+   }
+  },
+  {
+   "id": "cap-harpa",
+   "nome": "Harpa de cabos",
+   "capitulo": "harpa",
+   "comp": {
+    "duracao": 48,
+    "led": [
+     "c-cabos",
+     "c-relevo",
+     "r-cordas"
+    ],
+    "camadas": [
+     {
+      "id": "c1g",
+      "tipo": "arte",
+      "artes": [
+       "sol-e",
+       "sol-f",
+       "sol-g",
+       "sol-c",
+       "sol-i",
+       "sol-d"
+      ],
+      "tamanho": 95,
+      "y": 1,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 93,
+      "dir": -1,
+      "espaco": 745,
+      "copias": 1,
+      "trat": "original",
+      "opacidade": 0.75,
+      "nome": "Elenco"
+     },
+     {
+      "id": "c1h",
+      "tipo": "efeito",
+      "efeito": "harpa",
+      "opacidade": 1,
+      "qtd": 9,
+      "voltas": 2,
+      "amp": 14
+     }
+    ]
+   },
+   "hash": "1e02lgb",
+   "mudou": 1794028687949,
+   "gerado": {
+    "hash": "1e02lgb",
+    "em": 1794028730113,
+    "cena": "pe-cap-harpa"
+   }
+  },
+  {
+   "id": "cap-agulhas",
+   "nome": "Agulhas",
+   "capitulo": "agulhas",
+   "comp": {
+    "duracao": 45,
+    "led": [
+     "c-agulhas",
+     "laminas",
+     "g-espectro",
+     "g-onda",
+     "g-bumbo"
+    ],
+    "camadas": [
+     {
+      "id": "c1i",
+      "tipo": "efeito",
+      "efeito": "agulhas",
+      "opacidade": 1,
+      "passo": 9,
+      "voltas": 1,
+      "ondas": 4
+     },
+     {
+      "id": "c1j",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 360,
+      "borda": 70
+     },
+     {
+      "id": "c1k",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "9vo41k",
+   "mudou": 1794028730330,
+   "gerado": {
+    "hash": "9vo41k",
+    "em": 1794028770523,
+    "cena": "pe-cap-agulhas"
+   }
+  },
+  {
+   "id": "cap-concreto",
+   "nome": "Concreto abrindo",
+   "capitulo": "concreto",
+   "comp": {
+    "duracao": 48,
+    "led": [
+     "e-concreto",
+     "concreto-ceu",
+     "e-caixotoes",
+     "caixotoes",
+     "brutal"
+    ],
+    "camadas": [
+     {
+      "id": "c1l",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 130,
+      "cadentes": 2,
+      "semente": 13
+     },
+     {
+      "id": "c1m",
+      "tipo": "efeito",
+      "efeito": "concreto",
+      "opacidade": 1,
+      "abertura": 58,
+      "ciclos": 2,
+      "semente": 3,
+      "brilho": 0.92
+     },
+     {
+      "id": "c1n",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 56,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "relevo",
+      "opacidade": 1,
+      "nome": "Logo gravado"
+     }
+    ]
+   },
+   "hash": "nwwk3",
+   "mudou": 1794028770723,
+   "gerado": {
+    "hash": "nwwk3",
+    "em": 1794028831234,
+    "cena": "pe-cap-concreto"
+   }
+  },
+  {
+   "id": "cap-porticos",
+   "nome": "Pórticos",
+   "capitulo": "porticos",
+   "comp": {
+    "duracao": 40,
+    "led": [
+     "e-porticos",
+     "porticos",
+     "e-teto",
+     "teto-ceu",
+     "g-faixas",
+     "g-pulso",
+     "g-scanner",
+     "g-flash",
+     "r-portal"
+    ],
+    "camadas": [
+     {
+      "id": "c1o",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 30,
+      "semente": 14
+     },
+     {
+      "id": "c1p",
+      "tipo": "efeito",
+      "efeito": "porticos",
+      "opacidade": 1,
+      "x": 2236,
+      "qtd": 16,
+      "voltas": 2,
+      "brilho": 0.82
+     },
+     {
+      "id": "c1q",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 330,
+      "borda": 26
+     },
+     {
+      "id": "c1r",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 2,
+      "nome": "Logo"
+     }
+    ]
+   },
+   "hash": "128ld3i",
+   "mudou": 1794028831289,
+   "gerado": {
+    "hash": "128ld3i",
+    "em": 1794028860128,
+    "cena": "pe-cap-porticos"
+   }
+  },
+  {
+   "id": "cap-luz",
+   "nome": "Luz",
+   "capitulo": "luz",
+   "comp": {
+    "duracao": 40,
+    "led": [
+     "luz",
+     "g-cromo",
+     "g-clube"
+    ],
+    "camadas": [
+     {
+      "id": "c1s",
+      "tipo": "efeito",
+      "efeito": "tubos",
+      "opacidade": 1,
+      "qtd": 24,
+      "semente": 8
+     },
+     {
+      "id": "c1t",
+      "tipo": "arte",
+      "artes": [
+       "logomark"
+      ],
+      "tamanho": 70,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 2800,
+      "copias": 2,
+      "trat": "metal",
+      "opacidade": 1,
+      "nome": "Logomark",
+      "giro": 2
+     }
+    ]
+   },
+   "hash": "1llkfiy",
+   "mudou": 1794028860565,
+   "gerado": {
+    "hash": "1llkfiy",
+    "em": 1794028886982,
+    "cena": "pe-cap-luz"
+   }
+  },
+  {
+   "id": "cap-roda",
+   "nome": "Elenco em 360",
+   "capitulo": "roda",
+   "comp": {
+    "duracao": 48,
+    "led": [
+     "m-roda"
+    ],
+    "camadas": [
+     {
+      "id": "c1x",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 26,
+      "semente": 15
+     },
+     {
+      "id": "c1y",
+      "tipo": "video",
+      "artes": [
+       "v-a-detalhe-alto-iso",
+       "v-f-detalhe-alto-iso",
+       "v-i-detalhe-alto-iso",
+       "v-g-detalhe-alto-iso"
+      ],
+      "tamanho": 132,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 1118,
+      "copias": 4,
+      "opacidade": 1,
+      "mistura": "lighter",
+      "nome": "Instância"
+     }
+    ]
+   },
+   "hash": "1pkr7im",
+   "mudou": 1794028938251,
+   "gerado": {
+    "hash": "1pkr7im",
+    "em": 1794029009799,
+    "cena": "pe-cap-roda"
+   }
+  },
+  {
+   "id": "cap-noite",
+   "nome": "A noite inteira",
+   "capitulo": "noite",
+   "comp": {
+    "duracao": 180,
+    "led": [],
+    "camadas": [
+     {
+      "id": "c23",
+      "tipo": "efeito",
+      "efeito": "via",
+      "opacidade": 1,
+      "brilho": 0.9,
+      "semente": 2,
+      "capitulo": "via-lactea",
+      "janela": {
+       "ini": 0,
+       "fim": 0.16666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c24",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 120,
+      "cadentes": 15,
+      "semente": 2,
+      "capitulo": "via-lactea",
+      "janela": {
+       "ini": 0,
+       "fim": 0.16666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c25",
+      "tipo": "efeito",
+      "efeito": "eclipse",
+      "opacidade": 0.6,
+      "x": 2236,
+      "disco": false,
+      "raio": 24,
+      "alcance": 1100,
+      "ciclos": 9,
+      "capitulo": "via-lactea",
+      "janela": {
+       "ini": 0,
+       "fim": 0.16666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c26",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "black",
+      "opacidade": 1,
+      "reflexo": 0,
+      "nome": "Logo",
+      "capitulo": "via-lactea",
+      "janela": {
+       "ini": 0,
+       "fim": 0.16666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2a",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 26,
+      "semente": 3,
+      "capitulo": "travessia",
+      "janela": {
+       "ini": 0.16666666666666666,
+       "fim": 0.3333333333333333,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2b",
+      "tipo": "efeito",
+      "efeito": "grade",
+      "opacidade": 1,
+      "passo": 172,
+      "ciclos": 9,
+      "capitulo": "travessia",
+      "janela": {
+       "ini": 0.16666666666666666,
+       "fim": 0.3333333333333333,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2c",
+      "tipo": "arte",
+      "artes": [
+       "sol-a",
+       "sol-b",
+       "sol-e",
+       "sol-f",
+       "sol-g",
+       "sol-j",
+       "sol-c",
+       "sol-i",
+       "sol-d"
+      ],
+      "tamanho": 95,
+      "y": 1,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 75,
+      "dir": -1,
+      "espaco": 497,
+      "copias": 1,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Elenco",
+      "balanco": 1.4,
+      "ciclosB": 144,
+      "reflexo": 6,
+      "capitulo": "travessia",
+      "janela": {
+       "ini": 0.16666666666666666,
+       "fim": 0.3333333333333333,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2h",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 34,
+      "cadentes": 4,
+      "semente": 5,
+      "capitulo": "colossos",
+      "janela": {
+       "ini": 0.3333333333333333,
+       "fim": 0.5,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2i",
+      "tipo": "arte",
+      "artes": [
+       "sol-a",
+       "sol-i",
+       "sol-b"
+      ],
+      "tamanho": 620,
+      "y": 0.3,
+      "x": 0,
+      "caminho": "passar",
+      "vel": 50,
+      "dir": -1,
+      "espaco": 1490,
+      "copias": 1,
+      "trat": "original",
+      "opacidade": 1,
+      "nome": "Colossos",
+      "varreY": 0.5,
+      "ciclosY": 4,
+      "reflexo": 6,
+      "capitulo": "colossos",
+      "janela": {
+       "ini": 0.3333333333333333,
+       "fim": 0.5,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2j",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 420,
+      "borda": 200,
+      "capitulo": "colossos",
+      "janela": {
+       "ini": 0.3333333333333333,
+       "fim": 0.5,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2k",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 4,
+      "nome": "Logo",
+      "capitulo": "colossos",
+      "janela": {
+       "ini": 0.3333333333333333,
+       "fim": 0.5,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2o",
+      "tipo": "blocos",
+      "colunas": 26,
+      "linhas": 1,
+      "semente": 4,
+      "pinturas": [
+       "metal",
+       "black",
+       "deepGrey",
+       "black",
+       "metal",
+       "baseGrey",
+       "black"
+      ],
+      "modo": "varredura",
+      "quadros": 10,
+      "paradas": 30,
+      "voltas": 4,
+      "dir": -1,
+      "vao": 2,
+      "opacidade": 1,
+      "nome": "Grid",
+      "canelado": true,
+      "reflexo": 8,
+      "capitulo": "grade",
+      "janela": {
+       "ini": 0.5,
+       "fim": 0.6666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2p",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 360,
+      "borda": 24,
+      "capitulo": "grade",
+      "janela": {
+       "ini": 0.5,
+       "fim": 0.6666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2q",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 56,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "white",
+      "opacidade": 1,
+      "reflexo": 0,
+      "nome": "Logo",
+      "capitulo": "grade",
+      "janela": {
+       "ini": 0.5,
+       "fim": 0.6666666666666666,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2v",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 30,
+      "semente": 14,
+      "capitulo": "porticos",
+      "janela": {
+       "ini": 0.6666666666666666,
+       "fim": 0.8333333333333334,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2w",
+      "tipo": "efeito",
+      "efeito": "porticos",
+      "opacidade": 1,
+      "x": 2236,
+      "qtd": 16,
+      "voltas": 9,
+      "brilho": 0.82,
+      "capitulo": "porticos",
+      "janela": {
+       "ini": 0.6666666666666666,
+       "fim": 0.8333333333333334,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2x",
+      "tipo": "efeito",
+      "efeito": "clareira",
+      "opacidade": 1,
+      "x": 2236,
+      "largura": 330,
+      "borda": 26,
+      "capitulo": "porticos",
+      "janela": {
+       "ini": 0.6666666666666666,
+       "fim": 0.8333333333333334,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c2y",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 64,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "metal",
+      "opacidade": 1,
+      "reflexo": 9,
+      "nome": "Logo",
+      "capitulo": "porticos",
+      "janela": {
+       "ini": 0.6666666666666666,
+       "fim": 0.8333333333333334,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c32",
+      "tipo": "efeito",
+      "efeito": "estrelas",
+      "opacidade": 1,
+      "densidade": 130,
+      "cadentes": 8,
+      "semente": 13,
+      "capitulo": "concreto",
+      "janela": {
+       "ini": 0.8333333333333334,
+       "fim": 1,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c33",
+      "tipo": "efeito",
+      "efeito": "concreto",
+      "opacidade": 1,
+      "abertura": 58,
+      "ciclos": 8,
+      "semente": 3,
+      "brilho": 0.92,
+      "capitulo": "concreto",
+      "janela": {
+       "ini": 0.8333333333333334,
+       "fim": 1,
+       "fade": 0.006666666666666666
+      }
+     },
+     {
+      "id": "c34",
+      "tipo": "arte",
+      "artes": [
+       "logo-clube"
+      ],
+      "tamanho": 56,
+      "y": 0.5,
+      "x": 2236,
+      "caminho": "parado",
+      "vel": 40,
+      "dir": -1,
+      "espaco": 600,
+      "copias": 1,
+      "trat": "relevo",
+      "opacidade": 1,
+      "nome": "Logo gravado",
+      "capitulo": "concreto",
+      "janela": {
+       "ini": 0.8333333333333334,
+       "fim": 1,
+       "fade": 0.006666666666666666
+      }
+     }
+    ]
+   },
+   "hash": "7nmmtq",
+   "mudou": 1794029010018,
+   "gerado": {
+    "hash": "7nmmtq",
+    "em": 1794029244931,
+    "cena": "pe-cap-noite"
+   }
+  }
+ ],
+ "seguir": false,
+ "mapa": {}
+}

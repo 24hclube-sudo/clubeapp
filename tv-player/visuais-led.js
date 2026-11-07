@@ -12,6 +12,27 @@ const INICIAR = process.env.VISUAIS_INICIAR !== undefined ? process.env.VISUAIS_
 // Mesmos ids de VISUAIS em mesa\saida\main.js. Visual novo: acrescentar nos dois lugares e pôr a miniatura em public\visuais\<id>.jpg.
 const g = (id, nome, desc) => ({ id, nome, desc, grupo: 'Gerador', foto: `cenas/gp-${id}.png` });
 const VISUAIS = [
+  { id: 'p-numeros', nome: 'Personagens de código', desc: 'Os personagens gigantes em 3D com pele de micronúmeros que brilham como código. No bumbo, uma onda acende os números do peito para fora e uma onda de números se solta do corpo e se espalha pelo céu.', grupo: 'Pedra com código' },
+  { id: 'p-logo', nome: 'Logo de pedra', desc: 'CLUBE, Pista Quente e Millos Kaiser em rocha preta, com a frente polida coberta de números que brilham como código, e pares de rochas no céu. O bumbo passa como onda e troca os números.', grupo: 'Pedra com código' },
+  { id: 'p-campo', nome: 'Campo de rochas', desc: 'Rochas geradas na hora, com faces de código, e uma grande no meio que abre como livro a cada 32 tempos.', grupo: 'Pedra com código' },
+  { id: 'p-estelas', nome: 'Personagens de pedra', desc: 'Um personagem de cada vez recortado em pedra preta no teto, com o desenho dele nos números. Entra pelas costas de quem olha, fica e sobe.', grupo: 'Pedra com código' },
+  { id: 'p-corte', nome: 'Rocha fatiada', desc: 'Uma rocha de 4 m ao longo do teto, cortada em 7 fatias que abrem em leque, com faces de números.', grupo: 'Pedra com código' },
+  { id: 'p-lajes', nome: 'Lajes de travertino', desc: 'Teto de placas de travertino amarronzado, face lisa e lateral lascada, com o pé recuado. Abre em onda simétrica para o céu e fecha.', grupo: 'Teto de pedra' },
+  { id: 'p-degraus', nome: 'Degraus de pedra', desc: 'Caixotões em pirâmide invertida de travertino. Os anéis sobem e descem como telescópio, com o céu no alto.', grupo: 'Teto de pedra' },
+  { id: 'z-logo', nome: 'Logo em zinco', desc: 'CLUBE na parede, e Pista Quente, Millos Kaiser e CLUBE passando no teto até o fim do painel, em metal zincado com furta-cor discreto. O bumbo corre pelo reflexo.', grupo: 'Logo em zinco' },
+  { id: 'comportas', nome: 'Comportas', desc: 'Comportas de cimento correm de lado e as de inox correm no comprimento. O céu abre num retângulo, um eixo de cada vez, e depois fecha.', grupo: 'Teto que desliza' },
+  { id: 'trama', nome: 'Trama', desc: 'Faixas de cimento correm de lado e réguas de inox correm no comprimento. No meio do caminho o céu aparece em xadrez, e depois abre inteiro.', grupo: 'Teto que desliza' },
+  { id: 'r-nave', nome: 'Nave', desc: 'Duas fileiras de moving heads cruzam sobre o eixo e viram costelas de ponta a ponta do painel. O bumbo acende, o chimbal corre do booth até o fundo.', grupo: 'Moving head e laser' },
+  { id: 'r-eixo', nome: 'Eixo', desc: 'Feixes quase paralelos, do booth até o fim do painel. Abrem, fecham e se cruzam em bloco. Na parede, viram um sol atrás do logo.', grupo: 'Moving head e laser' },
+  { id: 'r-losango', nome: 'Losango', desc: 'Moving heads nas duas pontas do painel. Os feixes se cruzam numa treliça que aperta no build e abre no drop.', grupo: 'Moving head e laser' },
+  { id: 'r-cordas', nome: 'Cordas', desc: 'Cordas de laser esticadas até o fim do painel. Cada uma é uma faixa do som e treme quando ela toca. O bumbo corre por elas.', grupo: 'Moving head e laser' },
+  { id: 'r-lamina', nome: 'Lâmina', desc: 'Leques de laser atrás do logo e no fundo do painel, que se cruzam em riscos finos. No drop abrem tudo.', grupo: 'Moving head e laser' },
+  { id: 'r-portal', nome: 'Portal', desc: 'Pórticos de laser em fila, da parede até o fundo. Cada bumbo manda um embora, e o logo fica no fim do corredor.', grupo: 'Moving head e laser' },
+  { id: 'r-feixes', nome: 'Feixes', desc: 'Moving lights de verdade na névoa, de trás do logo para cima da pista. O desenho muda a cada 8 compassos. No build fecham, no drop abrem tudo.', grupo: 'Regência' },
+  { id: 'r-astrolabio', nome: 'Astrolábio', desc: 'Anéis de inox do tamanho do céu, um para cada instrumento. No drop, todos se alinham em volta do logo num túnel.', grupo: 'Regência' },
+  { id: 'r-mercurio', nome: 'Mercúrio', desc: 'O painel vira um lago de mercúrio. O bumbo faz ondas de verdade, o chimbal pinga, e no build o lago treme num desenho de cimática.', grupo: 'Regência' },
+  { id: 'r-micelio', nome: 'Micélio', desc: 'Um organismo de prata cresce pelo painel e procura o logo. A seção da música muda o jeito de ele crescer.', grupo: 'Regência' },
+  { id: 'r-enxame', nome: 'Enxame', desc: 'Milhões de pontos em véus no ar. No build giram num vórtice, e no drop formam um personagem da marca.', grupo: 'Regência' },
   { id: 'f-lactea', nome: 'Via Láctea', desc: "A galáxia de pé: o núcleo nasce atrás do logo e a faixa passa sobre a cabeça, com nuvens de poeira. O grave acende.", grupo: 'Firmamento' },
   { id: 'f-rastros', nome: 'Rastros', desc: "Foto de longa exposição ao vivo: milhares de arcos giram em volta do polo. O grave abre a exposição.", grupo: 'Firmamento' },
   { id: 'f-aurora', nome: 'Aurora', desc: "Cortinas de luz prateada caem do alto e se refletem num espelho d'água atrás do logo.", grupo: 'Firmamento' },
@@ -92,7 +113,7 @@ function pedir(metodo, rota, limite) {
 const ARQ_AJUSTE = path.join(__dirname, 'visuais-ajuste.json');
 const TETO = 'LED_PISTA', PAREDE = 'LED_DJ_FUNDO';
 const FORCA_QUENTE = [1.15, 1, 0.8], FORCA_FRIO = [0.85, 1, 1.2], PESOS_BRILHO = [0.2126, 0.7152, 0.0722];
-let ajuste = { tom: 0, brilho: null, antes: null, enviadas: null, limite: 100, limiteHz: 7.5 };
+let ajuste = { tom: 0, brilho: null, antes: null, enviadas: null, limite: 100, hzMax: 15, intensidade: 100 };
 try { ajuste = { ...ajuste, ...JSON.parse(fs.readFileSync(ARQ_AJUSTE, 'utf8')) }; } catch {}
 // Depois de um reinício do PC, o MadMapper abre com as cores do projeto. Sem isto, a diferença parece mudança feita à mão e o brilho guardado se perde.
 ajuste.enviadas = null;
@@ -156,8 +177,11 @@ async function corDoFlash(liga) {
     if (!ajuste.enviadas) await aplicarAjuste();
     if (!querCorAlta) return;
     corAlta = true;
-    enviarCor(TETO, corDoTeto(100, ajuste.tom));
-    enviarCor(PAREDE, corDaParede(100));
+    // sobe só até a intensidade pedida, nunca abaixo do brilho normal, e o limite continua valendo
+    const alto = Math.max(await brilhoAtual(), ajuste.intensidade);
+    if (!querCorAlta) return;
+    enviarCor(TETO, corDoTeto(alto, ajuste.tom));
+    enviarCor(PAREDE, corDaParede(alto));
   } else {
     corAlta = false;
     // o OSC vai sem confirmação: repete a volta, para a cor nunca ficar presa na do flash
@@ -248,9 +272,23 @@ function atender(req, res, p, url, sendJson) {
   if (p === '/api/visuais/som' && req.method === 'GET') { fluxoSom(req, res); return true; }
   const responder = async () => {
     if (p === '/api/visuais' && req.method === 'GET') {
-      return sendJson(res, 200, { visuais: VISUAIS, tom: ajuste.tom, brilho: await brilhoAtual(), limite: ajuste.limite, limiteHz: ajuste.limiteHz, saida: await pedir('GET', '/estado', 2000) });
+      return sendJson(res, 200, { visuais: VISUAIS, tom: ajuste.tom, brilho: await brilhoAtual(), limite: ajuste.limite, limiteHz: ajuste.hzMax, intensidade: ajuste.intensidade, saida: await pedir('GET', '/estado', 2000) });
+    }
+    // Camada de cor e diretor automático: quem guarda e aplica é a saída do LED. O app só repassa e avisa os outros aparelhos.
+    if (p === '/api/visuais/regencia' && req.method === 'GET') {
+      const [diretor, cor] = await Promise.all([pedir('GET', '/diretor', 1500), pedir('GET', '/cor', 1500)]);
+      return sendJson(res, 200, { diretor, cor });
     }
     if (req.method !== 'POST') return sendJson(res, 405, { error: 'método não aceito' });
+    if (p === '/api/visuais/regencia') {
+      const alvo = url.searchParams.get('alvo') === 'cor' ? '/cor' : '/diretor';
+      const q = new URLSearchParams(url.searchParams);
+      q.delete('alvo');
+      const r = await pedir('POST', alvo + '?' + q.toString(), 2500);
+      if (!r) return sendJson(res, 503, { error: 'saída do LED fechada' });
+      avisar({ regencia: true });
+      return sendJson(res, 200, r);
+    }
     if (p === '/api/visuais/led') {
       const id = url.searchParams.get('visual');
       if (!VISUAIS.some(v => v.id === id)) return sendJson(res, 400, { error: 'visual desconhecido' });
@@ -272,16 +310,17 @@ function atender(req, res, p, url, sendJson) {
         return Number.isFinite(v) ? Math.max(min, Math.min(max, Math.round(v))) : null;
       };
       const tom = numero('tom', -100, 100), brilho = numero('brilho', 0, 100);
-      const limite = numero('limite', 5, 100), limiteHz = numero('limiteHz', 1, 8);
-      if (tom === null && brilho === null && limite === null && limiteHz === null) return sendJson(res, 400, { error: 'valor inválido' });
+      const limite = numero('limite', 5, 100), limiteHz = numero('limiteHz', 1, 15), intensidade = numero('intensidade', 0, 100);
+      if (tom === null && brilho === null && limite === null && limiteHz === null && intensidade === null) return sendJson(res, 400, { error: 'valor inválido' });
       if (limite !== null) ajuste.limite = limite;
-      if (limiteHz !== null) ajuste.limiteHz = Math.min(limiteHz, 7.5);
+      if (limiteHz !== null) ajuste.hzMax = limiteHz;
+      if (intensidade !== null) ajuste.intensidade = intensidade;
       if (tom !== null) ajuste.tom = tom;
       if (brilho !== null) ajuste.brilho = brilho;
       avisar({ tom: ajuste.tom, brilho: ajuste.brilho });
       const saida = await pedir('GET', '/estado', 2000);
       if (saida && saida.noAr) await aplicarAjuste(); else guardarAjuste();
-      return sendJson(res, 200, { tom: ajuste.tom, brilho: ajuste.brilho, limite: ajuste.limite, limiteHz: ajuste.limiteHz, aplicado: !!(saida && saida.noAr) });
+      return sendJson(res, 200, { tom: ajuste.tom, brilho: ajuste.brilho, limite: ajuste.limite, limiteHz: ajuste.hzMax, intensidade: ajuste.intensidade, aplicado: !!(saida && saida.noAr) });
     }
     if (p === '/api/visuais/abrir') {
       const saida = await pedir('GET', '/estado', 2000);
@@ -294,4 +333,4 @@ function atender(req, res, p, url, sendJson) {
   return true;
 }
 
-module.exports = { atender, paraShow: { pedir, cor: corDoFlash, limiteHz: () => ajuste.limiteHz }, aoMudar: fn => { avisar = fn; } };
+module.exports = { atender, paraShow: { pedir, cor: corDoFlash, limiteHz: () => ajuste.hzMax, intensidade: () => ajuste.intensidade }, aoMudar: fn => { avisar = fn; } };

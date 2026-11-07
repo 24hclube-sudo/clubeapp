@@ -451,7 +451,7 @@ function quadro(agora) {
   const aj = ajusteLogo(M);
   const modoBooth = M.modo('booth');
   const spot = modoBooth === 'fixo' ? 0.75 : M.fonte('booth');
-  brilhinhos.quadro(dt, M, { cx: LOGO.cx, cy: LOGO.cy, z: zLogo, meia: LOGO.largura / 2 * aj.esc, lw: 2048 / 1720, lh: 720 / 1720, letra: L.a });
+  brilhinhos.quadro(dt, M, { cx: LOGO.cx, cy: LOGO.cy, z: zLogo, meia: LOGO.largura / 2 * aj.esc, lw: 2048 / 1720, lh: 720 / 1720, letra: L.a, letraB: L.b, mix: L.m });
   const contraPedida = forcaContra(M);
   const contra = CEU.luzNaCena ? 0 : contraPedida;
   const sub = ACUMULA ? [halton(nQuadro % 16 + 1, 2) - 0.5, halton(nQuadro % 16 + 1, 3) - 0.5] : [0, 0];

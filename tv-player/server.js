@@ -11,10 +11,13 @@ const vinhetas = require('./vinhetas');
 const zonas = require('./zonas');
 const musica = require('./musica');
 const visuaisLed = require('./visuais-led');
-const { criarLuzShow, nivelDaFita, corDaFita } = require('./luz-show');
+const { criarLuzShow, nivelDaFita, corDaFita, forcaDaFita } = require('./luz-show');
 const luzShow = criarLuzShow(visuaisLed.paraShow);
+const projecoes = require('./projecoes');
 const reacoes = require('./reacoes');
 const { criarCriacoes } = require('./criacoes-barras');
+const { criarEstudio } = require('./painel-estudio');
+const { criarSequenciaTv } = require('./sequencia-tv');
 
 const PORT = process.env.PORT || 8080;
 const ROOT = __dirname;
@@ -132,6 +135,8 @@ function lerCenasGerador() {
 const ehZonaGerador = zid => zid.startsWith('telas:painel:');
 
 // Animações das fitas: as barras da pista têm lista própria; os balcões compartilham outra.
+// Fitas que usam o Estúdio. Comando sem zona, de aparelho com a página antiga aberta, continua indo para as barras.
+const fitaDoEstudio = zid => (['fita:barras', 'fita:sexto', 'fita:terreo'].includes(zid) ? zid : 'fita:barras');
 function lerAnimacoes(zid) {
   const arq = zid === 'fita:barras' ? 'animacoes-barras.json' : 'animacoes-balcoes.json';
   try { return JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, arq), 'utf8')); } catch { return []; }
@@ -384,6 +389,8 @@ const server = http.createServer((req, res) => {
   if (musica.atender(req, res, p)) return;
   if (reacoes.atender(req, res, p, sendJson)) return; // o que reage a quê
   if (criacoes.atender(req, res, p, sendJson)) return; // modelos criados para as barras
+  if (projecoes.atender(req, res, p, url, sendJson)) return; // Resolume dos projetores
+  if (painelEstudio.atender(req, res, p, url, sendJson)) return; // estúdio do painel do 1º andar
   if (luzShow.atender(req, res, p, url, sendJson)) return; // botões de flash
   if (visuaisLed.atender(req, res, p, url, sendJson)) return;
   if (balcao.audio.atender(req, res, p, sendJson)) return; // monitoração do áudio das barras
@@ -549,6 +556,7 @@ const prog = criarProgramacao({
 const balcao = criarBalcao({
   flash: nivelDaFita,
   corFlash: corDaFita,
+  forcaFlash: forcaDaFita,
   estado: instalacao => {
     try { const p = prog.estadoFita(instalacao, Date.now()); if (p) return p; } catch (e) { console.log('programação (fitas):', e.message); }
     return zona('fita:' + instalacao);
@@ -563,9 +571,13 @@ setInterval(() => {
 }, 2000);
 function pushEstado() { broadcastPanels(estadoMsg()); }
 // Modelos que o usuário cria para as barras: a lista dos apps abertos se atualiza sozinha.
-const criacoes = criarCriacoes({ dir: ROOT, publico: PUBLIC_DIR, temEfeito: nome => balcao.temEfeito(nome), avisar: () => broadcastPanels({ type: 'animacoes-mudaram' }) });
+const criacoes = criarCriacoes({ dir: ROOT, publico: PUBLIC_DIR, temEfeito: nome => balcao.temEfeito(nome), avisar: () => broadcastPanels({ type: 'animacoes-mudaram' }), noAr: zid => { const z = zona(fitaDoEstudio(zid)); return { cena: z.cena || null, balcao: z.ativo && z.ativo.cena ? z.ativo.cena.balcao : null }; } });
 // Sincronia: o que não passa pelo "estado" também avisa todos os apps abertos.
 visuaisLed.aoMudar(m => broadcastPanels({ type: 'visuais', ...m }));
+const sequenciaTv = criarSequenciaTv({ mediaDir: MEDIA_DIR });
+const painelEstudio = criarEstudio({ dir: ROOT, publico: PUBLIC_DIR, media: MEDIA_DIR, porta: () => PORT, lerCenas,
+  visualNoAr: () => visuaisLed.paraShow.pedir('GET', '/estado', 2000).then(s => (s && s.noAr ? s.visual : null)),
+  noPainel: () => zona('telas:led:1').cena || null });
 zonas.aoMudar(() => broadcastPanels({ type: 'zonas' }));
 musica.aoMudar(m => { if (m.caixa) broadcastPanels({ type: 'zonas' }); });
 
@@ -698,7 +710,17 @@ wss.on('connection', (ws, req) => {
         } else {
           // TVs têm lista própria (cenas-tv.json); painéis de LED usam as cenas de vídeo.
           const ehTv = zid.startsWith('telas:telas:') || (zid.startsWith('tela:') && grupoDe(zid.slice(5)) === 'telas');
-          const cena = (ehZonaGerador(zid) ? lerCenasGerador() : ehTv ? lerCenasTv() : lerCenas()).find(c => c.id === m.id);
+          // Sequência (só TVs): várias cenas tocando uma depois da outra, em loop, juntas em todas as TVs.
+          if (ehTv && m.id === 'sequencia') {
+            const lista = sequenciaTv.escolher(lerCenasTv(), m.sequencia);
+            if (!lista.length) continue;
+            const idsSeq = zid.startsWith('tela:') ? [zid.slice(5)] : telasDaZona(zid)
+              .sort((a, b) => (state.tvs[a].name || a).localeCompare(state.tvs[b].name || b, 'pt', { numeric: true }));
+            idsSeq.forEach((id, i) => { const c = sequenciaTv.conteudo(lista, i, startAt, srcDeMidia); if (c) definirConteudo([id], c); });
+            z.cena = 'sequencia'; z.sequencia = lista.map(c => c.id); z.cor = null;
+            continue;
+          }
+          const cena =(ehZonaGerador(zid) ? lerCenasGerador() : ehTv ? lerCenasTv() : lerCenas()).find(c => c.id === m.id);
           if (!cena) continue;
           const ids = zid.startsWith('tela:') ? [zid.slice(5)] : telasDaZona(zid)
             .sort((a, b) => (state.tvs[a].name || a).localeCompare(state.tvs[b].name || b, 'pt', { numeric: true }));
@@ -725,7 +747,7 @@ wss.on('connection', (ws, req) => {
             definirConteudo([id], { kind: 'single', loop: true, sync: true, startAt: inicio, items: [item] });
           });
         }
-        z.cena = m.id; z.cor = null;
+        z.cena = m.id; z.cor = null; delete z.sequencia;
       }
       save(); pushTvs(); return pushEstado();
     }
@@ -814,14 +836,15 @@ wss.on('connection', (ws, req) => {
 
     // Criador de animações das barras: prévia só para quem está criando, ou direto nas barras.
     if (m.type === 'rascunho-barras') {
-      balcao.rascunho(ws, m.cena ? criacoes.limpar(m.cena) : null, msg => send(ws, msg));
+      balcao.rascunho(ws, m.cena ? criacoes.limpar(m.cena) : null, msg => send(ws, msg), fitaDoEstudio(m.zona).slice(5));
       return;
     }
     if (m.type === 'rascunho-nas-barras') {
       const limpo = criacoes.limpar(m.cena);
       if (!limpo) return;
-      prog.assumirManual('fita:barras');
-      const z = zona('fita:barras');
+      const zid = fitaDoEstudio(m.zona);
+      prog.assumirManual(zid);
+      const z = zona(zid);
       z.ativo = { tipo: 'cena', cena: { id: 'criacao', nome: 'Criação em teste', duracao: 8, balcao: limpo }, startAt: Date.now() };
       z.cena = 'Criação em teste'; z.cor = null;
       save(); return pushEstado();

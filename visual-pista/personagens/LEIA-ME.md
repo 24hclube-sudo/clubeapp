@@ -1,6 +1,8 @@
 # Personagens na parede
 
-Os personagens da marca na parede do DJ, com o logo atrás. Viram devagar e vão trocando. É uma camada transparente por cima de qualquer visual do LED: a página do visual não sabe que ela existe.
+Os personagens da marca na parede do DJ, atrás do logo. Viram devagar e vão trocando. É uma camada transparente por cima de qualquer visual do LED.
+
+Nos visuais com o logo em 3D (Firmamento, Espaço, Marca e Cinética), a página conta em `window.__logoTela` onde o logo está, e as letras abrem um buraco na camada: o logo de verdade fica à frente, com o acabamento escolhido. Nos outros visuais, o corpo fica por cima.
 
 - **Botão:** LED da pista → Personagens da marca (`personagens` em `/api/reacoes`). Desligado, a camada não carrega a malha e não gasta GPU.
 - **Entrada:** `mesa\saida\flash-pagina.js` importa `camada.js` em toda página que a saída abre. Mudar `flash-pagina.js` pede reiniciar a saída; mudar `camada.js` vale ao trocar de visual.

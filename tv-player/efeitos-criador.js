@@ -1,5 +1,6 @@
-// Velas, fogueira, física e composição em camadas das barras do 5º. O motor (balcao.js) relê este arquivo sozinho
-// quando ele muda, como o efeitos-audio.js. Só as barras usam estas animações: 8 colunas de 86 pixels.
+// Velas, fogueira, física e composição em camadas das fitas. O motor (balcao.js) relê este arquivo sozinho
+// quando ele muda, como o efeitos-audio.js. As animações são desenhadas para as barras do 5º, 8 colunas de 86 pixels;
+// nos balcões, a composição deita esse desenho na bancada (ver "sentido" em novos.composicao).
 //
 // As simulações guardam estado entre quadros. O motor chama a animação uma vez por pixel, então cada simulação
 // avança uma vez por quadro: sim() só dá o passo quando o relógio do som mudou. Sem som, velas e fogueira seguem
@@ -28,7 +29,22 @@ const FUNDOS = {
   respira: 'Respira com o som', brasas: 'Brasas', estrelas: 'Estrelas',
 };
 
-const fabrica = ({ au, cor, hex, mix, escala, frac, hash01, onda01, efeitos: TODOS }) => {
+// Brilhos: pontos de luz por cima de tudo, curtos e fortes, disparados por uma faixa do som.
+// fonte: 0 bumbo, 1 baixo, 2 médio, 3 agudo. forte: pode passar de 100% em branco, acendendo todos os LEDs do pixel.
+const BRILHOS = {
+  faisca: { nome: 'Faíscas', fonte: 3, forte: true },
+  glitter: { nome: 'Glitter', fonte: 3, forte: true },
+  estouro: { nome: 'Estouro', fonte: 2, forte: true },
+  risco: { nome: 'Risco', fonte: 0, forte: true },
+  cometa: { nome: 'Cometa', fonte: 1, forte: true },
+  estrelas: { nome: 'Estrelas', fonte: 2, forte: true },
+  topo: { nome: 'Topo', fonte: 1, forte: false },
+  linha: { nome: 'Linha', fonte: 2, forte: false },
+  barra: { nome: 'Barra', fonte: 0, forte: false },
+  raio: { nome: 'Raio', fonte: 0, forte: false },
+};
+
+const fabrica = ({ au, cor, hex, mix, escala, frac, hash01, onda01, efeitos: TODOS, zona }) => {
   const barra = x => Math.floor(x * COLS);
   const doCentro = b => (b < 4 ? 3 - b : b - 4);
   const limita = v => Math.max(0, Math.min(1, v));
@@ -396,22 +412,128 @@ const fabrica = ({ au, cor, hex, mix, escala, frac, hash01, onda01, efeitos: TOD
     }
   }
 
+  // Quanto um brilho acende este pixel (0–1). Sem estado: cada golpe recente decide sozinho onde cai.
+  function valorDoBrilho(tipo, AU, q, qtd, b, h, i) {
+    const golpes = AU.golpes[q] || [];
+    let k = 0;
+    switch (tipo) {
+      case 'faisca':
+        for (const g of golpes) if (g.a < 0.16 && hash01(i * 1.37 + g.i * 7.7) > 0.985 - 0.09 * qtd) k = Math.max(k, Math.exp(-g.a * 22));
+        return k;
+      case 'glitter': {
+        const nivel = AU.f[q];
+        return hash01(i * 2.1 + Math.floor(AU.t * 30)) < nivel * nivel * (0.015 + 0.11 * qtd) ? 1 : 0;
+      }
+      case 'estouro':
+        for (const g of golpes) {
+          if (g.a >= 0.24) continue;
+          const n = 1 + Math.round(qtd * 2);
+          for (let e = 0; e < n; e++) {
+            const c0 = Math.floor(hash01(g.i * 3.3 + e * 11) * COLS), y0 = 0.1 + 0.8 * hash01(g.i * 5.1 + e * 7);
+            const dc = (b - c0) * 0.07, dy = h - y0, d = Math.sqrt(dc * dc + dy * dy), raio = g.a * 0.75;
+            k = Math.max(k, Math.exp(-g.a * 9) * Math.max(d < 0.018 ? 1 : 0, limita(1 - Math.abs(d - raio) / 0.022)));
+          }
+        }
+        return k;
+      case 'risco':
+        for (const g of golpes) {
+          if (g.a >= 0.28) continue;
+          const n = 1 + Math.round(qtd * 2);
+          for (let e = 0; e < n; e++) {
+            if (Math.floor(hash01(g.i * 7.3 + e * 13) * COLS) !== b) continue;
+            const sobe = hash01(g.i * 2.9 + e) > 0.5, u = sobe ? h : 1 - h, d = g.a * 5 - u;
+            if (d >= 0 && d < 0.24) k = Math.max(k, Math.pow(1 - d / 0.24, 2));
+          }
+        }
+        return k;
+      case 'cometa':
+        for (const g of golpes) {
+          if (g.a >= 0.85 || hash01(g.i * 4.7 + 1) > 0.4 + 0.6 * qtd) continue;
+          if (Math.floor(hash01(g.i * 9.1) * COLS) !== b) continue;
+          const d = h - (1 - g.a * 1.6);
+          if (d >= 0 && d < 0.26) k = Math.max(k, Math.pow(1 - d / 0.26, 2.2));
+        }
+        return k;
+      case 'estrelas': {
+        if (hash01(i * 1.7 + 0.3) < 0.95 - 0.08 * qtd || !golpes.length) return 0;
+        const g = golpes[golpes.length - 1];
+        return g.a < 0.45 && hash01(i + g.i * 3.1) > 0.35 ? Math.exp(-g.a * 8) : 0;
+      }
+      case 'topo':
+        for (const g of golpes) if (g.a < 0.2 && h > 0.93 - 0.14 * qtd) k = Math.max(k, Math.exp(-g.a * 17));
+        return k;
+      case 'linha':
+        for (const g of golpes) if (g.a < 0.16 && Math.abs(h - (0.08 + 0.84 * hash01(g.i * 6.1))) < 0.012 + 0.016 * qtd) k = Math.max(k, Math.exp(-g.a * 19));
+        return k;
+      case 'barra':
+        for (const g of golpes) {
+          if (g.a >= 0.13) continue;
+          const n = 1 + Math.round(qtd * 2);
+          for (let e = 0; e < n; e++) if (Math.floor(hash01(g.i * 11.7 + e * 17) * COLS) === b) k = Math.max(k, Math.exp(-g.a * 24));
+        }
+        return k;
+      case 'raio':
+        for (const g of golpes) {
+          if (g.a >= 0.2 || !(g.a < 0.05 || (g.a > 0.09 && g.a < 0.14))) continue;
+          if (hash01(b * 3.1 + g.i * 1.9) < 0.75 - 0.5 * qtd || hash01(Math.floor(h * 14) + b * 9 + g.i) < 0.35) continue;
+          k = 1;
+        }
+        return k;
+      default: return 0;
+    }
+  }
+  function somarBrilhos(c, lista, AU, x, h, i) {
+    const b = barra(x);
+    let r = c[0], g = c[1], a = c[2];
+    for (const br of lista) {
+      const def = BRILHOS[br.tipo];
+      if (!def) continue;
+      const q = br.fonte != null ? br.fonte : def.fonte;
+      const v = valorDoBrilho(br.tipo, AU, q, br.qtd != null ? br.qtd : 0.5, b, h, i);
+      if (v <= 0.003) continue;
+      const forca = br.forca != null ? br.forca : 0.85;
+      // Até 60% de força sobe o brilho; daí em diante, só nos pontos pequenos, passa do branco cheio.
+      const k = v * (0.4 + 0.6 * Math.min(1, forca / 0.6)) * (def.forte && forca > 0.6 ? 1 + (forca - 0.6) * 2.5 : 1);
+      const cc = corHex(br.cor || '#ffffff');
+      r += cc[0] * k; g += cc[1] * k; a += cc[2] * k;
+    }
+    return r === c[0] && g === c[1] && a === c[2] ? c : [r, g, a];
+  }
+
   const memoCamadas = new WeakMap();
-  function paramsDa(cam, idx, rascunho) {
-    let m = memoCamadas.get(cam);
+  function paramsDa(cam, idx, rascunho, zn) {
+    let porZona = memoCamadas.get(cam);
+    if (!porZona) { porZona = new Map(); memoCamadas.set(cam, porZona); }
+    let m = porZona.get(zn);
     if (!m) {
       const paleta = cam.paleta || (cam.p && cam.p.paleta);
-      m = { ...(cam.p || {}), _chave: (rascunho ? 'r' : 'a') + idx + cam.efeito, B: cam.batidas || 4 };
+      m = { ...(cam.p || {}), _chave: zn + (rascunho ? 'r' : 'a') + idx + cam.efeito, B: cam.batidas || 4 };
       if (paleta) m.paleta = paleta;
-      memoCamadas.set(cam, m);
+      porZona.set(zn, m);
     }
     return m;
   }
 
-  novos.composicao = (p, x, r, fase, h, i) => {
+  // Sentido no balcão. O desenho nasceu para barras em pé; aqui a altura (h) vira a posição ao longo da bancada e as
+  // 6 fileiras fazem o papel das barras. centro: abre do meio para as pontas. fecha: das pontas para o meio.
+  // direita e esquerda: de uma ponta à outra. blocos: a bancada em 8 trechos, com a fileira como altura.
+  // Camada "nativa" é uma cena feita para o balcão: recebe as coordenadas dele como sempre.
+  novos.composicao = (p, x0, r0, fase, h0, i) => {
     try {
       const AU = au();
-      const M = sim('duck', { _chave: 'duck:' + (p.rascunho ? 'r' : 'a'), duck: p.duck }, AU, criarDuck, (S, A, dt) => passoDuck(S, A, dt, p));
+      const zn = zona ? zona() : '';
+      let x = x0, r = r0, h = h0;
+      const s = p.sentido;
+      if (s) {
+        if (s === 'blocos') h = 1 - h0;
+        else {
+          const meio = Math.abs(2 * x0 - 1);
+          h = s === 'fecha' ? 1 - meio : s === 'direita' ? x0 : s === 'esquerda' ? 1 - x0 : meio;
+          x = (r0 + 0.5) / 6;
+        }
+        r = h * 6;
+      }
+      const M = sim('duck', { _chave: 'duck:' + zn + (p.rascunho ? 'r' : 'a'), duck: p.duck }, AU, criarDuck, (S, A, dt) => passoDuck(S, A, dt, p));
       const mult = M.mult != null ? M.mult : 1;
       const f = p.fundo || {};
       let c = pintarFundo(f, AU, x, h, i);
@@ -419,9 +541,10 @@ const fabrica = ({ au, cor, hex, mix, escala, frac, hash01, onda01, efeitos: TOD
       const camadas = p.camadas || [];
       for (let k = 0; k < camadas.length; k++) {
         const cam = camadas[k], fn = TODOS[cam.efeito];
-        if (!fn || cam.efeito === 'composicao') continue;
+        if (!fn || cam.oculta || cam.efeito === 'composicao') continue;
         const dur = cam.batidas ? cam.batidas * 60 / (AU.bpm || 120) : (cam.duracao || 8);
-        let a = fn(paramsDa(cam, k, p.rascunho), cam.espelhar ? 1 - x : x, r, frac(AU.t / dur), cam.virar ? 1 - h : h, i);
+        const cx = cam.nativa ? x0 : x, cr = cam.nativa ? r0 : r, ch = cam.nativa ? h0 : h;
+        let a = fn(paramsDa(cam, k, p.rascunho, zn), cam.espelhar ? 1 - cx : cx, cr, frac(AU.t / dur), cam.virar ? 1 - ch : ch, i);
         if (cam.paleta && !COM_PALETA_PROPRIA.has(cam.efeito)) {
           const l = Math.max(a[0], a[1], a[2]) / 255;
           a = l > 0.004 ? grad(paletaDe(cam.paleta, 'prata'), l) : PRETO;
@@ -430,6 +553,8 @@ const fabrica = ({ au, cor, hex, mix, escala, frac, hash01, onda01, efeitos: TOD
         if (cam.duck && mult !== 1) op *= mult;
         c = misturar(cam.mistura || 'cima', c, a, op);
       }
+      // Os brilhos ficam por cima de tudo e não abaixam no duck: é neles que o golpe aparece.
+      if (p.brilhos && p.brilhos.length && !AU.ocioso) c = somarBrilhos(c, p.brilhos, AU, x, h, i);
       return c;
     } catch { return PRETO; }
   };
@@ -439,4 +564,5 @@ const fabrica = ({ au, cor, hex, mix, escala, frac, hash01, onda01, efeitos: TOD
 fabrica.PALETAS = PALETAS;
 fabrica.MISTURAS = MISTURAS;
 fabrica.FUNDOS = FUNDOS;
+fabrica.BRILHOS = BRILHOS;
 module.exports = fabrica;

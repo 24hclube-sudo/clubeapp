@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<script>
+  // Fora do servidor (arquivo aberto direto / prévia "data:" do navegador do app):
+  // imagens, miniaturas e logos passam a vir do servidor deste PC.
+  if (!/^https?:$/.test(location.protocol)) document.write('<base href="http://localhost:8080/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>CLUBE</title>
+<style>
+  :root {
+    --bg: #0b0c0e; --s1: #15171b; --s2: #1d2025; --s3: #262a31; --line: rgba(255,255,255,.07);
+    --ink: #f3f4f6; --muted: #8d939c; --dim: #5d636c;
+    --accent: #00a0e6; --ok: #34d17a; --warn: #ffc465; --danger: #ff5a3c;
+    --r: 22px; --r-sm: 14px;
+    --ease: cubic-bezier(.2,.8,.2,1);
+    --topo: 60px; --nav: 62px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); overscroll-behavior-y: contain;
+    font-family: -apple-system, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { padding: 0 0 calc(var(--nav) + 28px + env(safe-area-inset-bottom)); touch-action: manipulation; }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+
+  /* ---------- topo ---------- */
+  .top { position: sticky; top: 0; z-index: 20; padding-top: env(safe-area-inset-top);
+    background: linear-gradient(var(--bg) 70%, rgba(11,12,14,0)); }
+  .top .wrap { display: flex; align-items: center; gap: 12px; min-height: 60px; }
+  .marca { font-weight: 800; letter-spacing: .14em; font-size: 17px; }
+  .conexao { margin-left: auto; display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; font-weight: 600; }
+  .conexao i { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 3px rgba(255,90,60,.15); }
+  .conexao.on i { background: var(--ok); box-shadow: 0 0 0 3px rgba(52,209,122,.15); }
+  .voltar { width: 40px; height: 40px; margin-left: -8px; border-radius: 50%; display: grid; place-items: center; }
+  .voltar:active { background: var(--s2); }
+  .titulo-det { font-weight: 800; font-size: 20px; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ---------- barra de baixo: as cinco seções do app ---------- */
+  .nav-app { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; height: calc(var(--nav) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(11,12,14,.94); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border-top: 1px solid var(--line); }
+  .nav-app .itens { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 560px; height: 100%; margin: 0 auto; }
+  .nav-app a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted); font-size: 11px; font-weight: 700; text-decoration: none; transition: color .15s; }
+  .nav-app a svg { width: 24px; height: 24px; }
+  .nav-app a .num { height: 24px; font-size: 22px; line-height: 24px; font-weight: 800; }
+  .nav-app a:active { transform: scale(.94); }
+  .nav-app a[aria-current="page"] { color: var(--ink); }
+
+  /* Música: a interface da rádio ocupa tudo entre o topo e a barra de baixo */
+  #tela-musica { position: fixed; left: 0; right: 0; top: calc(var(--topo) + env(safe-area-inset-top)); bottom: calc(var(--nav) + env(safe-area-inset-bottom)); }
+  #tela-musica iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--bg); }
+
+  .andares { display: grid; grid-template-columns: 1fr 1fr; background: var(--s1); border-radius: 14px; padding: 4px; margin: 4px 0 18px; }
+  .andares button { padding: 10px 0; border-radius: 10px; font-weight: 700; color: var(--muted); transition: all .25s var(--ease); }
+  .andares button.on { background: var(--s3); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.4); }
+
+  .secao { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .09em; margin: 26px 4px 10px; }
+
+  /* ---------- cartões dos aparelhos (início) ---------- */
+  .cartoes { display: grid; gap: 12px; }
+  .cartao { position: relative; border-radius: var(--r); background: var(--s1); overflow: hidden; isolation: isolate;
+    transition: transform .2s var(--ease); }
+  .cartao:active { transform: scale(.985); }
+  .cartao .tinta { position: absolute; inset: 0; z-index: -1; opacity: .9; transition: background .5s; }
+  .cartao .corpo { padding: 16px 16px 14px; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; }
+  .icone { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.08); display: grid; place-items: center; }
+  .icone svg { width: 24px; height: 24px; }
+  .nome { font-weight: 800; font-size: 17px; letter-spacing: -.01em; }
+  .sub { color: rgba(255,255,255,.62); font-size: 13px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .previa { margin: 0 16px; height: 46px; border-radius: 12px; background: #000 center/cover no-repeat; overflow: hidden; position: relative; }
+  .previa canvas, .previa img { width: 100%; height: 100%; display: block; image-rendering: pixelated; object-fit: cover; }
+  .previa.vertical { height: 64px; }
+  .cartao .brilho { padding: 12px 16px 16px; }
+  .cartao.desligado .tinta { background: var(--s1) !important; }
+  .cartao.desligado .previa { opacity: .35; }
+
+  /* interruptor */
+  .chave { width: 52px; height: 32px; border-radius: 16px; background: rgba(255,255,255,.16); position: relative; transition: background .25s; flex: none; }
+  .chave::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s var(--ease); }
+  .chave.on { background: var(--ok); }
+  .chave.on::after { transform: translateX(20px); }
+  .chave.confirmar { background: var(--warn); }
+
+  /* slider estilo Hue: pílula grossa, o preenchimento é o nível */
+  .slider { position: relative; height: 40px; border-radius: 14px; background: rgba(255,255,255,.1); overflow: hidden; touch-action: none; }
+  .slider .nivel { position: absolute; inset: 0 auto 0 0; background: rgba(255,255,255,.88); border-radius: 0; transition: width .08s linear; }
+  .slider .rot { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 14px;
+    font-size: 13px; font-weight: 700; color: #111; mix-blend-mode: normal; pointer-events: none; }
+  .slider .rot span { color: #fff; mix-blend-mode: difference; }
+  .slider.grande { height: 58px; border-radius: 18px; }
+  .slider.grande .rot { font-size: 15px; padding: 0 18px; }
+  .slider.canal-r .nivel { background: #ff3b3b; }
+  .slider.canal-g .nivel { background: #2fd659; }
+  .slider.canal-b .nivel { background: #3b74ff; }
+  .slider.canal-r .rot span, .slider.canal-g .rot span, .slider.canal-b .rot span { mix-blend-mode: normal; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.55); }
+
+  /* "Cor da saída" das fitas: opacidade e R/G/B por cima da animação */
+  .filtro { margin-top: 12px; grid-column: 1 / -1; }
+  .filtro-cab { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .filtro-cab .t { flex: 1; min-width: 0; }
+  .filtro-cab .t b { display: block; font-size: 15px; }
+  .filtro-cab .t small { color: var(--muted); font-size: 13px; }
+  .filtro-amostra { flex: none; width: 30px; height: 30px; border-radius: 9px; border: 1px solid rgba(255,255,255,.3); background: #fff; }
+  .filtro-sliders { display: grid; gap: 8px; }
+
+  /* ---------- detalhe do aparelho ---------- */
+  .det-cabeca { border-radius: var(--r); background: var(--s1); padding: 16px; position: relative; overflow: hidden; isolation: isolate; margin-bottom: 14px; }
+  .det-cabeca .tinta { position: absolute; inset: 0; z-index: -1; opacity: .9; transition: background .5s; }
+  .det-linha { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .det-linha .info { min-width: 0; flex: 1; }
+  .det-cabeca .previa { margin: 0 0 14px; height: 54px; }
+  .det-cabeca .previa.vertical { height: 88px; }
+
+  .abas { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 4px -16px 14px; padding: 0 16px; }
+  .abas::-webkit-scrollbar { display: none; }
+  .abas button { flex: none; padding: 9px 16px; border-radius: 999px; background: var(--s1); color: var(--muted); font-weight: 700; font-size: 14px; }
+  .abas button.on { background: var(--ink); color: #000; }
+  /* categorias das animações */
+  .cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+  .cats button { padding: 10px 0; border-radius: 12px; background: var(--s1); color: var(--muted); font-weight: 700; font-size: 14px; }
+  .cats button.on { background: var(--s3); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .paletas button { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .paletas i { width: 16px; height: 16px; border-radius: 50%; flex: none; }
+  /* BPM */
+  .bpm { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .bpm .valor { flex: 1; height: 58px; border-radius: 18px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; font-weight: 700; }
+  .bpm .valor b { font-size: 22px; font-variant-numeric: tabular-nums; }
+  .bpm button { height: 58px; min-width: 58px; border-radius: 18px; background: rgba(255,255,255,.1); font-weight: 800; font-size: 22px; }
+  .bpm .toque { padding: 0 16px; font-size: 14px; background: var(--ink); color: #000; }
+  .bpm .toque.batendo { background: var(--warn); }
+
+  /* cenas */
+  .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cena { position: relative; border-radius: 18px; background: var(--s1); overflow: hidden; text-align: left; display: flex; flex-direction: column;
+    outline: 2px solid transparent; outline-offset: -2px; transition: outline-color .2s, transform .15s var(--ease); }
+  .cena:active { transform: scale(.97); }
+  .cena .thumb { height: 64px; background: #000 center/cover no-repeat; position: relative; }
+  .cena .thumb video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+  .cena .rot { padding: 10px 12px 12px; font-weight: 700; font-size: 14px; line-height: 1.25; min-height: 42px; }
+  .cena.on { outline-color: var(--ink); }
+  .cena.on::after { content: "No ar"; position: absolute; top: 8px; right: 8px; font-size: 11px; font-weight: 800; color: #000;
+    background: var(--ink); padding: 3px 8px; border-radius: 999px; }
+  /* TVs: ícone em pé mostrando a arte inteira, como ela aparece na TV */
+  .grade.retrato .cena .thumb { height: 150px; background-size: contain; background-color: #050505; }
+  .previa.retrato { height: 120px; }
+  .previa.retrato img { object-fit: contain; image-rendering: auto; }
+  .cena.apagar .thumb { background: repeating-linear-gradient(135deg, #0e0e0e 0 8px, #181818 8px 16px); }
+  .cena .x { position: absolute; top: 8px; left: 8px; z-index: 2; font-size: 11px; font-weight: 800; padding: 3px 8px;
+    border-radius: 999px; background: rgba(0,0,0,.72); color: #fff; }
+  .cena.enviando { opacity: .55; }
+  /* TVs: vários conteúdos em sequência */
+  .seq-barra { margin: 0 0 12px; }
+  .seq-barra .seq-abrir { width: 100%; padding: 13px; border-radius: 14px; background: var(--s1); color: var(--ink); font-weight: 700; font-size: 14px; border: 1px solid var(--line); }
+  .seq-barra .seq-linha { display: flex; gap: 8px; align-items: center; }
+  .seq-barra .seq-txt { flex: 1; font-size: 13px; color: var(--muted); line-height: 1.3; }
+  .seq-barra .seq-mini { padding: 10px 14px; border-radius: 999px; background: var(--s2); color: var(--ink); font-weight: 700; font-size: 13px; }
+  .seq-tocar { position: sticky; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 5; width: 100%; margin: 12px 0 0; padding: 16px; border-radius: 16px;
+    background: var(--accent); color: #fff; font-weight: 800; font-size: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+  .seq-tocar:disabled { background: var(--s3); color: var(--muted); box-shadow: none; }
+  .cena .num { position: absolute; left: 8px; bottom: 8px; z-index: 2; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 13px;
+    background: var(--accent); color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .cena.na-seq { outline-color: var(--accent); }
+  .grade.escolhendo .cena.apagar { opacity: .3; pointer-events: none; }
+
+  /* cores */
+  .quentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .quente { border-radius: 18px; height: 86px; padding: 12px; display: flex; align-items: flex-end; font-weight: 800; font-size: 14px; color: #2a1600;
+    outline: 3px solid transparent; outline-offset: -3px; transition: outline-color .2s, transform .15s var(--ease); }
+  .quente:active, .bolinha:active { transform: scale(.95); }
+  .quente.on { outline-color: #fff; }
+  .bolinhas { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .bolinha { aspect-ratio: 1; border-radius: 50%; position: relative; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    transition: transform .15s var(--ease); }
+  .bolinha.on { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px #fff; }
+  .bolinha.arco { background: conic-gradient(#f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); overflow: hidden; }
+  .bolinha.arco input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; border: 0; padding: 0; cursor: pointer; }
+  .legenda { color: var(--muted); font-size: 13px; margin: 14px 4px 0; line-height: 1.45; }
+
+  /* logo + cor */
+  .bloco { background: var(--s1); border-radius: var(--r); padding: 14px; margin-bottom: 12px; }
+  .bloco h3 { margin: 0 0 10px; font-size: 13px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--bg); border-radius: 12px; padding: 3px; }
+  .seg button { padding: 10px 0; border-radius: 9px; font-weight: 700; font-size: 14px; color: var(--muted); }
+  .seg button.on { background: var(--s3); color: var(--ink); }
+  .logo-previa { height: 64px; border-radius: 14px; overflow: hidden; position: relative; margin-bottom: 12px; transition: background .3s; }
+  .logo-previa .trilho { position: absolute; top: 0; left: 0; height: 100%; display: flex; align-items: center; animation: passa 3.2s linear infinite; }
+  .logo-previa .lg { flex: 0 0 140px; height: 100%; display: grid; place-items: center; }
+  .logo-previa .lg i { width: 104px; height: 26px; display: block;
+    -webkit-mask: url(logo_clube.png) center/100% 100% no-repeat; mask: url(logo_clube.png) center/100% 100% no-repeat; }
+  .logo-previa.noalto .lg i { width: 80px; height: 44px; -webkit-mask-image: url(logo_noalto.png); mask-image: url(logo_noalto.png); }
+  @keyframes passa { to { transform: translateX(-140px); } }
+  .botao { width: 100%; padding: 15px; border-radius: 16px; background: var(--ink); color: #000; font-weight: 800; font-size: 16px; margin-top: 12px; }
+  .botao:disabled { opacity: .4; }
+  .botao.sec { background: var(--s2); color: var(--ink); }
+
+  /* arte */
+  .soltar { border: 2px dashed rgba(255,255,255,.18); border-radius: var(--r); padding: 26px 16px; text-align: center; color: var(--muted); position: relative; }
+  .soltar strong { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
+  .soltar input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .campo { width: 100%; font: inherit; padding: 13px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); margin-top: 12px; }
+  .progresso { height: 6px; border-radius: 3px; background: var(--s2); overflow: hidden; margin-top: 12px; display: none; }
+  .progresso i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+
+  /* ajustes */
+  .linha-aj { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .linha-aj:first-of-type { border-top: 0; padding-top: 4px; }
+  .linha-aj .t { flex: 1; min-width: 0; }
+  .linha-aj .t b { display: block; font-size: 15px; }
+  .linha-aj .t small { color: var(--muted); font-size: 13px; }
+  .pill { padding: 9px 14px; border-radius: 999px; background: var(--s2); font-weight: 700; font-size: 14px; }
+  .pill.on { background: var(--warn); color: #000; }
+  .ponto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: var(--danger); }
+  .ponto.on { background: var(--ok); }
+
+  /* avisos */
+  .toast { position: fixed; left: 50%; bottom: calc(var(--nav) + 14px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0;
+    background: #f3f4f6; color: #000; font-weight: 700; font-size: 14px; padding: 12px 18px; border-radius: 999px; z-index: 50;
+    box-shadow: 0 10px 30px rgba(0,0,0,.45); transition: all .3s var(--ease); pointer-events: none; max-width: 90vw; text-align: center; }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
+  .aviso { background: #3a2a00; border: 1px solid #6b4e00; color: #ffd98a; border-radius: 16px; padding: 14px; font-weight: 600; margin-bottom: 16px; }
+  .aviso a { color: #fff; }
+  .vazio { color: var(--muted); text-align: center; padding: 30px 10px; }
+  .bt-andar { flex: none; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,.12); color: var(--ink); font-weight: 700; font-size: 14px; }
+  .bt-andar.confirmar { background: var(--warn); color: #000; }
+  .radio .t b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .radio .t small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #radio-pular:disabled { opacity: .4; }
+  .vin-grande { width: 100%; padding: 18px; border-radius: 16px; background: var(--accent); color: #fff; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .vin-grande svg { width: 24px; height: 24px; flex: none; }
+  .vin-grande:disabled { opacity: .4; }
+  .vin-nota { display: block; color: var(--muted); font-size: 13px; margin-top: 8px; min-height: 18px; }
+  .vin textarea, .vin select, .vin input[type=datetime-local], .vin input[type=number] { box-sizing: border-box; background: var(--bg); color: inherit; border: 1px solid var(--s3); border-radius: 12px; padding: 10px 12px; font: inherit; }
+  .vin textarea { width: 100%; margin-bottom: 10px; resize: vertical; }
+  .vin select { width: 100%; }
+  .vin-item { border-top: 1px solid var(--line); padding: 10px 0; }
+  .vin-item p { margin: 0 0 8px; font-size: 14px; }
+  .vin-acoes { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .vin-acoes .bt-andar { padding: 8px 12px; font-size: 13px; }
+  .vin-acoes input[type=datetime-local] { flex: 1 1 180px; min-width: 0; }
+  .vin-acoes select { width: auto; }
+  .vin-status { color: var(--muted); font-size: 13px; }
+  .vin-linha { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; font-size: 14px; }
+  .vin-linha input[type=number] { width: 76px; }
+  .vin-linha input[type=checkbox] { width: 22px; height: 22px; }
+  #aviso-andar { padding: 12px 14px; margin: 12px 0 0; border-top: 0; }
+  #aviso-andar.externo { box-shadow: inset 0 0 0 2px var(--warn); }
+  /* ---------- PC (tela larga): aparelhos à esquerda, controles à direita ---------- */
+  @media (min-width: 980px) {
+    :root { --topo: 64px; }
+    .wrap { max-width: 1440px; padding: 0 28px; }
+    main.wrap { display: grid; grid-template-columns: 400px 1fr; gap: 28px; align-items: start; }
+    #aviso-previa { grid-column: 1 / -1; }
+    #inicio { position: sticky; top: 72px; max-height: calc(100vh - 88px - var(--nav)); overflow-y: auto; padding-bottom: 20px; scrollbar-width: thin; }
+    #inicio[hidden], #detalhe[hidden] { display: block !important; }
+    #detalhe[hidden] > * { display: none; }
+    body[data-secao="musica"] #inicio, body[data-secao="musica"] #detalhe,
+    body[data-secao="radio"] #inicio, body[data-secao="radio"] #detalhe { display: none !important; }
+    body[data-secao="radio"] main.wrap { display: block; max-width: 760px; }
+    .cartao.sel { box-shadow: 0 0 0 2px var(--ink); }
+    .cartao:active { transform: none; }
+    .grade { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+    .grade.retrato { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+    .det-cabeca { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; padding: 20px; }
+    .det-cabeca .det-linha, .det-cabeca .previa { grid-column: 1 / -1; }
+    .det-cabeca .previa { height: 70px; } .det-cabeca .previa.vertical { height: 120px; } .det-cabeca .previa.retrato { height: 160px; }
+    #det-brilho, #det-velocidade { margin-top: 0 !important; }
+    .det-cabeca .bpm { grid-column: 1 / -1; }
+    .quentes { grid-template-columns: repeat(3, 180px); }
+    .bolinhas { grid-template-columns: repeat(12, 44px); gap: 14px; }
+    .bloco, #aba-arte, #aba-ajustes { max-width: 720px; }
+    .top .wrap { min-height: 64px; }
+    .marca { font-size: 19px; }
+  }
+  [hidden] { display: none !important; }
+  .tela { animation: entra .28s var(--ease); }
+  @keyframes entra { from { opacity: 0; transform: translateY(8px); } }
+</style>
+<link rel="stylesheet" href="programacao.css">
+<link rel="stylesheet" href="visuais.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap" id="barra">
+    <button class="voltar" id="bt-voltar" hidden aria-label="Voltar">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="marca" id="titulo">CLUBE</div>
+    <div class="conexao" id="conexao"><span id="conexao-txt">Conectando</span><i></i></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="aviso" id="aviso-previa" hidden>
+    Esta é só uma prévia do arquivo e não controla nada. Abra <a href="http://localhost:8080/celular">http://localhost:8080/celular</a>
+    (no celular: http://192.168.1.21:8080/celular).
+  </div>
+
+  <!-- MÚSICA: playlists e o que está tocando (servido em /musica/ por musica.js) -->
+  <section id="tela-musica" class="tela" hidden>
+    <iframe id="musica-quadro" title="Música da Rádio CLUBE" allow="autoplay"></iframe>
+  </section>
+
+  <!-- RÁDIO: o que vai ao ar agora, vinhetas e locução -->
+  <section id="tela-radio" class="tela" hidden>
+    <div class="bloco linha-aj radio" id="radio" style="padding:12px 14px;margin-bottom:12px" hidden>
+      <div class="t"><small id="radio-rotulo">Rádio CLUBE · tocando agora</small><b id="radio-titulo"></b><small id="radio-artista"></small></div>
+      <button class="bt-andar" id="radio-pular" aria-label="Pular música">Pular ⏭</button>
+    </div>
+    <div class="vin" id="vin" hidden>
+      <div class="bloco">
+        <button class="vin-grande" id="vin-botao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg>Entrar com vinheta</button>
+        <small class="vin-nota" id="vin-nota"></small>
+      </div>
+      <div class="bloco">
+        <h3>Vinheta especial</h3>
+        <textarea id="vin-texto" maxlength="300" rows="3" placeholder="Ex.: Rádio Clube. Sejam bem-vindos."></textarea>
+        <div class="vin-acoes"><button class="bt-andar" id="vin-gerar">Gerar · US$ 0,10</button><span class="vin-status" id="vin-limite"></span></div>
+        <div id="vin-producao"></div>
+      </div>
+      <div class="bloco">
+        <h3>Para ouvir e aprovar</h3>
+        <div id="vin-ouvir"></div>
+      </div>
+      <div class="bloco">
+        <h3>Programadas</h3>
+        <div id="vin-agendadas"></div>
+      </div>
+      <div class="bloco">
+        <h3>Aprovadas</h3>
+        <select id="vin-filtro" aria-label="Filtrar vinhetas aprovadas"></select>
+        <div id="vin-aprovadas"></div>
+      </div>
+      <div class="bloco">
+        <h3>Programação automática</h3>
+        <label class="vin-linha">Ligada <input type="checkbox" id="vin-ativo"></label>
+        <label class="vin-linha">Falar a hora em ponto <input type="checkbox" id="vin-horas"></label>
+        <label class="vin-linha">Uma fala a cada quantas músicas <input type="number" id="vin-musicas" min="0" max="30"></label>
+        <label class="vin-linha">Fala do clima a cada quantos minutos <input type="number" id="vin-clima" min="0" max="1440"></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANDAR: todos os aparelhos do andar escolhido na barra de baixo -->
+  <section id="inicio" class="tela">
+    <div id="visuais-cartao" hidden></div>
+    <div id="projecoes-cartao" hidden></div>
+    <div id="projecao-cartao" hidden></div>
+    <div class="bloco linha-aj" id="som-cartao" style="padding:12px 14px;margin-bottom:12px" hidden>
+      <div class="t"><b id="som-cartao-t">Música</b><small id="som-cartao-s"></small></div>
+      <a class="bt-andar" id="som-cartao-bt" style="text-decoration:none">Trocar</a>
+    </div>
+    <div class="bloco linha-aj" id="aviso-andar" style="padding:12px 14px;margin-bottom:12px" hidden>
+      <div class="t"><b id="aviso-andar-t"></b><small id="aviso-andar-s"></small></div>
+      <button class="bt-andar" id="aviso-andar-apagar" title="Manda um quadro preto (tira luz presa)">Apagar</button>
+      <button class="bt-andar" id="aviso-andar-bt"></button>
+    </div>
+    <div class="cartoes" id="cartoes"></div>
+    <div class="vazio" id="inicio-vazio" hidden></div>
+    <div id="prog-cartao" style="margin-top:12px"></div>
+  </section>
+
+  <!-- VISUAIS DO LED da pista (visuais-app.js) -->
+  <section id="visuais" class="tela" hidden></section>
+  <section id="projecoes" class="tela" hidden></section>
+
+  <!-- PROGRAMAÇÃO: cores e efeitos do dia, anúncios (programacao-app.js) -->
+  <section id="programacao" class="tela" hidden></section>
+
+  <!-- DETALHE de um aparelho -->
+  <section id="detalhe" class="tela" hidden>
+    <div class="det-cabeca" id="det-cabeca">
+      <div class="tinta" id="det-tinta"></div>
+      <div class="det-linha">
+        <div class="icone" id="det-icone"></div>
+        <div class="info"><div class="nome" id="det-nome"></div><div class="sub" id="det-sub"></div></div>
+        <button class="chave" id="det-chave" aria-label="Ligar/desligar"></button>
+      </div>
+      <div class="previa" id="det-previa"></div>
+      <div id="det-brilho"></div>
+      <div id="det-velocidade" style="margin-top:10px" hidden></div>
+      <div id="det-filtro" class="filtro" hidden>
+        <div class="filtro-cab">
+          <span class="filtro-amostra" id="filtro-amostra"></span>
+          <div class="t"><b>Cor da saída</b><small>Opacidade e R/G/B por cima de qualquer animação</small></div>
+          <button class="pill" id="filtro-zerar">Zerar</button>
+        </div>
+        <div class="filtro-sliders" id="filtro-sliders"></div>
+      </div>
+      <div class="bpm" id="det-bpm" hidden>
+        <button id="bpm-menos" aria-label="Diminuir BPM">−</button>
+        <div class="valor"><span>BPM <small style="color:var(--muted);font-weight:600">pista</small></span><b id="bpm-valor">120</b></div>
+        <button id="bpm-mais" aria-label="Aumentar BPM">+</button>
+        <button class="toque" id="bpm-toque">Toque no ritmo</button>
+      </div>
+      <div id="det-audio" style="grid-column:1/-1" hidden>
+        <div class="bloco linha-aj" style="padding:12px 14px;margin-top:10px">
+          <div class="t"><b>Áudio reativo</b><small id="audio-info">Reage à música que entra no som do PC</small></div>
+          <button class="chave" id="chave-audio" aria-label="Áudio reativo"></button>
+        </div>
+        <div id="audio-ganho" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="det-prog" hidden></div>
+    <nav class="abas" id="abas"></nav>
+
+    <div id="aba-cenas"><div class="cats paletas" id="paletas" hidden></div><div class="cats" id="cats" hidden></div><div class="grade" id="grade-cenas"></div></div>
+
+    <div id="aba-cores" hidden>
+      <div class="bloco linha-aj" style="padding:12px 14px;margin-bottom:12px">
+        <div class="t"><b>Respirar</b><small>A cor sobe e desce devagar, como uma lâmpada respirando</small></div>
+        <button class="chave" id="chave-respirar" aria-label="Respirar"></button>
+      </div>
+      <div class="quentes" id="quentes"></div>
+      <div class="bolinhas" id="bolinhas"></div>
+      <p class="legenda">A cor fica fixa nas fitas até você escolher uma cena. Os tons quentes usam o LED de branco quente da fita.</p>
+    </div>
+
+    <div id="aba-logo" hidden>
+      <div class="bloco">
+        <div class="logo-previa" id="logo-previa"><div class="trilho" id="logo-trilho"></div></div>
+        <h3>Marca</h3>
+        <div class="seg" id="seg-marca"><button data-v="clube">CLUBE</button><button data-v="noalto">NO ALTO</button></div>
+      </div>
+      <div class="bloco">
+        <h3>Cor do logo</h3>
+        <div class="seg" id="seg-logo"><button data-v="branco">Branco</button><button data-v="preto">Preto</button><button data-v="metal">Metálico</button></div>
+      </div>
+      <div class="bloco">
+        <h3>Cor de fundo</h3>
+        <div class="bolinhas" id="fundos"></div>
+      </div>
+      <button class="botao" id="bt-logo">Colocar no ar</button>
+    </div>
+
+    <div id="aba-arte" hidden>
+      <div class="soltar">
+        <strong id="arte-nome-arq">Escolher imagem ou vídeo</strong>
+        Em pé, ideal 1080×1920 · png, jpg, mp4
+        <input type="file" id="arte-arquivo" accept="image/*,video/*">
+      </div>
+      <input class="campo" id="arte-nome" placeholder="Nome da arte (opcional)" maxlength="40">
+      <div class="progresso" id="arte-prog"><i></i></div>
+      <button class="botao" id="bt-arte" disabled>Enviar para as TVs</button>
+      <p class="legenda">A arte é ajustada às TVs em pé e entra na aba Cenas — toque nela para colocar no ar. Se a proporção for diferente, as bordas que sobrarem são cortadas.</p>
+    </div>
+
+    <div id="aba-ajustes" hidden>
+      <div class="bloco" id="ajustes"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="nav-app" id="nav-app" aria-label="Andares e música">
+  <div class="itens">
+    <a href="#/andar/1" data-andar="1"><span class="num" aria-hidden="true">1</span>1º andar</a>
+    <a href="#/andar/5" data-andar="5"><span class="num" aria-hidden="true">5</span>5º andar</a>
+    <a href="#/musica" data-secao="musica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>Música</a>
+    <a href="#/radio" data-secao="radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></svg>Rádio</a>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script src="ambiente.js"></script>
+<script src="programacao-app.js"></script>
+<script src="visuais-app.js"></script>
+<script src="projecoes-app.js"></script>
+<script src="projecao-app.js"></script>
+
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const SERVIDOR = /^https?:$/.test(location.protocol) ? location.origin + '/' : 'http://localhost:8080/';
+  const PREVIA_ARQUIVO = !/^https?:$/.test(location.protocol);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const vibrar = () => { if (navigator.vibrate) navigator.vibrate(10); };
+  const guardar = (k, v) => { try { v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+  const ler = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+
+  // ---------- ícones ----------
+  const ICONES = {
+    led: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="2.5" y="9" width="19" height="6" rx="1.5"/><path d="M6 12h.01M9 12h.01M12 12h.01M15 12h.01M18 12h.01"/></svg>',
+    telas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="2.5" width="7" height="13" rx="1.5"/><rect x="13.5" y="2.5" width="7" height="13" rx="1.5"/><path d="M7 19.5v2M17 19.5v2M5 21.5h4M15 21.5h4"/></svg>',
+    balcao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 8h18M3 12h18M3 16h18"/></svg>',
+    barras: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 3v18M9.7 3v18M14.3 3v18M19 3v18"/></svg>',
+    outro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="12" rx="2"/></svg>',
+  };
+  const icone = z => ICONES[z.grupo === 'painel' ? 'led' : z.grupo] || ICONES.outro;
+
+  // ---------- estado ----------
+  let estado = { andares: {}, zonas: [], balcao: [] };
+  let telas = [];
+  let andar = /[?&]andar=(\d)/.exec(location.search) ? RegExp.$1 : (ler('clube-andar') || '1');
+  let ws = null, versaoServidor = null;
+  const listas = { led: null, tvs: null, balcoes: null, barras: null, gerador: null };
+  const cartoes = {};             // zid → elementos do cartão
+  const previas = {};             // instalação → último quadro da fita (para desenhar)
+
+  // A barra de baixo: 1º andar, 5º andar, Música e Rádio. Cada andar mostra todos os aparelhos dele.
+  let secao = /[?&]andar=\d/.test(location.search) ? 'andar' : ['musica', 'radio'].indexOf(ler('clube-secao')) >= 0 ? ler('clube-secao') : 'andar';
+  const temAparelhos = () => secao === 'andar';
+  const zonasDaSecao = () => (estado.zonas || []).filter(z => z.andar === andar && z.grupo !== 'painel');
+  const zonaPorId = id => (estado.zonas || []).find(z => z.id === id);
+  const fitaDe = z => z && z.id.indexOf('fita:') === 0 ? (estado.balcao || []).find(b => b.id === z.id.slice(5)) : null;
+  const listaDe = z => !z ? null : z.tipo === 'fita' ? (z.id === 'fita:barras' ? 'barras' : 'balcoes')
+    : z.grupo === 'telas' ? 'tvs' : z.grupo === 'painel' ? 'gerador' : 'led';
+  // Zonas com animações por categoria e BPM: fitas e o gerador do painel do 5º.
+  const temRitmo = z => z.tipo === 'fita' || listaDe(z) === 'gerador';
+  const brilhoDe = z => { const b = (estado.andares[z.andar] || {}).brilho || {}; return b[z.grupo] != null ? b[z.grupo] : 100; };
+
+  // Rótulo do que está no ar numa zona.
+  function noAr(z) {
+    if (z.prog && z.prog.ativa) return 'Programação · ' + z.prog.faixa;
+    if (z.cor) return z.cor.toLowerCase() === '#ffc465' ? 'Filamento' : z.cor.toLowerCase() === '#ffaf32' ? 'Âmbar' : z.cor.toLowerCase() === '#ffd6a1' ? 'Branco quente' : 'Cor fixa';
+    if (z.cena === 'logo-cor') return 'Logo + cor';
+    if (!z.cena) return 'Nada no ar';
+    if (z.cena === 'sequencia') return 'Sequência · ' + (z.sequencia || []).length + ' conteúdos';
+    const c = (listas[listaDe(z)] || []).find(c => c.id === z.cena);
+    return c ? c.nome : z.cena;
+  }
+  function cenaAtual(z) {
+    const id = z.cena === 'sequencia' ? (z.sequencia || [])[0] : z.cena; // sequência: mostra a 1ª
+    return (listas[listaDe(z)] || []).find(c => c.id === id) || null;
+  }
+  // Cor que tinge o cartão (estilo Hue): cor fixa, fundo do logo ou tom neutro.
+  function tinta(z) {
+    if (z.prog && z.prog.ativa) { const c = z.prog.cores; return `linear-gradient(135deg, ${c[0]}aa, ${c[1]}66 55%, rgba(21,23,27,.9) 100%)`; }
+    const cor = z.cor || (z.cena === 'logo-cor' && z.logoCor ? z.logoCor.fundo : null);
+    // cores claras tingem menos, para o texto branco continuar legível
+    if (cor) return claro(cor) ? `linear-gradient(135deg, ${cor}70 0%, ${cor}26 55%, rgba(21,23,27,.95) 100%)`
+      : `linear-gradient(135deg, ${cor}cc 0%, ${cor}55 55%, rgba(21,23,27,.9) 100%)`;
+    if (z.cena && z.cena !== 'apagar') return 'linear-gradient(135deg, rgba(0,160,230,.28), rgba(21,23,27,.95) 70%)';
+    return 'var(--s1)';
+  }
+  const ligado = z => { const f = fitaDe(z); if (z.prog && z.prog.ativa) return f ? !!f.saida : true; return f ? !!f.saida && z.cena !== 'apagar' : !!z.cena && z.cena !== 'apagar'; };
+
+  // ---------- conexão ----------
+  function enviar(msg) { if (ws && ws.readyState === 1) { ws.send(JSON.stringify(msg)); return true; } toast('Sem conexão com o servidor'); return false; }
+  function conectar() {
+    if (PREVIA_ARQUIVO) { $('aviso-previa').hidden = false; $('conexao-txt').textContent = 'Prévia'; return; }
+    ws = new WebSocket(SERVIDOR.replace(/^http/, 'ws') + 'ws');
+    let retry = conectar.retry || 1000;
+    ws.onopen = () => { conectar.retry = 1000; $('conexao').classList.add('on'); $('conexao-txt').textContent = 'Conectado'; enviar({ type: 'hello-panel' }); pedirPrevia(); };
+    ws.onclose = () => { $('conexao').classList.remove('on'); $('conexao-txt').textContent = 'Reconectando'; setTimeout(conectar, retry); conectar.retry = Math.min(retry * 2, 10000); };
+    ws.onerror = () => { try { ws.close(); } catch (e) {} };
+    ws.onmessage = e => {
+      ultimaMsg = Date.now();
+      try {
+        const m = JSON.parse(e.data);
+        if (m.type === 'versao') { if (versaoServidor && versaoServidor !== m.v) location.reload(); versaoServidor = m.v; }
+        else if (m.type === 'estado') { estado = m; render(); }
+        else if (m.type === 'tvs') { telas = m.tvs || []; render(); }
+        else if (m.type === 'visuais') Visuais.remoto(m);
+        else if (m.type === 'zonas') mostrarSomDoAndar();
+        else if (m.type === 'programacao') Programacao.estado(m);
+        else if (m.type === 'balcao-previa') desenharPrevia(m);
+        else if (m.type === 'radio') { radio = m; mostrarRadio(); }
+        else if (m.type === 'radio-pulou') { pulando = false; toast(m.ok ? 'Música pulada' : m.erro); mostrarRadio(); }
+        else if (m.type === 'cenas-mudaram') carregar('cenas-tv.json', 'tvs');
+        else if (m.type === 'animacoes-mudaram') { carregar('animacoes-balcoes.json', 'balcoes'); carregar('animacoes-barras.json', 'barras'); }
+      } catch (err) { console.error(err); }
+    };
+  }
+  function pedirPrevia() { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'balcao-previa', ligado: !document.hidden })); }
+  // Vigia da conexão: o celular que volta do fundo pode estar com uma conexão morta sem saber, e aí não recebe o
+  // que os outros mudam. Sem resposta, reconecta; ao reconectar o servidor manda tudo de novo.
+  let ultimaMsg = 0;
+  function religar() {
+    if (ws) { ws.onclose = ws.onerror = ws.onmessage = null; try { ws.close(); } catch (e) {} }
+    $('conexao').classList.remove('on'); $('conexao-txt').textContent = 'Reconectando';
+    conectar.retry = 1000;
+    conectar();
+  }
+  function vigiar() {
+    if (PREVIA_ARQUIVO || document.hidden || !ws || ws.readyState !== 1) return;
+    if (Date.now() - ultimaMsg > 5000) return religar();
+    ws.send(JSON.stringify({ type: 'ping', t0: Date.now() }));
+  }
+  setInterval(vigiar, 2500);
+  function conferirConexao() {
+    if (PREVIA_ARQUIVO || document.hidden || !ws || ws.readyState !== 1) return;
+    const pediuEm = Date.now();
+    ws.send(JSON.stringify({ type: 'ping', t0: pediuEm }));
+    setTimeout(() => { if (ws && ws.readyState === 1 && ultimaMsg < pediuEm) religar(); }, 1500);
+  }
+  document.addEventListener('visibilitychange', () => { pedirPrevia(); if (!document.hidden) { tocarVideos(); conferirConexao(); } });
+  window.addEventListener('pageshow', conferirConexao);
+  window.addEventListener('online', conferirConexao);
+
+  function carregar(arquivo, chave) {
+    fetch(SERVIDOR + arquivo, { cache: 'no-store' }).then(r => r.json()).then(l => { listas[chave] = l; montadas = ''; render(); }).catch(() => {});
+  }
+  carregar('cenas.json', 'led'); carregar('cenas-tv.json', 'tvs');
+  carregar('animacoes-balcoes.json', 'balcoes'); carregar('animacoes-barras.json', 'barras');
+  carregar('cenas-gerador.json', 'gerador');
+
+  // ---------- aviso rápido ----------
+  let toastT;
+  function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 1800); }
+
+  // ---------- Vinhetas da rádio: botão, especiais, aprovação e programação ----------
+  (() => {
+    const ROTULOS = { especial: 'Especiais', hora: 'Horas', clima: 'Clima', manha: 'Manhã', tarde: 'Tarde', noite: 'Noite', madrugada: 'Madrugada', geral: 'Gerais' };
+    const STATUS = { 'na-fila': 'Na fila', gerando: 'Gerando, leva de 30 segundos a 5 minutos' };
+    const cache = {};
+    let dados = null;
+    let audio = null;
+    let tocandoArq = null;
+
+    const criar = (tag, props, ...filhos) => { const e = Object.assign(document.createElement(tag), props || {}); e.append(...filhos); return e; };
+    const botao = (texto, aoClicar) => criar('button', { className: 'bt-andar', textContent: texto, onclick: aoClicar });
+
+    async function post(rota, corpo) {
+      try {
+        const r = await fetch('/api/vinhetas/' + rota, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corpo || {}) });
+        return await r.json();
+      } catch { return { ok: false, erro: 'Sem conexão com o servidor' }; }
+    }
+
+    async function carregar() {
+      try { dados = await (await fetch('/api/vinhetas', { cache: 'no-store' })).json(); mostrar(); } catch { /* tenta no próximo ciclo */ }
+    }
+
+    // Só refaz a parte que mudou: não fecha um formulário aberto nem interrompe quem está lendo.
+    function seMudou(nome, valor, desenhar) {
+      const chave = JSON.stringify(valor);
+      if (cache[nome] === chave) return;
+      cache[nome] = chave;
+      desenhar();
+    }
+
+    function ouvir(arquivo, bt) {
+      if (audio) audio.pause();
+      if (tocandoArq === arquivo) { tocandoArq = null; bt.textContent = 'Ouvir'; return; }
+      document.querySelectorAll('.vin [data-ouvindo]').forEach(b => { b.textContent = 'Ouvir'; delete b.dataset.ouvindo; });
+      audio = new Audio('/vinhetas-audio/' + encodeURIComponent(arquivo));
+      tocandoArq = arquivo;
+      bt.textContent = 'Parar';
+      bt.dataset.ouvindo = '1';
+      audio.onended = audio.onerror = () => { tocandoArq = null; bt.textContent = 'Ouvir'; delete bt.dataset.ouvindo; };
+      audio.play().catch(() => toast('Não consegui tocar aqui'));
+    }
+
+    function agir(promessa, sucesso) {
+      promessa.then(r => { toast(r.ok ? sucesso : r.erro); if (r.ok) carregar(); });
+    }
+
+    function noAr(id) {
+      vibrar();
+      post('tocar', id ? { id } : {}).then(r => { toast(r.ok ? 'No ar' : r.erro); carregar(); });
+    }
+
+    function formularioProgramar(item, area) {
+      if (area.firstChild) { area.replaceChildren(); return; }
+      const data = criar('input', { type: 'datetime-local' });
+      const repetir = criar('select', {}, criar('option', { value: 'nao', textContent: 'Uma vez' }), criar('option', { value: 'diario', textContent: 'Todo dia' }));
+      area.append(criar('div', { className: 'vin-acoes', style: 'margin-top:8px' }, data, repetir, botao('Salvar', () => {
+        if (!data.value) return toast('Escolha dia e hora');
+        agir(post('agendar', { id: item.id, quando: new Date(data.value).toISOString(), repetir: repetir.value }), 'Programada');
+        area.replaceChildren();
+      })));
+    }
+
+    function desenharProducao(itens) {
+      $('vin-producao').replaceChildren(...itens.map(i => criar('div', { className: 'vin-item' },
+        criar('p', { textContent: i.texto }),
+        criar('span', { className: 'vin-status', textContent: i.status === 'erro' ? 'Não saiu: ' + i.erro : STATUS[i.status] }))));
+    }
+
+    function desenharOuvir(itens) {
+      if (!itens.length) { $('vin-ouvir').replaceChildren(criar('span', { className: 'vin-status', textContent: 'Nada esperando.' })); return; }
+      $('vin-ouvir').replaceChildren(...itens.map(i => criar('div', { className: 'vin-item' },
+        criar('p', { textContent: i.texto }),
+        ...i.tomadas.map((t, n) => criar('div', { className: 'vin-acoes', style: 'margin-bottom:6px' },
+          criar('span', { className: 'vin-status', textContent: 'Versão ' + (n + 1) }),
+          (() => { const b = botao('Ouvir', () => ouvir(t.arquivo, b)); return b; })(),
+          botao('Aprovar', () => agir(post('aprovar', { id: i.id, tomada: n }), 'Aprovada')))),
+        criar('div', { className: 'vin-acoes' }, botao('Descartar', () => agir(post('descartar', { id: i.id }), 'Descartada'))))));
+    }
+
+    function desenharAgendadas(lista, porId) {
+      if (!lista.length) { $('vin-agendadas').replaceChildren(criar('span', { className: 'vin-status', textContent: 'Nada programado.' })); return; }
+      $('vin-agendadas').replaceChildren(...lista.map(a => criar('div', { className: 'vin-item' },
+        criar('p', { textContent: porId[a.vinheta] ? porId[a.vinheta].texto : a.vinheta }),
+        criar('div', { className: 'vin-acoes' },
+          criar('span', { className: 'vin-status', textContent: new Date(a.quando).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) + (a.repetir === 'diario' ? ' · todo dia' : '') }),
+          botao('Cancelar', () => agir(post('desagendar', { id: a.id }), 'Cancelada'))))));
+    }
+
+    function desenharFiltro(contagem) {
+      const sel = $('vin-filtro');
+      const atual = sel.value;
+      sel.replaceChildren(...Object.keys(ROTULOS).filter(c => contagem[c]).map(c => criar('option', { value: c, textContent: `${ROTULOS[c]} (${contagem[c]})` })));
+      if (atual && contagem[atual]) sel.value = atual;
+      sel.hidden = !sel.options.length;
+    }
+
+    function desenharAprovadas(itens) {
+      const cat = $('vin-filtro').value;
+      const lista = itens.filter(i => i.categoria === cat);
+      if (!lista.length) { $('vin-aprovadas').replaceChildren(criar('span', { className: 'vin-status', textContent: 'Nenhuma aprovada ainda.' })); return; }
+      $('vin-aprovadas').replaceChildren(...lista.map(i => {
+        const area = criar('div');
+        const b = botao('Ouvir', () => ouvir(i.tomadas[i.escolhida].arquivo, b));
+        return criar('div', { className: 'vin-item' }, criar('p', { textContent: i.texto }),
+          criar('div', { className: 'vin-acoes' }, botao('No ar', () => noAr(i.id)), b,
+            botao('Programar', () => formularioProgramar(i, area)),
+            botao('Tirar', () => agir(post('descartar', { id: i.id }), 'Removida'))), area);
+      }));
+    }
+
+    function mostrar() {
+      $('vin').hidden = false;
+      const itens = dados.itens;
+      const porId = Object.fromEntries(itens.map(i => [i.id, i]));
+      const aprovadas = itens.filter(i => i.status === 'aprovada');
+      const h = new Date().getHours();
+      const periodo = h >= 6 && h < 12 ? 'manha' : h >= 12 && h < 18 ? 'tarde' : h >= 18 ? 'noite' : 'madrugada';
+      const prontas = aprovadas.filter(i => i.categoria === periodo || i.categoria === 'geral').length;
+      $('vin-botao').disabled = !prontas || dados.ocupadoSeg > 0;
+      $('vin-nota').textContent = dados.ocupadoSeg > 0 ? `Fala no ar, mais ${dados.ocupadoSeg} s`
+        : prontas ? `${prontas} prontas para ${ROTULOS[periodo].toLowerCase()}. Abaixa a música e entra na hora.`
+        : 'Nenhuma vinheta aprovada para este horário.';
+      $('vin-limite').textContent = `${dados.especiaisHoje} de ${dados.limiteEspeciais} hoje`;
+
+      const producao = itens.filter(i => ['na-fila', 'gerando', 'erro'].includes(i.status));
+      seMudou('producao', producao.map(i => [i.id, i.status, i.erro]), () => desenharProducao(producao));
+      const ouvirLista = itens.filter(i => i.status === 'ouvir');
+      seMudou('ouvir', ouvirLista.map(i => [i.id, i.tomadas.length]), () => desenharOuvir(ouvirLista));
+      seMudou('agendadas', dados.agendadas, () => desenharAgendadas(dados.agendadas, porId));
+      const contagem = {};
+      aprovadas.forEach(i => { contagem[i.categoria] = (contagem[i.categoria] || 0) + 1; });
+      seMudou('filtro', contagem, () => desenharFiltro(contagem));
+      seMudou('aprovadas', [$('vin-filtro').value, aprovadas.map(i => [i.id, i.escolhida])], () => desenharAprovadas(aprovadas));
+
+      const p = dados.programacao;
+      if (document.activeElement !== $('vin-musicas')) $('vin-musicas').value = p.musicasEntreFalas;
+      if (document.activeElement !== $('vin-clima')) $('vin-clima').value = p.minutosEntreClimas;
+      $('vin-ativo').checked = p.ativo;
+      $('vin-horas').checked = p.horas;
+    }
+
+    $('vin-botao').onclick = () => noAr();
+    $('vin-gerar').onclick = () => {
+      const texto = $('vin-texto').value.trim();
+      if (!texto) return toast('Escreva o texto da vinheta');
+      if (!confirm('Gerar esta vinheta? Custa US$ 0,10 e pode levar até 5 minutos.')) return;
+      post('especial', { texto }).then(r => {
+        toast(r.ok ? 'Gerando. Depois é só ouvir e aprovar.' : r.erro);
+        if (r.ok) { $('vin-texto').value = ''; carregar(); }
+      });
+    };
+    $('vin-filtro').onchange = () => { delete cache.aprovadas; if (dados) mostrar(); };
+    const salvarProgramacao = campo => { agir(post('programacao', campo), 'Programação salva'); };
+    $('vin-ativo').onchange = e => salvarProgramacao({ ativo: e.target.checked });
+    $('vin-horas').onchange = e => salvarProgramacao({ horas: e.target.checked });
+    $('vin-musicas').onchange = e => salvarProgramacao({ musicasEntreFalas: Number(e.target.value) });
+    $('vin-clima').onchange = e => salvarProgramacao({ minutosEntreClimas: Number(e.target.value) });
+
+    carregar();
+    setInterval(() => { if (!document.hidden && !$('tela-radio').hidden) carregar(); }, 5000);
+    window.addEventListener('hashchange', () => { if (location.hash === '#/radio') carregar(); });
+  })();
+
+  // ---------- Rádio CLUBE: o que está tocando + Pular ----------
+  // O servidor manda { online, id, titulo, artista } quando muda; o pulo leva o id que estava na tela,
+  // assim dois toques ao mesmo tempo (ou um toque atrasado) não pulam a música seguinte.
+  let radio = null, pulando = false;
+  function mostrarRadio() {
+    $('radio').hidden = !radio;
+    if (!radio) return;
+    $('radio-titulo').textContent = radio.online ? (radio.titulo || 'Tocando') : 'Rádio fora do ar';
+    $('radio-artista').textContent = radio.online ? (radio.artista || '') : '';
+    $('radio-pular').disabled = pulando || !radio.online || !radio.id;
+    $('radio-pular').textContent = pulando ? 'Pulando…' : 'Pular ⏭';
+  }
+  $('radio-pular').onclick = () => {
+    if (!radio || !radio.id || pulando) return;
+    vibrar();
+    if (enviar({ type: 'radio-pular', expectId: radio.id })) { pulando = true; mostrarRadio(); }
+  };
+
+  // ---------- navegação (voltar do celular funciona) ----------
+  let zonaAberta = null, aba = null;
+  const PC = window.matchMedia('(min-width: 980px)');
+  PC.addEventListener('change', () => rota());
+  function mostrarSecao() {
+    document.body.dataset.secao = secao;
+    guardar('clube-secao', secao);
+    document.querySelectorAll('#nav-app a').forEach(a => {
+      const aqui = a.dataset.andar ? secao === 'andar' && a.dataset.andar === andar : a.dataset.secao === secao;
+      if (aqui) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    $('tela-musica').hidden = secao !== 'musica';
+    $('tela-radio').hidden = secao !== 'radio';
+    Visuais.mostrarNoAndar(secao === 'andar' && andar === '5');
+    Projecoes.mostrarNoAndar(false);
+    Projecao.mostrarNoAndar(secao === 'andar' && andar === '5');
+    mostrarSomDoAndar();
+    // A Música só carrega quando alguém abre e continua viva depois: quem está ouvindo não para ao trocar de seção.
+    if (secao === 'musica' && !$('musica-quadro').src) $('musica-quadro').src = SERVIDOR + 'musica/';
+  }
+  // Cartão "Música do andar": o que toca aqui e o caminho para trocar. Rooftop fica na mesma tela.
+  async function mostrarSomDoAndar() {
+    const cartao = $('som-cartao');
+    cartao.hidden = secao !== 'andar';
+    if (cartao.hidden) return;
+    const lugarAqui = andar;
+    $('som-cartao-t').textContent = 'Música do ' + lugarAqui + 'º andar';
+    $('som-cartao-bt').href = SERVIDOR + 'musica-andares.html#' + lugarAqui;
+    try {
+      if (lugarAqui === '5') {
+        const c = await (await fetch(SERVIDOR + 'musica/api/caixa')).json();
+        if (andar !== lugarAqui) return;
+        $('som-cartao-s').textContent = !c.caixaAberta ? 'Janela de som fechada neste PC' : c.modo === 'player' && c.faixa ? c.faixa.titulo : 'Rádio CLUBE';
+      } else {
+        const z = (await (await fetch(SERVIDOR + 'api/zonas')).json()).lugares[lugarAqui];
+        if (andar !== lugarAqui) return;
+        $('som-cartao-s').textContent = !z.aparelhos ? 'Nenhum aparelho conectado' : z.faixa ? z.faixa.titulo : z.modo === 'radio' ? 'Rádio CLUBE' : 'Sem música';
+      }
+    } catch { $('som-cartao-s').textContent = ''; }
+  }
+  setInterval(() => { if (!document.hidden) mostrarSomDoAndar(); }, 10000);
+  function rota() {
+    const m = /^#\/z\/(.+)$/.exec(location.hash);
+    const pedida = /^#\/(musica|radio)$/.exec(location.hash);
+    const pedidoAndar = /^#\/andar\/(\d)$/.exec(location.hash);
+    zonaAberta = m ? decodeURIComponent(m[1]) : null;
+    const zAberta = zonaAberta && zonaPorId(zonaAberta);
+    if (pedida) secao = pedida[1];
+    else if (pedidoAndar) { secao = 'andar'; andar = pedidoAndar[1]; guardar('clube-andar', andar); }
+    else if (zAberta) { secao = 'andar'; andar = zAberta.andar; }
+    else if (location.hash === '#/programacao') secao = 'andar';
+    else if (location.hash === '#/visuais' || location.hash === '#/projecoes') { secao = 'andar'; andar = '5'; }
+    else if (/^#\/(luzes|balcoes|telas)$/.test(location.hash)) secao = 'andar'; // endereços da organização antiga
+    // No PC a tela da direita nunca fica vazia: no 5º ela abre nos visuais.
+    if (PC.matches && secao === 'andar' && andar === '5' && !zonaAberta && (pedidoAndar || !location.hash)) history.replaceState(null, '', '#/visuais');
+    mostrarSecao();
+    const emProg = Programacao.rota(), emVisuais = Visuais.rota(), emProjecoes = Projecoes.rota();
+    if (emProg || emVisuais || emProjecoes) {
+      zonaAberta = null; montadas = ''; aba = null;
+      if (PC.matches) { renderInicio(); Object.keys(cartoes).forEach(id => cartoes[id].el.classList.remove('sel')); }
+      return;
+    }
+    if (!temAparelhos()) {
+      $('inicio').hidden = true; $('detalhe').hidden = true; $('bt-voltar').hidden = true;
+      $('titulo').className = 'marca'; $('titulo').textContent = 'CLUBE';
+      montadas = ''; aba = null;
+      window.scrollTo(0, 0);
+      return;
+    }
+    // No PC não há tela de início separada: se nada estiver aberto, abre o 1º aparelho da seção.
+    if (PC.matches && !zonaAberta) { const z0 = zonasDaSecao()[0]; if (z0) { history.replaceState(null, '', '#/z/' + encodeURIComponent(z0.id)); zonaAberta = z0.id; } }
+    $('inicio').hidden = !!zonaAberta; $('detalhe').hidden = !zonaAberta; $('bt-voltar').hidden = !zonaAberta;
+    $('titulo').className = zonaAberta && !PC.matches ? 'titulo-det' : 'marca';
+    if (!zonaAberta || PC.matches) $('titulo').textContent = 'CLUBE';
+    if (PC.matches) $('bt-voltar').hidden = true;
+    montadas = ''; aba = null;
+    render();
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', rota);
+  $('bt-voltar').onclick = () => { if (history.length > 1) history.back(); else location.hash = ''; };
+  const abrir = zid => { vibrar(); if (PC.matches) { history.replaceState(null, '', '#/z/' + encodeURIComponent(zid)); rota(); } else location.hash = '#/z/' + encodeURIComponent(zid); };
+  document.querySelectorAll('#nav-app a').forEach(a => a.addEventListener('click', vibrar));
+
+  // ---------- slider estilo Hue ----------
+  // valor 0–100; onChange é chamado com ~12 envios/s enquanto arrasta.
+  function criarSlider(opts) {
+    const el = document.createElement('div');
+    el.className = 'slider' + (opts.grande ? ' grande' : '');
+    el.innerHTML = '<div class="nivel"></div><div class="rot"><span class="a"></span><span class="b"></span></div>';
+    let valor = opts.valor, arrastando = false, ultimo = 0, pend = null, soltouEm = 0;
+    const pintar = () => {
+      el.querySelector('.nivel').style.width = valor + '%';
+      el.querySelector('.a').textContent = opts.rotulo || 'Brilho';
+      el.querySelector('.b').textContent = opts.texto ? opts.texto(valor) : valor + '%';
+    };
+    const enviarJa = () => { pend = null; ultimo = Date.now(); opts.onChange(valor); };
+    const mover = x => {
+      const r = el.getBoundingClientRect();
+      valor = Math.max(0, Math.min(100, Math.round((x - r.left) / r.width * 100)));
+      pintar();
+      clearTimeout(pend);
+      const espera = 80 - (Date.now() - ultimo);
+      if (espera <= 0) enviarJa(); else pend = setTimeout(enviarJa, espera);
+    };
+    el.addEventListener('pointerdown', e => { arrastando = true; el.setPointerCapture(e.pointerId); mover(e.clientX); e.stopPropagation(); });
+    el.addEventListener('pointermove', e => { if (arrastando) mover(e.clientX); });
+    const soltar = () => { if (!arrastando) return; arrastando = false; soltouEm = Date.now(); clearTimeout(pend); enviarJa(); };
+    el.addEventListener('pointerup', soltar); el.addEventListener('pointercancel', soltar);
+    el.addEventListener('click', e => e.stopPropagation());
+    el.definir = v => { if (!arrastando && v != null && Date.now() - soltouEm > 400) { valor = v; pintar(); } };
+    pintar();
+    return el;
+  }
+  const textoBrilho = z => v => { const f = fitaDe(z); return f && f.limite < 1 ? `${v}% · ${Math.round(v * f.limite)}% real` : v + '%'; };
+  const mudarBrilho = z => v => enviar({ type: 'brilho', andar: z.andar, grupo: z.grupo, valor: v });
+
+  // ---------- liga/desliga ----------
+  // Fitas: liga/desliga a saída Art-Net. Telas: apaga (cena "Apagar") ou volta à última cena.
+  const confirmando = {};
+  function alternar(z, chave) {
+    vibrar();
+    const f = fitaDe(z);
+    if (f) {
+      if (!f.saida && !confirmando[z.id]) { // ligar a saída pede um 2º toque (evita ligar sem querer)
+        confirmando[z.id] = true; chave.classList.add('confirmar'); toast('Toque de novo para ligar as fitas');
+        setTimeout(() => { confirmando[z.id] = false; chave.classList.remove('confirmar'); }, 3000);
+        return;
+      }
+      confirmando[z.id] = false;
+      enviar({ type: 'balcao-saida', id: f.id, ligada: !f.saida });
+      toast(f.saida ? z.nome + ' desligada' : z.nome + ' ligada');
+      return;
+    }
+    if (ligado(z)) { guardar('clube-ultima-' + z.id, z.cena === 'sequencia' ? 'seq:' + (z.sequencia || []).join(',') : z.cena); enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'apagar' }); toast(z.nome + ' apagada'); }
+    else {
+      const lista = listas[listaDe(z)] || [];
+      const volta = ler('clube-ultima-' + z.id);
+      if (volta && volta.indexOf('seq:') === 0) { // volta a sequência que estava no ar
+        enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'sequencia', sequencia: volta.slice(4).split(',') }); toast(z.nome + ': sequência'); return;
+      }
+      const c = lista.find(c => c.id === volta && !c.apagar) || lista.find(c => !c.apagar);
+      if (c) { enviar({ type: 'cena', andar: z.andar, zona: z.id, id: c.id }); toast(z.nome + ': ' + c.nome); }
+    }
+  }
+
+  // ---------- prévias ----------
+  function previaHtml(z) {
+    if (z.tipo === 'fita') return '<canvas></canvas>';
+    if (z.prog && z.prog.ativa) return `<i class="prog-previa" style="background:linear-gradient(90deg,${z.prog.cores.join(',')})"></i>`;
+    const c = cenaAtual(z);
+    return c && c.thumb ? `<img src="${esc(c.thumb)}" alt="">` : '';
+  }
+  function desenharPrevia(m) {
+    previas[m.id] = m;
+    document.querySelectorAll(`[data-previa="${m.id}"] canvas`).forEach(cv => {
+      if (cv.width !== m.colunas || cv.height !== m.linhas) { cv.width = m.colunas; cv.height = m.linhas; }
+      const ctx = cv.getContext('2d'), bin = atob(m.px), img = ctx.createImageData(m.colunas, m.linhas);
+      for (let i = 0, j = 0; i < bin.length; i += 3, j += 4) { img.data[j] = bin.charCodeAt(i); img.data[j + 1] = bin.charCodeAt(i + 1); img.data[j + 2] = bin.charCodeAt(i + 2); img.data[j + 3] = 255; }
+      ctx.putImageData(img, 0, 0);
+    });
+  }
+
+  // Quem controla as fitas do andar: o app ou o MadMapper. No MadMapper, o app continua aqui
+  // (dá para preparar as cenas), mas não manda nada para as controladoras — sem conflito.
+  let confirmandoAndar = false;
+  function montarAvisoAndar() {
+    const ext = (estado.andares[andar] || {}).externo;
+    const mostrar = !!ext || andar === '5';
+    $('aviso-andar').hidden = !mostrar;
+    if (!mostrar) return;
+    $('aviso-andar').classList.toggle('externo', !!ext);
+    $('aviso-andar-t').textContent = ext ? 'Fitas deste andar no MadMapper' : 'Fitas deste andar no app';
+    $('aviso-andar-s').textContent = ext ? `O app não manda nada para a bancada e as barras (está no ${ext}). As escolhas daqui ficam guardadas.`
+      : 'O app está mandando para a bancada e as barras. Se abrir o MadMapper com elas, passe para ele.';
+    // luz presa: a controladora guarda o último quadro se ninguém mandar outro
+    $('aviso-andar-apagar').hidden = !ext;
+    $('aviso-andar-apagar').onclick = () => { vibrar(); enviar({ type: 'balcao-apagar', andar }); toast('Fitas do andar apagadas'); };
+    const bt = $('aviso-andar-bt');
+    if (!confirmandoAndar) { bt.textContent = ext ? 'Usar o app' : 'Passar p/ MadMapper'; bt.classList.remove('confirmar'); }
+    bt.onclick = () => {
+      if (!confirmandoAndar) { // dois toques: a troca muda o que as fitas mostram na hora
+        confirmandoAndar = true; bt.textContent = 'Confirmar?'; bt.classList.add('confirmar'); vibrar();
+        setTimeout(() => { confirmandoAndar = false; montarAvisoAndar(); }, 3000);
+        return;
+      }
+      confirmandoAndar = false; vibrar();
+      enviar({ type: 'andar-externo', andar, nome: ext ? null : 'MadMapper e no Resolume' });
+      toast(ext ? 'App no comando das fitas do andar — feche as fitas no MadMapper' : 'Fitas do andar passadas para o MadMapper');
+    };
+  }
+
+  // ---------- LISTA DE APARELHOS DO ANDAR ESCOLHIDO ----------
+  function renderInicio() {
+    const zs = zonasDaSecao();
+    // remove cartões que não são desta seção neste andar
+    Object.keys(cartoes).forEach(id => { if (!zs.some(z => z.id === id)) { cartoes[id].el.remove(); delete cartoes[id]; } });
+    montarAvisoAndar();
+    $('inicio-vazio').hidden = zs.length > 0;
+    $('inicio-vazio').textContent = (estado.zonas || []).length ? 'Nada neste andar.' : 'Carregando…';
+    zs.forEach(z => {
+      let c = cartoes[z.id];
+      if (!c) {
+        const el = document.createElement('div');
+        el.className = 'cartao';
+        el.innerHTML = `<div class="tinta"></div>
+          <div class="corpo"><div class="icone">${icone(z)}</div>
+            <div style="min-width:0"><div class="nome"></div><div class="sub"></div></div>
+            <button class="chave" aria-label="Ligar/desligar"></button></div>
+          <div class="previa"></div><div class="brilho"></div>`;
+        const chave = el.querySelector('.chave');
+        chave.onclick = e => { e.stopPropagation(); alternar(zonaPorId(z.id), chave); };
+        el.onclick = () => { if (z.tipo === 'fita') location.href = SERVIDOR + 'estudio.html?z=' + encodeURIComponent(z.id); else if (z.id === 'telas:led:1') location.href = SERVIDOR + 'painel-estudio.html'; else abrir(z.id); };
+        const sl = criarSlider({ valor: brilhoDe(z), texto: textoBrilho(z), onChange: v => mudarBrilho(zonaPorId(z.id))(v) });
+        el.querySelector('.brilho').appendChild(sl);
+        c = cartoes[z.id] = { el, chave, sl, prev: el.querySelector('.previa'), previaChave: '' };
+        $('cartoes').appendChild(el);
+      }
+      const f = fitaDe(z);
+      c.el.querySelector('.nome').textContent = z.nome + (z.qtd > 1 ? ` (${z.qtd})` : '');
+      const online = z.telas ? z.telas.filter(id => (telas.find(t => t.id === id) || {}).online).length : null;
+      c.el.querySelector('.sub').textContent = noAr(z) + (online != null && z.qtd ? ` · ${online}/${z.qtd} online` : '') +
+        (f && f.externo ? ' · no MadMapper' : f && !f.saida ? ' · saída desligada' : '');
+      c.el.querySelector('.tinta').style.background = tinta(z);
+      c.el.classList.toggle('desligado', !ligado(z));
+      c.chave.classList.toggle('on', ligado(z));
+      c.sl.definir(brilhoDe(z));
+      const pk = z.tipo === 'fita' ? 'fita' : z.prog && z.prog.ativa ? 'prog' + z.prog.cores : (cenaAtual(z) || {}).thumb || '';
+      if (pk !== c.previaChave) { c.previaChave = pk; c.prev.innerHTML = previaHtml(z); }
+      c.prev.dataset.previa = f ? f.id : '';
+      c.prev.classList.toggle('vertical', !!(f && f.vertical));
+      c.prev.classList.toggle('retrato', listaDe(z) === 'tvs');
+      if (f && previas[f.id]) desenharPrevia(previas[f.id]);
+    });
+  }
+
+  // ---------- DETALHE ----------
+  let montadas = '', detSlider = null, velSlider = null, escolhaLogo = null;
+  const ABAS = { cenas: 'Cenas', cores: 'Cores', logo: 'Logo', arte: 'Arte', ajustes: 'Ajustes' };
+  function abasDe(z) {
+    const l = ['cenas'];
+    if (z.tipo === 'fita') l.push('cores');
+    // nas TVs só passam as artes fixas; nas barras em pé "logo passando" não faz sentido
+    if (z.grupo !== 'telas' && z.id !== 'fita:barras') l.push('logo');
+    if (z.grupo === 'telas') l.push('arte');
+    if (z.tipo === 'fita') l.push('ajustes');
+    return l;
+  }
+  function renderDetalhe() {
+    const z = zonaPorId(zonaAberta);
+    if (!z) { $('titulo').textContent = 'Aparelho'; return; }
+    const f = fitaDe(z);
+    if (!PC.matches) $('titulo').textContent = z.nome + (z.qtd > 1 ? ` (${z.qtd})` : '');
+    $('det-icone').innerHTML = icone(z);
+    $('det-nome').textContent = noAr(z);
+    const online = z.telas ? z.telas.filter(id => (telas.find(t => t.id === id) || {}).online).length : null;
+    $('det-sub').textContent = f && f.externo ? 'No MadMapper — o app não está mandando para estas fitas'
+      : f ? (f.saida ? 'Saída ligada' : 'Saída desligada') + (f.limite < 1 ? ` · máx. ${Math.round(f.limite * 100)}%` : '')
+      : (online != null ? `${online} de ${z.qtd} online` : '');
+    $('det-tinta').style.background = tinta(z);
+    const chave = $('det-chave');
+    chave.classList.toggle('on', ligado(z));
+    chave.onclick = () => alternar(zonaPorId(z.id), chave);
+    const prev = $('det-previa');
+    const pk = z.id + '|' + (z.tipo === 'fita' ? 'fita' : z.prog && z.prog.ativa ? 'prog' + z.prog.cores : (cenaAtual(z) || {}).thumb || '');
+    if (prev.dataset.chave !== pk) { prev.dataset.chave = pk; prev.innerHTML = previaHtml(z); }
+    prev.dataset.previa = f ? f.id : '';
+    prev.classList.toggle('vertical', !!(f && f.vertical));
+    prev.classList.toggle('retrato', listaDe(z) === 'tvs');
+    if (f && previas[f.id]) desenharPrevia(previas[f.id]);
+    if (!detSlider || detSlider.zona !== z.id) {
+      $('det-brilho').innerHTML = '';
+      detSlider = criarSlider({ grande: true, valor: brilhoDe(z), texto: textoBrilho(z), onChange: v => mudarBrilho(zonaPorId(z.id))(v) });
+      detSlider.zona = z.id;
+      $('det-brilho').appendChild(detSlider);
+    }
+    detSlider.definir(brilhoDe(z));
+
+    // Velocidade (painel de LED): meio = 1×, esquerda até 0,25×, direita até 4×.
+    const naProg = !!(z.prog && z.prog.ativa); // na programação, velocidade/BPM/filtro não mandam nada
+    const temVel = !naProg && (z.grupo === 'led' || z.grupo === 'painel' || z.tipo === 'fita');
+    $('det-bpm').hidden = naProg || !temRitmo(z);
+    if (temRitmo(z)) $('bpm-valor').textContent = String(Math.round((z.bpm || 120) * 10) / 10).replace('.', ',');
+    $('det-velocidade').hidden = !temVel;
+    if (temVel) {
+      const paraVel = v => Math.pow(2, (v - 50) / 25);
+      const paraPos = s => Math.round(50 + 25 * Math.log2(s || 1));
+      if (!velSlider || velSlider.zona !== z.id) {
+        $('det-velocidade').innerHTML = '';
+        velSlider = criarSlider({
+          grande: true, rotulo: 'Velocidade', valor: paraPos(z.velocidade),
+          texto: v => paraVel(v).toFixed(paraVel(v) < 1 ? 2 : 1).replace('.', ',') + '×',
+          onChange: v => { const zz = zonaPorId(zonaAberta); enviar({ type: 'velocidade', andar: zz.andar, zona: zz.id, valor: +paraVel(v).toFixed(3) }); },
+        });
+        velSlider.zona = z.id;
+        $('det-velocidade').appendChild(velSlider);
+      }
+      velSlider.definir(paraPos(z.velocidade));
+    }
+
+    Programacao.bannerZona(z);
+    montarFiltro(z, f);
+    montarAudio(z);
+
+    // abas
+    const abas = abasDe(z);
+    if (!aba || abas.indexOf(aba) < 0) aba = ler('clube-aba-' + listaDe(z)) || 'cenas';
+    if (abas.indexOf(aba) < 0) aba = 'cenas';
+    $('abas').innerHTML = abas.map(a => `<button data-a="${a}" class="${a === aba ? 'on' : ''}">${a === 'cenas' && z.tipo === 'fita' ? 'Animações' : ABAS[a]}</button>`).join('');
+    Array.from($('abas').children).forEach(b => b.onclick = () => { aba = b.dataset.a; guardar('clube-aba-' + listaDe(z), aba); vibrar(); renderDetalhe(); });
+    ['cenas', 'cores', 'logo', 'arte', 'ajustes'].forEach(a => $('aba-' + a).hidden = a !== aba);
+
+    if (aba === 'cenas') montarCenas(z);
+    if (aba === 'cores') montarCores(z);
+    if (aba === 'logo') montarLogo(z);
+    if (aba === 'ajustes') montarAjustes(z, f);
+  }
+
+  // "Cor da saída" das fitas: opacidade e R/G/B (0–100) por cima da animação, como o Group
+  // Settings do MadMapper. Cada barra manda só o próprio canal; o servidor guarda por zona.
+  const CANAIS = [['opacidade', 'Opacidade', ''], ['r', 'R', 'canal-r'], ['g', 'G', 'canal-g'], ['b', 'B', 'canal-b']];
+  let filtroSliders = null;
+  function montarFiltro(z, f) {
+    $('det-filtro').hidden = !f || !!(z.prog && z.prog.ativa);
+    if (!f) return;
+    const fl = { opacidade: 100, r: 100, g: 100, b: 100, ...(z.filtro || {}) };
+    if (!filtroSliders || filtroSliders.zona !== z.id) {
+      $('filtro-sliders').innerHTML = '';
+      filtroSliders = { zona: z.id };
+      for (const [k, rotulo, classe] of CANAIS) {
+        const sl = criarSlider({ rotulo, valor: fl[k], onChange: v => { const zz = zonaPorId(zonaAberta); enviar({ type: 'filtro', andar: zz.andar, zona: zz.id, [k]: v }); } });
+        if (classe) sl.classList.add(classe);
+        filtroSliders[k] = sl;
+        $('filtro-sliders').appendChild(sl);
+      }
+    }
+    $('filtro-zerar').onclick = () => {
+      vibrar(); const zz = zonaPorId(zonaAberta);
+      if (enviar({ type: 'filtro', andar: zz.andar, zona: zz.id, zerar: true })) toast(zz.nome + ': cor da saída zerada');
+    };
+    for (const [k] of CANAIS) filtroSliders[k].definir(fl[k]);
+    const op = fl.opacidade / 100;
+    $('filtro-amostra').style.background = `rgb(${[fl.r, fl.g, fl.b].map(c => Math.round(255 * op * c / 100)).join(',')})`;
+  }
+
+  // Áudio reativo do gerador: chave, sensibilidade e o que ele está ouvindo (status do gerador).
+  let ganhoSlider = null;
+  function montarAudio(z) {
+    const ger = listaDe(z) === 'gerador';
+    $('det-audio').hidden = !ger;
+    if (!ger) return;
+    const au = z.audio || {};
+    $('chave-audio').classList.toggle('on', !!au.ligado);
+    $('chave-audio').onclick = () => {
+      vibrar(); enviar({ type: 'audio', andar: z.andar, zona: z.id, ligado: !au.ligado });
+      toast(au.ligado ? 'Áudio reativo desligado' : 'Áudio reativo ligado');
+    };
+    const tela = telas.find(t => (z.telas || []).indexOf(t.id) >= 0 && t.online);
+    const st = tela && tela.aparelhos && tela.aparelhos[0] && tela.aparelhos[0].status;
+    const a = st && st.audio;
+    $('audio-info').textContent = !au.ligado ? 'Reage à música que entra no som do PC'
+      : !a ? 'Ligando…'
+      : a.estado !== 'ouvindo' ? a.estado
+      : a.comandando ? `Ouvindo · ${String(a.bpm).replace('.', ',')} BPM, na batida da música`
+      : a.bpm ? `Ouvindo · achando a batida (${Math.round(a.bpm)} BPM?)` : `Ouvindo · volume ${a.nivel}%`;
+    const paraGanho = v => Math.pow(2, (v - 50) / 25), paraPos = g => Math.round(50 + 25 * Math.log2(g || 1));
+    if (!ganhoSlider || ganhoSlider.zona !== z.id) {
+      $('audio-ganho').innerHTML = '';
+      ganhoSlider = criarSlider({
+        grande: true, rotulo: 'Sensibilidade', valor: paraPos(au.ganho),
+        texto: v => paraGanho(v).toFixed(paraGanho(v) < 1 ? 2 : 1).replace('.', ',') + '×',
+        onChange: v => { const zz = zonaPorId(zonaAberta); enviar({ type: 'audio', andar: zz.andar, zona: zz.id, ganho: +paraGanho(v).toFixed(3) }); },
+      });
+      ganhoSlider.zona = z.id;
+      $('audio-ganho').appendChild(ganhoSlider);
+    }
+    ganhoSlider.definir(paraPos(au.ganho));
+  }
+
+  // cenas
+  // Categorias das animações das fitas: Calmas · Normais · Pista (lembra a última por aparelho).
+  const CATS = { calma: 'Calmas', normal: 'Normais', pista: 'Pista' };
+  // Paletas da identidade no gerador do painel ("Da cena" = cada cena com a sua).
+  const PALETAS = { '': ['Da cena', 'conic-gradient(#ff4c2c, #009edd, #00ae40, #ffaf32, #ff4c2c)'],
+    vermelho: ['Vermelho', 'linear-gradient(135deg,#ff8564,#ff0016)'], azul: ['Azul', 'linear-gradient(135deg,#54b7dc,#006eaa)'],
+    verde: ['Verde', 'linear-gradient(135deg,#00bd64,#007529)'], prata: ['Prata', 'linear-gradient(135deg,#fff,#5a5a5a)'],
+    ambar: ['Âmbar', 'linear-gradient(135deg,#ffd6a1,#ff7a1a)'] };
+  function montarPaletas(z) {
+    const ok = listaDe(z) === 'gerador';
+    $('paletas').hidden = !ok;
+    if (!ok) return;
+    $('paletas').innerHTML = Object.keys(PALETAS).map(k =>
+      `<button data-p="${k}" class="${(z.paleta || '') === k ? 'on' : ''}"><i style="background:${PALETAS[k][1]}"></i>${PALETAS[k][0]}</button>`).join('');
+    Array.from($('paletas').children).forEach(b => b.onclick = () => {
+      vibrar(); enviar({ type: 'paleta', andar: z.andar, zona: z.id, paleta: b.dataset.p || null });
+      toast('Paleta: ' + PALETAS[b.dataset.p][0]);
+    });
+  }
+  function montarCenas(z) {
+    const temCats = temRitmo(z);
+    montarPaletas(z);
+    // o gerador do painel tem também as cenas feitas para o áudio
+    const cats = listaDe(z) === 'gerador' || z.id === 'fita:barras' ? { ...CATS, audio: 'Áudio' } : CATS;
+    let cat = temCats ? (ler('clube-cat-' + z.id) || 'calma') : '';
+    if (temCats && !cats[cat]) cat = 'calma';
+    $('cats').hidden = !temCats;
+    if (temCats) {
+      $('cats').style.gridTemplateColumns = `repeat(${Object.keys(cats).length}, 1fr)`;
+      $('cats').innerHTML = Object.keys(cats).map(k => `<button data-c="${k}" class="${k === cat ? 'on' : ''}">${cats[k]}</button>`).join('');
+      Array.from($('cats').children).forEach(b => b.onclick = () => { guardar('clube-cat-' + z.id, b.dataset.c); vibrar(); montadas = ''; montarCenas(zonaPorId(zonaAberta)); });
+    }
+    // Barras: atalho para a monitoração do áudio por faixa.
+    let linkAudio = $('link-audio');
+    if (!linkAudio) {
+      linkAudio = document.createElement('a');
+      linkAudio.id = 'link-audio'; linkAudio.href = SERVIDOR + 'audio-barras.html'; linkAudio.textContent = 'Monitorar áudio por faixa';
+      linkAudio.style.cssText = 'display:block;text-align:center;padding:12px;margin:0 0 12px;border:1px solid currentColor;border-radius:10px;color:inherit;text-decoration:none;font-size:14px;opacity:.8';
+      $('cats').after(linkAudio);
+      const linkReage = linkAudio.cloneNode();
+      linkReage.id = 'link-reage'; linkReage.href = SERVIDOR + 'reacoes.html'; linkReage.textContent = 'O que reage a quê';
+      linkAudio.after(linkReage);
+      const linkCriar = linkAudio.cloneNode();
+      linkCriar.id = 'link-criar'; linkCriar.href = SERVIDOR + 'estudio.html?z=fita%3Abarras'; linkCriar.textContent = 'Abrir o Estúdio';
+      linkCriar.style.opacity = '1'; linkCriar.style.fontWeight = '700';
+      linkAudio.before(linkCriar);
+    }
+    linkAudio.style.display = z.id === 'fita:barras' && cat === 'audio' ? 'block' : 'none';
+    $('link-reage').style.display = linkAudio.style.display;
+    $('link-criar').style.display = linkAudio.style.display;
+    // Barras > Áudio: separadas pelo jeito de reagir ao som.
+    const GRUPOS_AUDIO = { auto: 'Automático', minhas: 'Minhas', aceso: 'Sempre acesas', direcao: 'Direções', fogo: 'Fogo', fisica: 'Física', faixa: 'Por faixa', golpe: 'No golpe', batida: 'Na batida', calma: 'Calmas' };
+    const comGrupos = z.id === 'fita:barras' && cat === 'audio';
+    let grupo = ler('clube-grupo-audio');
+    if (!GRUPOS_AUDIO[grupo]) grupo = 'auto';
+    let linhaGrupos = $('grupos-audio');
+    if (!linhaGrupos) {
+      linhaGrupos = document.createElement('div');
+      linhaGrupos.id = 'grupos-audio';
+      linhaGrupos.style.cssText = 'display:flex;gap:6px;overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none';
+      $('cats').after(linhaGrupos);
+    }
+    linhaGrupos.style.display = comGrupos ? 'flex' : 'none';
+    if (comGrupos) {
+      linhaGrupos.innerHTML = Object.keys(GRUPOS_AUDIO).map(k => `<button data-g="${k}" style="flex:none;padding:9px 13px;border-radius:999px;border:1px solid ${k === grupo ? 'currentColor' : 'rgba(255,255,255,.14)'};background:${k === grupo ? 'rgba(255,255,255,.14)' : 'transparent'};color:inherit;font:inherit;font-size:13px;font-weight:600;white-space:nowrap">${GRUPOS_AUDIO[k]}</button>`).join('');
+      Array.from(linhaGrupos.children).forEach(b => b.onclick = () => { guardar('clube-grupo-audio', b.dataset.g); vibrar(); montadas = ''; montarCenas(zonaPorId(zonaAberta)); });
+    }
+    const chave = z.id + '|' + listaDe(z) + '|' + cat + (comGrupos ? '|' + grupo : '');
+    const lista = (listas[listaDe(z)] || null) && listas[listaDe(z)].filter(c => (!c.estudio || c.id === z.cena) && (!temCats || c.apagar || ((c.categoria || 'normal') === cat && (!comGrupos || c.grupo === grupo)))); // peças do Estúdio do painel moram lá; aqui só a que está no ar
+    if (!lista) { $('grade-cenas').innerHTML = '<div class="vazio">Carregando…</div>'; return; }
+    if (montadas !== chave) {
+      montadas = chave;
+      $('grade-cenas').className = 'grade' + (listaDe(z) === 'tvs' || listaDe(z) === 'barras' ? ' retrato' : '');
+      $('grade-cenas').innerHTML = '';
+      lista.forEach(c => {
+        const b = document.createElement('button');
+        b.className = 'cena' + (c.apagar ? ' apagar' : '');
+        b.dataset.id = c.id;
+        b.innerHTML = `<div class="thumb" style="${c.thumb ? `background-image:url('${esc(c.thumb)}')` : ''}"></div><div class="rot">${esc(c.nome)}</div>`;
+        if (c.preview) {
+          const v = document.createElement('video');
+          Object.assign(v, { muted: true, loop: true, autoplay: true, playsInline: true, preload: 'auto', src: c.preview });
+          v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+          if (c.thumb) v.poster = c.thumb;
+          b.querySelector('.thumb').appendChild(v);
+        }
+        if (c.enviada) { // arte enviada: pode apagar (2 toques)
+          const x = document.createElement('span'); x.className = 'x'; x.textContent = 'Excluir';
+          x.onclick = ev => {
+            ev.stopPropagation();
+            if (!x.dataset.ok) { x.dataset.ok = '1'; x.textContent = 'Confirmar?'; setTimeout(() => { delete x.dataset.ok; x.textContent = 'Excluir'; }, 3000); return; }
+            fetch(SERVIDOR + 'api/arte-tv/' + encodeURIComponent(c.id), { method: 'DELETE' }).then(() => toast('Arte excluída'));
+          };
+          b.appendChild(x);
+        }
+        if (c.criada) { // modelo criado aqui: abre de novo no criador
+          const x = document.createElement('span'); x.className = 'x'; x.textContent = 'Editar';
+          x.onclick = ev => { ev.stopPropagation(); location.href = SERVIDOR + 'estudio.html?z=fita%3Abarras&id=' + encodeURIComponent(c.id); };
+          b.appendChild(x);
+        }
+        b.onclick = () => {
+          const zz = zonaPorId(zonaAberta);
+          if (seq.modo && listaDe(zz) === 'tvs') { // escolhendo a sequência: toque marca/desmarca na ordem
+            if (c.apagar) return;
+            vibrar();
+            const k = seq.ids.indexOf(c.id);
+            if (k >= 0) seq.ids.splice(k, 1); else seq.ids.push(c.id);
+            return marcarSeq(zz);
+          }
+          vibrar(); b.classList.add('enviando');
+          if (enviar({ type: 'cena', andar: zz.andar, zona: zz.id, id: c.id })) toast(`${c.nome} → ${zz.nome}`);
+          setTimeout(() => b.classList.remove('enviando'), 600);
+        };
+        $('grade-cenas').appendChild(b);
+      });
+      tocarVideos();
+    }
+    Array.from($('grade-cenas').children).forEach(b => b.classList.toggle('on', b.dataset.id === z.cena && !(z.prog && z.prog.ativa)));
+    marcarSeq(z);
+  }
+
+  // ---------- TVs: vários conteúdos em sequência ----------
+  // "Tocar vários em sequência" → toque nos conteúdos na ordem → "Tocar N em sequência".
+  // O servidor monta uma playlist igual em todas as TVs, em loop (sequencia-tv.js).
+  var seq = { modo: false, ids: [], zona: null };
+  function marcarSeq(z) {
+    let barra = $('barra-seq');
+    if (!barra) {
+      barra = document.createElement('div'); barra.id = 'barra-seq'; barra.className = 'seq-barra';
+      $('grade-cenas').before(barra);
+      const tocar = document.createElement('button'); tocar.id = 'seq-tocar'; tocar.className = 'seq-tocar';
+      $('grade-cenas').after(tocar);
+      tocar.onclick = () => {
+        const zz = zonaPorId(zonaAberta);
+        if (!zz || seq.ids.length < 2) return;
+        vibrar();
+        if (enviar({ type: 'cena', andar: zz.andar, zona: zz.id, id: 'sequencia', sequencia: seq.ids.slice() })) toast(`Sequência de ${seq.ids.length} → ${zz.nome}`);
+        seq.modo = false; marcarSeq(zz);
+      };
+    }
+    const ehTvs = listaDe(z) === 'tvs';
+    if (!ehTvs || seq.zona !== z.id) { seq.modo = false; seq.zona = z.id; }
+    const naSeq = z.cena === 'sequencia' && !(z.prog && z.prog.ativa) ? (z.sequencia || []) : [];
+    barra.style.display = ehTvs ? '' : 'none';
+    $('seq-tocar').style.display = ehTvs && seq.modo ? '' : 'none';
+    $('grade-cenas').classList.toggle('escolhendo', ehTvs && seq.modo);
+    if (ehTvs) {
+      if (!seq.modo) {
+        barra.innerHTML = `<button class="seq-abrir">${naSeq.length ? `Sequência no ar · ${naSeq.length} conteúdos · editar` : 'Tocar vários em sequência'}</button>`;
+        barra.firstChild.onclick = () => { vibrar(); seq.modo = true; seq.ids = naSeq.slice(); marcarSeq(zonaPorId(zonaAberta)); };
+      } else {
+        barra.innerHTML = `<div class="seq-linha"><div class="seq-txt">Toque nos conteúdos na ordem em que vão tocar. Repete do começo no fim.</div>
+          <button class="seq-mini" data-a="limpar">Limpar</button><button class="seq-mini" data-a="sair">Cancelar</button></div>`;
+        barra.querySelector('[data-a=limpar]').onclick = () => { vibrar(); seq.ids = []; marcarSeq(zonaPorId(zonaAberta)); };
+        barra.querySelector('[data-a=sair]').onclick = () => { vibrar(); seq.modo = false; marcarSeq(zonaPorId(zonaAberta)); };
+        const t = $('seq-tocar');
+        t.disabled = seq.ids.length < 2;
+        t.textContent = seq.ids.length < 2 ? 'Escolha pelo menos 2' : `Tocar ${seq.ids.length} em sequência`;
+      }
+    }
+    const ordem = ehTvs && seq.modo ? seq.ids : naSeq;
+    Array.from($('grade-cenas').children).forEach(b => {
+      const k = ordem.indexOf(b.dataset.id);
+      b.classList.toggle('na-seq', k >= 0);
+      let n = b.querySelector('.num');
+      if (k < 0) { if (n) n.remove(); return; }
+      if (!n) { n = document.createElement('span'); n.className = 'num'; (b.querySelector('.thumb') || b).appendChild(n); }
+      n.textContent = k + 1;
+    });
+  }
+  function tocarVideos() { document.querySelectorAll('.cena video').forEach(v => { if (v.paused) v.play().catch(() => {}); }); }
+  document.addEventListener('touchstart', tocarVideos, { passive: true });
+
+  // cores (fitas)
+  const QUENTES = [{ hex: '#ffc465', nome: 'Filamento' }, { hex: '#ffaf32', nome: 'Âmbar' }, { hex: '#ffd6a1', nome: 'Branco quente' }];
+  const PALETA = ['#ffffff', '#ff0000', '#ff3308', '#ff7452', '#00b000', '#00c44a', '#006faf', '#00a0e6', '#00bae3', '#9d9d9d', '#ff00aa'];
+  let respirar = false;
+  function enviarCor(hex) {
+    const z = zonaPorId(zonaAberta); vibrar();
+    if (enviar({ type: 'balcao-cor', andar: z.andar, zona: z.id, cor: hex, respirar })) toast(z.nome + (respirar ? ': cor respirando' : ': cor fixa'));
+  }
+  $('chave-respirar').onclick = () => {
+    const z = zonaPorId(zonaAberta);
+    respirar = !respirar; $('chave-respirar').classList.toggle('on', respirar);
+    if (z && z.cor) enviarCor(z.cor); // já tem cor no ar: aplica na hora
+  };
+  function montarCores(z) {
+    if ($('quentes').dataset.ok !== '1') {
+      $('quentes').dataset.ok = '1';
+      $('quentes').innerHTML = QUENTES.map(q => `<button class="quente" data-cor="${q.hex}" style="background:linear-gradient(160deg,${q.hex},${q.hex}bb)">${q.nome}</button>`).join('');
+      $('bolinhas').innerHTML = PALETA.map(h => `<button class="bolinha" data-cor="${h}" style="background:${h}" aria-label="${h}"></button>`).join('') +
+        '<label class="bolinha arco" aria-label="Outra cor"><input type="color" value="#ffc465"></label>';
+      document.querySelectorAll('#quentes [data-cor], #bolinhas [data-cor]').forEach(b => b.onclick = () => enviarCor(b.dataset.cor));
+      document.querySelector('#bolinhas input').addEventListener('change', e => enviarCor(e.target.value.toLowerCase()));
+    }
+    if (z.cor) respirar = !!z.respirar;
+    $('chave-respirar').classList.toggle('on', respirar);
+    const atual = z.prog && z.prog.ativa ? '' : (z.cor || '').toLowerCase();
+    document.querySelectorAll('#quentes [data-cor], #bolinhas [data-cor]').forEach(b => b.classList.toggle('on', b.dataset.cor === atual));
+  }
+
+  // logo + cor
+  const FUNDOS = ['#000000', '#ffffff', '#ffc465', '#707070', '#ff0000', '#ff3308', '#ff7452', '#007000', '#00b000', '#006faf', '#00a0e6'];
+  const COR_LOGO = { branco: '#fff', preto: '#000', metal: 'linear-gradient(90deg,#6f6f6f,#fff,#9d9d9d,#cfd0d1,#8a8a8a,#e1e2e3,#6f6f6f)' };
+  const claro = h => { const n = parseInt(h.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) > 170; };
+  function montarLogo(z) {
+    if (!escolhaLogo || escolhaLogo.zona !== z.id) {
+      const lc = z.logoCor || {};
+      escolhaLogo = { zona: z.id, fundo: lc.fundo || '#000000', logo: lc.logo || 'branco', marca: lc.marca || 'clube' };
+    }
+    if ($('fundos').dataset.ok !== '1') {
+      $('fundos').dataset.ok = '1';
+      $('fundos').innerHTML = FUNDOS.map(h => `<button class="bolinha" data-cor="${h}" style="background:${h}" aria-label="${h}"></button>`).join('') +
+        '<label class="bolinha arco" aria-label="Outra cor"><input type="color" value="#ff00aa"></label>';
+      const tr = $('logo-trilho'); tr.innerHTML = '<div class="lg"><i></i></div>'.repeat(7);
+      document.querySelectorAll('#fundos [data-cor]').forEach(b => b.onclick = () => {
+        const h = b.dataset.cor, e = escolhaLogo;
+        if (e.fundo !== h && ((claro(h) && e.logo === 'branco') || (!claro(h) && e.logo === 'preto'))) e.logo = claro(h) ? 'preto' : 'branco';
+        e.fundo = h; vibrar(); pintarLogo();
+      });
+      document.querySelector('#fundos input').addEventListener('change', e => { escolhaLogo.fundo = e.target.value.toLowerCase(); pintarLogo(); });
+      document.querySelectorAll('#seg-marca button').forEach(b => b.onclick = () => { escolhaLogo.marca = b.dataset.v; vibrar(); pintarLogo(); });
+      document.querySelectorAll('#seg-logo button').forEach(b => b.onclick = () => { escolhaLogo.logo = b.dataset.v; vibrar(); pintarLogo(); });
+      $('bt-logo').onclick = () => {
+        const zz = zonaPorId(zonaAberta), e = escolhaLogo; vibrar();
+        if (enviar({ type: 'logo', andar: zz.andar, zona: zz.id, fundo: e.fundo, logo: e.logo, marca: e.marca })) toast('Logo no ar em ' + zz.nome);
+      };
+    }
+    pintarLogo();
+  }
+  function pintarLogo() {
+    const e = escolhaLogo;
+    $('logo-previa').style.background = e.fundo;
+    $('logo-previa').classList.toggle('noalto', e.marca === 'noalto');
+    document.querySelectorAll('#logo-trilho i').forEach(i => i.style.background = COR_LOGO[e.logo]);
+    document.querySelectorAll('#fundos [data-cor]').forEach(b => b.classList.toggle('on', b.dataset.cor === e.fundo));
+    document.querySelectorAll('#seg-marca button').forEach(b => b.classList.toggle('on', b.dataset.v === e.marca));
+    document.querySelectorAll('#seg-logo button').forEach(b => b.classList.toggle('on', b.dataset.v === e.logo));
+  }
+
+  // arte (TVs)
+  $('arte-arquivo').addEventListener('change', () => {
+    const f = $('arte-arquivo').files[0];
+    $('arte-nome-arq').textContent = f ? f.name : 'Escolher imagem ou vídeo';
+    if (f && !$('arte-nome').value) $('arte-nome').value = f.name.replace(/\.[^.]+$/, '').slice(0, 40);
+    $('bt-arte').disabled = !f;
+  });
+  $('bt-arte').onclick = () => {
+    const f = $('arte-arquivo').files[0]; if (!f) return;
+    const nome = $('arte-nome').value.trim() || f.name.replace(/\.[^.]+$/, '');
+    const prog = $('arte-prog'), barra = prog.querySelector('i');
+    $('bt-arte').disabled = true; prog.style.display = 'block'; barra.style.width = '0';
+    const x = new XMLHttpRequest();
+    x.open('POST', SERVIDOR + 'api/arte-tv?arquivo=' + encodeURIComponent(f.name) + '&nome=' + encodeURIComponent(nome));
+    x.upload.onprogress = e => { if (e.lengthComputable) barra.style.width = Math.round(e.loaded / e.total * 90) + '%'; $('bt-arte').textContent = 'Enviando…'; };
+    x.upload.onload = () => { $('bt-arte').textContent = 'Preparando para as TVs…'; };
+    x.onload = () => {
+      let r = {}; try { r = JSON.parse(x.responseText); } catch (e) {}
+      barra.style.width = '100%'; setTimeout(() => { prog.style.display = 'none'; }, 600);
+      $('bt-arte').textContent = 'Enviar para as TVs';
+      if (x.status === 200) {
+        toast(`"${nome}" pronta — está em Cenas`);
+        $('arte-arquivo').value = ''; $('arte-nome').value = ''; $('arte-nome-arq').textContent = 'Escolher imagem ou vídeo';
+        carregar('cenas-tv.json', 'tvs'); aba = 'cenas'; guardar('clube-aba-tvs', 'cenas');
+      } else { toast(r.error || 'Não deu certo o envio'); $('bt-arte').disabled = false; }
+    };
+    x.onerror = () => { toast('Falha de conexão no envio'); $('bt-arte').disabled = false; $('bt-arte').textContent = 'Enviar para as TVs'; prog.style.display = 'none'; };
+    x.send(f);
+  };
+
+  // ajustes (fitas)
+  function montarAjustes(z, f) {
+    if (!f) return;
+    const ctrl = Object.keys(f.controladoras).map(ip => `<span class="ponto ${f.controladoras[ip] ? 'on' : ''}"></span>.${ip.split('.').pop()} ${f.controladoras[ip] ? 'respondendo' : 'sem resposta'}`).join(' · ');
+    $('ajustes').innerHTML = `
+      <div class="linha-aj"><div class="t"><b>Saída Art-Net</b><small>${f.saida ? 'Enviando para as fitas' : 'Desligada — as fitas não recebem nada'}</small></div>
+        <button class="chave ${f.saida ? 'on' : ''}" id="aj-saida" aria-label="Saída"></button></div>
+      <div class="linha-aj"><div class="t"><b>Teste de direção</b><small>Um pixel anda do começo ao fim de cada fita (1 min)</small></div>
+        <button class="pill ${f.teste ? 'on' : ''}" id="aj-teste">${f.teste ? 'Parar' : 'Testar'}</button></div>
+      <div class="linha-aj"><div class="t"><b>Controladora</b><small>${ctrl}</small></div></div>
+      ${f.limite < 1 ? `<div class="linha-aj"><div class="t"><b>Limite de potência</b><small>Nunca passa de ${Math.round(f.limite * 100)}% (proteção da fonte)</small></div></div>` : ''}`;
+    $('aj-saida').onclick = () => alternar(z, $('aj-saida'));
+    $('aj-teste').onclick = () => { vibrar(); enviar({ type: 'balcao-teste', id: f.id, ligado: !f.teste }); };
+  }
+
+  // ---------- BPM (animações de pista das fitas) ----------
+  // "Toque no ritmo": toque junto com a batida; a partir do 3º toque o BPM é a média dos
+  // intervalos, e a batida 1 da animação é alinhada com o seu último toque.
+  const toques = [];
+  function enviarBpm(bpm, alinhar) {
+    const z = zonaPorId(zonaAberta); if (!z) return;
+    const msg = { type: 'bpm', andar: z.andar, zona: z.id, bpm };
+    if (alinhar) msg.msDesdeToque = 0;
+    enviar(msg);
+    $('bpm-valor').textContent = String(Math.round(bpm * 10) / 10).replace('.', ',');
+  }
+  $('bpm-menos').onclick = () => { const z = zonaPorId(zonaAberta); vibrar(); enviarBpm(Math.max(40, Math.round((z.bpm || 120) - 1)), false); };
+  $('bpm-mais').onclick = () => { const z = zonaPorId(zonaAberta); vibrar(); enviarBpm(Math.min(220, Math.round((z.bpm || 120) + 1)), false); };
+  $('bpm-toque').addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const agora = performance.now();
+    if (toques.length && agora - toques[toques.length - 1] > 2000) toques.length = 0; // pausa longa = recomeça
+    toques.push(agora); if (toques.length > 8) toques.shift();
+    const bt = $('bpm-toque'); bt.classList.add('batendo'); setTimeout(() => bt.classList.remove('batendo'), 90);
+    if (navigator.vibrate) navigator.vibrate(8);
+    if (toques.length >= 3) {
+      const media = (toques[toques.length - 1] - toques[0]) / (toques.length - 1);
+      enviarBpm(Math.max(40, Math.min(220, 60000 / media)), true);
+      bt.textContent = `${toques.length} toques`;
+      clearTimeout(bt.t); bt.t = setTimeout(() => { bt.textContent = 'Toque no ritmo'; }, 2200);
+    } else bt.textContent = toques.length === 1 ? 'Continue…' : 'Mais um…';
+  });
+
+  Programacao.iniciar({ enviar, toast, vibrar, criarSlider, SERVIDOR, PC });
+  Visuais.iniciar({ toast, vibrar, criarSlider, SERVIDOR, PC });
+  Projecoes.iniciar({ toast, vibrar, SERVIDOR, PC });
+
+  // ---------- render geral ----------
+  function render() {
+    // Aparelho aberto por link: o andar dele só é conhecido quando o estado chega.
+    const zAberta = zonaAberta && zonaPorId(zonaAberta);
+    if (zAberta && (secao !== 'andar' || andar !== zAberta.andar)) { secao = 'andar'; andar = zAberta.andar; mostrarSecao(); }
+    if (Programacao.ativa() || Visuais.ativa() || Projecoes.ativa()) { if (PC.matches) renderInicio(); return; }
+    if (!temAparelhos()) return;
+    if (PC.matches) {
+      if (!zonaAberta && zonasDaSecao()[0]) return rota(); // chegou o estado: abre o 1º aparelho
+      renderInicio(); if (zonaAberta) renderDetalhe();
+      Object.keys(cartoes).forEach(id => cartoes[id].el.classList.toggle('sel', id === zonaAberta));
+      return;
+    }
+    if (zonaAberta) renderDetalhe(); else renderInicio();
+  }
+
+  rota();
+  conectar();
+})();
+</script>
+</body>
+</html>

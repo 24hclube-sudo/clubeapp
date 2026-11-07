@@ -91,6 +91,7 @@ async function gerar(lista, inst) {
 }
 
 (async () => {
-  if (!process.env.PREVIA_ID) await gerar('animacoes-balcoes.json', INSTALACOES.find(i => i.id === 'terreo'));
-  await gerar('animacoes-barras.json', INSTALACOES.find(i => i.id === 'barras'));
+  const uma = !!process.env.PREVIA_ID, qual = process.env.PREVIA_LISTA;
+  if (!uma || qual === 'balcoes') await gerar('animacoes-balcoes.json', INSTALACOES.find(i => i.id === 'terreo'));
+  if (!uma || qual !== 'balcoes') await gerar('animacoes-barras.json', INSTALACOES.find(i => i.id === 'barras'));
 })();

@@ -98,10 +98,12 @@
 
 <script>
 const $ = id => document.getElementById(id);
-const NOMES = { desligado: 'Desligado', fixo: 'Fixo, sem som', bumbo: 'Bumbo (kick)', grave: 'Grave', baixo: 'Baixo', medio: 'Médio', agudo: 'Agudo', volume: 'Volume geral', ligado: 'Ligado', prata: 'Prata sólida', cromado: 'Cromado', canelado: 'Canelado', branco: 'Branco chapado', contorno: 'Só o contorno', metal: 'Gradiente metal', halo: 'Halo das letras', aurora: 'Nuvem de luz', neon: 'Neon fino', nada: 'Não reage', acende: 'Acende', pulsa: 'Pulsa no tamanho', equalizador: 'Equalizador nas letras', onda: 'Onda de luz', pequeno: 'Pequeno', medio: 'Médio', grande: 'Grande' };
+const NOMES = { desligado: 'Desligado', fixo: 'Fixo, sem som', bumbo: 'Bumbo (kick)', grave: 'Grave', baixo: 'Baixo', medio: 'Médio', agudo: 'Agudo', volume: 'Volume geral', ligado: 'Ligado', prata: 'Prata sólida', cromado: 'Cromado', canelado: 'Canelado', branco: 'Branco chapado', contorno: 'Só o contorno', metal: 'Gradiente metal', zinco: 'Zinco galvanizado', halo: 'Halo das letras', aurora: 'Nuvem de luz', neon: 'Neon fino', nada: 'Não reage', acende: 'Acende', pulsa: 'Pulsa no tamanho', equalizador: 'Equalizador nas letras', onda: 'Onda de luz', pequeno: 'Pequeno', medio: 'Médio', grande: 'Grande' };
 const SOM = ['desligado', 'bumbo', 'grave', 'medio', 'agudo', 'volume'];
 const LED = [
   ['personagemSom', 'Brilho dos personagens', 'O brilho dos personagens da parede', ['desligado', 'grave', 'medio', 'agudo', 'volume']],
+  ['fumacaSom', 'Pulso da fumaça', 'A fumaça acende, engrossa e dá um empurrão', ['desligado', 'bumbo', 'grave', 'medio', 'agudo', 'volume']],
+  ['pasSom', 'Passagens no céu', 'Meteoros, faixas e o resto entram neste golpe. Desligado: entram sozinhas', ['desligado', 'bumbo', 'grave', 'medio', 'agudo', 'volume']],
   ['ceu', 'Céu do Firmamento', 'Galáxia, aurora, coroa, anéis e disco', SOM],
   ['estrelas', 'Estrelas', 'O brilho do céu', SOM],
   ['reflexo', 'Reflexo do metal', 'Só nos visuais de Marca em inox', SOM],
@@ -134,7 +136,7 @@ function linhaEscolha(alvo, grupo, [chave, nome, sub, opcoes]) {
 }
 LED.forEach(l => linhaEscolha($('led'), 'led', l));
 [
-  ['logo', 'Acabamento', 'Como o logo é feito', ['prata', 'cromado', 'canelado', 'metal', 'branco', 'contorno']],
+  ['logo', 'Acabamento', 'Como o logo é feito', ['prata', 'cromado', 'canelado', 'metal', 'zinco', 'branco', 'contorno']],
   ['logoTam', 'Tamanho', 'Na parede do DJ', ['pequeno', 'medio', 'grande']],
   ['logoReage', 'Como reage ao som', 'O jeito de o logo responder', ['nada', 'acende', 'pulsa', 'equalizador', 'onda']],
   ['logoFonte', 'Reage a quê', 'Vale para Acende, Pulsa e Onda', SOM.slice(1)],
@@ -164,7 +166,7 @@ const dPiso = deslize($('som'), 'Piso do som', 'Se o ruído da mesa acende as co
 const dForca = deslize($('som'), 'Força da reação', 'O quanto tudo responde ao som. 100% é o normal.', 0, 200, 5, v => v + '%', v => enviar({ grupo: 'som', chave: 'forca', valor: v }));
 const ajuste = (nome, v) => fetch(`/api/visuais/ajuste?${nome}=${v}`, { method: 'POST' }).then(() => avisar('Salvo')).catch(() => avisar('Não salvou', true));
 const dLimite = deslize($('seguranca'), 'Limite de brilho', 'O máximo que o painel recebe, mesmo com brilho, flash ou strobo no topo.', 5, 100, 1, v => v + '%', v => ajuste('limite', v));
-const dHz = deslize($('seguranca'), 'Strobo máximo', 'Piscadas por segundo. O sinal do painel mostra limpo até 7,5.', 1, 7.5, 0.5, v => virg(v) + ' por segundo', v => ajuste('limiteHz', v));
+const dHz = deslize($('seguranca'), 'Strobo máximo', 'Piscadas por segundo. O sinal do painel vai até 15; acima de 7,5 a piscada pode sair menos regular.', 1, 15, 1, v => virg(v) + ' por segundo', v => ajuste('limiteHz', v));
 const dBanding = deslize($('seguranca'), 'Correção de banding', 'Disfarça as faixas nos degradês com um ruído bem fino. 0 desliga. Suba aos poucos: quanto mais baixo o brilho, mais ele ajuda.', 0, 8, 0.5, v => (v ? virg(v) : 'Desligada'), v => enviar({ grupo: 'tela', chave: 'antiBanding', valor: v }));
 async function lerAjuste() { try { const d = await (await fetch('/api/visuais', { cache: 'no-store' })).json(); if (d.limite) dLimite.definir(d.limite); if (d.limiteHz) dHz.definir(d.limiteHz); } catch {} }
 lerAjuste(); setInterval(lerAjuste, 5000);

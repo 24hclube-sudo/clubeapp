@@ -1,0 +1,61 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ouvido da faixa</title>
+<script type="module">
+// Janela escondida da saída do LED. Fica aberta o tempo todo, então a grade, a seção e o tom não recomeçam quando o visual troca.
+// Ouve a mesma entrada dos visuais e fala com todas as páginas por BroadcastChannel, sem passar pela rede. Para a saída (main.js), manda a foto 4 vezes por segundo e cada evento na hora.
+// ?arquivo=<url> toca um arquivo em vez da entrada, só para teste.
+import { AnaliseFaixa } from './analise.mjs';
+
+const Q = new URLSearchParams(location.search);
+const canal = new BroadcastChannel('clube-faixa');
+let analise = null, ultFoto = 0, ultPost = 0;
+
+function postar(rota, corpo) { fetch(rota, { method: 'POST', body: JSON.stringify(corpo) }).catch(() => {}); }
+
+async function pegarEntrada(ctx) {
+  const arquivo = Q.get('arquivo');
+  if (arquivo) {
+    const buf = await ctx.decodeAudioData(await (await fetch(arquivo)).arrayBuffer());
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.loop = true; src.start();
+    return { no: src, nome: 'arquivo' };
+  }
+  const base = { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
+  const pedido = (Q.get('audio') || '').toLowerCase();
+  let stream = await navigator.mediaDevices.getUserMedia({ audio: base });
+  if (pedido) {
+    const d = (await navigator.mediaDevices.enumerateDevices()).find(x => x.kind === 'audioinput' && x.label.toLowerCase().includes(pedido));
+    if (d) { stream.getTracks().forEach(t => t.stop()); stream = await navigator.mediaDevices.getUserMedia({ audio: { ...base, deviceId: { exact: d.deviceId } } }); }
+  }
+  return { no: ctx.createMediaStreamSource(stream), nome: stream.getAudioTracks()[0].label };
+}
+
+async function ligar() {
+  const ctx = new AudioContext({ latencyHint: 'interactive' });
+  const { no, nome } = await pegarEntrada(ctx);
+  await ctx.audioWorklet.addModule('./coletor.js');
+  const coletor = new AudioWorkletNode(ctx, 'coletor', { numberOfOutputs: 0 });
+  no.connect(coletor);
+  analise = new AnaliseFaixa(ctx.sampleRate, {
+    aoEvento: e => {
+      canal.postMessage({ evento: e });
+      if (e.tipo !== 'compasso') postar('/diretor/analise', { evento: e });
+    },
+  });
+  coletor.port.onmessage = ev => {
+    analise.empurrar(ev.data);
+    analise.emissoes.length = 0;
+    const agora = performance.now();
+    if (agora - ultFoto >= 25) {
+      ultFoto = agora;
+      const foto = analise.foto();
+      canal.postMessage({ foto });
+      if (agora - ultPost >= 250) { ultPost = agora; postar('/diretor/analise', { foto, entrada: nome }); }
+    }
+  };
+  if (ctx.state === 'suspended') await ctx.resume();
+  window.__ouvido = { analise, ctx, nome };
+}
+ligar().catch(e => { console.error('ouvido: ' + e.message); setTimeout(() => location.reload(), 5000); });
+</script>

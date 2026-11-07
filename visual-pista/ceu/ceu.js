@@ -352,6 +352,7 @@ function pistoes(dt) {
 
 const PARADO = ['aberto', 'fechado'].includes(Q.get('estado')) ? Q.get('estado') : null;
 const CENA = criarCena(MODO, { caixa, brilho, quat, P, NB, R, HT, ZF, XC, PARADO });
+window.__tetoCena = () => { if (CENA.abrirJa) CENA.abrirJa(); };
 
 // ---------- estrelas: distribuídas por igual sobre o painel, cada uma numa altura ----------
 const nTeto = CENA.estrelasTeto, nParede = CENA.estrelasParede;
@@ -402,6 +403,8 @@ function quadro(agora) {
   if (nB) gpu.queue.writeBuffer(bufBr, 0, dadosB, 0, nB * POR);
 
   const zLogo = ZF - LOGO.recuo - golpeLogo * 0.13 - R.grave * 0.04;
+  // para os personagens passarem atrás das letras (personagens\camada.js)
+  window.__logoTela = { cx: LOGO.cx, cy: LOGO.cy, z: zLogo, meia: LOGO.largura / 2, a: 0, b: 0, m: 0, prof: LOGO.prof, xc: XC, yc: HT - 0.64 };
   fC.set([ZF - R.idade * 15, Math.exp(-R.idade * 2.6) * (0.35 + 0.8 * R.bumbo + 0.3 * R.grave), flash, envFase,
     CENA.velocidade ? voo : deriva, voo, 0.035 + 0.27 * Math.max(R.grave, R.bumbo * 0.85), varre,
     LOGO.cx, LOGO.cy, zLogo, LOGO.largura / 2,

@@ -205,15 +205,13 @@ fn ceuEm(v: vec3f) -> vec2f {
   let intens = pow(1. / r, queda) * (forma + .45 / (r * r));
   let som = .36 + 1.1 * C.ceu.x + C.ceu2.z * .7;
   var l = intens * som * 1.05;
-  // anel de cromosfera, fino e duro, com as protuberâncias
+  // sem o anel de cromosfera: o usuário não quis a linha branca em volta da lua
   let aa = max(abs(dpdx(aL)) + abs(dpdy(aL)) * CORTE_C, .00002);
   let dL = aL - RL;
-  let prot = max(gn(vec3f(dir * 22., f * .02)), 0.) * .0042;
-  l += (1. - smoothstep(0., .0014 + prot + aa * 1.5, dL)) * smoothstep(-aa * 1.2, 0., dL) * 2.6 * (.55 + .7 * C.ceu.x);
-  // conta de diamante: o ponto do sol que a lua não cobriu, onde a borda da lua está mais longe do sol
+  // conta de diamante: o ponto do sol que a lua não cobriu, onde a borda da lua está mais longe do sol. Só aparece no bumbo
   let lado = normalize(vec2f(-des.x, -des.y));
   let onde = dot(dir, lado);
-  let gota = exp(-(1. - onde) * 240.) * exp(-abs(dL) * 280.) * (.5 + 3. * C.ceu.y);
+  let gota = exp(-(1. - onde) * 240.) * exp(-abs(dL) * 280.) * 3. * C.ceu.y;
   let raio = exp(-(1. - onde) * 26.) * exp(-max(dL, 0.) * 26.) * C.ceu.y * .55;
   l += gota * 2.4 + raio;
   // a lua: quase preta, com o reflexo da Terra só no limite do que se vê

@@ -1,0 +1,125 @@
+--- antes-sequencia/celular.html	2026-11-07 13:33:15.932522900 -0300
++++ trabalho-sequencia/celular.html	2026-11-07 13:34:49.001809800 -0300
+@@ -154,6 +154,19 @@
+   .cena .x { position: absolute; top: 8px; left: 8px; z-index: 2; font-size: 11px; font-weight: 800; padding: 3px 8px;
+     border-radius: 999px; background: rgba(0,0,0,.72); color: #fff; }
+   .cena.enviando { opacity: .55; }
++  /* TVs: vários conteúdos em sequência */
++  .seq-barra { margin: 0 0 12px; }
++  .seq-barra .seq-abrir { width: 100%; padding: 13px; border-radius: 14px; background: var(--s1); color: var(--ink); font-weight: 700; font-size: 14px; border: 1px solid var(--line); }
++  .seq-barra .seq-linha { display: flex; gap: 8px; align-items: center; }
++  .seq-barra .seq-txt { flex: 1; font-size: 13px; color: var(--muted); line-height: 1.3; }
++  .seq-barra .seq-mini { padding: 10px 14px; border-radius: 999px; background: var(--s2); color: var(--ink); font-weight: 700; font-size: 13px; }
++  .seq-tocar { position: sticky; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 5; width: 100%; margin: 12px 0 0; padding: 16px; border-radius: 16px;
++    background: var(--accent); color: #fff; font-weight: 800; font-size: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
++  .seq-tocar:disabled { background: var(--s3); color: var(--muted); box-shadow: none; }
++  .cena .num { position: absolute; left: 8px; bottom: 8px; z-index: 2; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 13px;
++    background: var(--accent); color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
++  .cena.na-seq { outline-color: var(--accent); }
++  .grade.escolhendo .cena.apagar { opacity: .3; pointer-events: none; }
+ 
+   /* cores */
+   .quentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+@@ -510,10 +523,14 @@
+     if (z.cor) return z.cor.toLowerCase() === '#ffc465' ? 'Filamento' : z.cor.toLowerCase() === '#ffaf32' ? 'Âmbar' : z.cor.toLowerCase() === '#ffd6a1' ? 'Branco quente' : 'Cor fixa';
+     if (z.cena === 'logo-cor') return 'Logo + cor';
+     if (!z.cena) return 'Nada no ar';
++    if (z.cena === 'sequencia') return 'Sequência · ' + (z.sequencia || []).length + ' conteúdos';
+     const c = (listas[listaDe(z)] || []).find(c => c.id === z.cena);
+     return c ? c.nome : z.cena;
+   }
+-  function cenaAtual(z) { return (listas[listaDe(z)] || []).find(c => c.id === z.cena) || null; }
++  function cenaAtual(z) {
++    const id = z.cena === 'sequencia' ? (z.sequencia || [])[0] : z.cena; // sequência: mostra a 1ª
++    return (listas[listaDe(z)] || []).find(c => c.id === id) || null;
++  }
+   // Cor que tinge o cartão (estilo Hue): cor fixa, fundo do logo ou tom neutro.
+   function tinta(z) {
+     if (z.prog && z.prog.ativa) { const c = z.prog.cores; return `linear-gradient(135deg, ${c[0]}aa, ${c[1]}66 55%, rgba(21,23,27,.9) 100%)`; }
+@@ -906,10 +923,13 @@
+       toast(f.saida ? z.nome + ' desligada' : z.nome + ' ligada');
+       return;
+     }
+-    if (ligado(z)) { guardar('clube-ultima-' + z.id, z.cena); enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'apagar' }); toast(z.nome + ' apagada'); }
++    if (ligado(z)) { guardar('clube-ultima-' + z.id, z.cena === 'sequencia' ? 'seq:' + (z.sequencia || []).join(',') : z.cena); enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'apagar' }); toast(z.nome + ' apagada'); }
+     else {
+       const lista = listas[listaDe(z)] || [];
+       const volta = ler('clube-ultima-' + z.id);
++      if (volta && volta.indexOf('seq:') === 0) { // volta a sequência que estava no ar
++        enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'sequencia', sequencia: volta.slice(4).split(',') }); toast(z.nome + ': sequência'); return;
++      }
+       const c = lista.find(c => c.id === volta && !c.apagar) || lista.find(c => !c.apagar);
+       if (c) { enviar({ type: 'cena', andar: z.andar, zona: z.id, id: c.id }); toast(z.nome + ': ' + c.nome); }
+     }
+@@ -1250,6 +1270,13 @@
+         }
+         b.onclick = () => {
+           const zz = zonaPorId(zonaAberta);
++          if (seq.modo && listaDe(zz) === 'tvs') { // escolhendo a sequência: toque marca/desmarca na ordem
++            if (c.apagar) return;
++            vibrar();
++            const k = seq.ids.indexOf(c.id);
++            if (k >= 0) seq.ids.splice(k, 1); else seq.ids.push(c.id);
++            return marcarSeq(zz);
++          }
+           vibrar(); b.classList.add('enviando');
+           if (enviar({ type: 'cena', andar: zz.andar, zona: zz.id, id: c.id })) toast(`${c.nome} → ${zz.nome}`);
+           setTimeout(() => b.classList.remove('enviando'), 600);
+@@ -1259,6 +1286,57 @@
+       tocarVideos();
+     }
+     Array.from($('grade-cenas').children).forEach(b => b.classList.toggle('on', b.dataset.id === z.cena && !(z.prog && z.prog.ativa)));
++    marcarSeq(z);
++  }
++
++  // ---------- TVs: vários conteúdos em sequência ----------
++  // "Tocar vários em sequência" → toque nos conteúdos na ordem → "Tocar N em sequência".
++  // O servidor monta uma playlist igual em todas as TVs, em loop (sequencia-tv.js).
++  var seq = { modo: false, ids: [], zona: null };
++  function marcarSeq(z) {
++    let barra = $('barra-seq');
++    if (!barra) {
++      barra = document.createElement('div'); barra.id = 'barra-seq'; barra.className = 'seq-barra';
++      $('grade-cenas').before(barra);
++      const tocar = document.createElement('button'); tocar.id = 'seq-tocar'; tocar.className = 'seq-tocar';
++      $('grade-cenas').after(tocar);
++      tocar.onclick = () => {
++        const zz = zonaPorId(zonaAberta);
++        if (!zz || seq.ids.length < 2) return;
++        vibrar();
++        if (enviar({ type: 'cena', andar: zz.andar, zona: zz.id, id: 'sequencia', sequencia: seq.ids.slice() })) toast(`Sequência de ${seq.ids.length} → ${zz.nome}`);
++        seq.modo = false; marcarSeq(zz);
++      };
++    }
++    const ehTvs = listaDe(z) === 'tvs';
++    if (!ehTvs || seq.zona !== z.id) { seq.modo = false; seq.zona = z.id; }
++    const naSeq = z.cena === 'sequencia' && !(z.prog && z.prog.ativa) ? (z.sequencia || []) : [];
++    barra.style.display = ehTvs ? '' : 'none';
++    $('seq-tocar').style.display = ehTvs && seq.modo ? '' : 'none';
++    $('grade-cenas').classList.toggle('escolhendo', ehTvs && seq.modo);
++    if (ehTvs) {
++      if (!seq.modo) {
++        barra.innerHTML = `<button class="seq-abrir">${naSeq.length ? `Sequência no ar · ${naSeq.length} conteúdos · editar` : 'Tocar vários em sequência'}</button>`;
++        barra.firstChild.onclick = () => { vibrar(); seq.modo = true; seq.ids = naSeq.slice(); marcarSeq(zonaPorId(zonaAberta)); };
++      } else {
++        barra.innerHTML = `<div class="seq-linha"><div class="seq-txt">Toque nos conteúdos na ordem em que vão tocar. Repete do começo no fim.</div>
++          <button class="seq-mini" data-a="limpar">Limpar</button><button class="seq-mini" data-a="sair">Cancelar</button></div>`;
++        barra.querySelector('[data-a=limpar]').onclick = () => { vibrar(); seq.ids = []; marcarSeq(zonaPorId(zonaAberta)); };
++        barra.querySelector('[data-a=sair]').onclick = () => { vibrar(); seq.modo = false; marcarSeq(zonaPorId(zonaAberta)); };
++        const t = $('seq-tocar');
++        t.disabled = seq.ids.length < 2;
++        t.textContent = seq.ids.length < 2 ? 'Escolha pelo menos 2' : `Tocar ${seq.ids.length} em sequência`;
++      }
++    }
++    const ordem = ehTvs && seq.modo ? seq.ids : naSeq;
++    Array.from($('grade-cenas').children).forEach(b => {
++      const k = ordem.indexOf(b.dataset.id);
++      b.classList.toggle('na-seq', k >= 0);
++      let n = b.querySelector('.num');
++      if (k < 0) { if (n) n.remove(); return; }
++      if (!n) { n = document.createElement('span'); n.className = 'num'; (b.querySelector('.thumb') || b).appendChild(n); }
++      n.textContent = k + 1;
++    });
+   }
+   function tocarVideos() { document.querySelectorAll('.cena video').forEach(v => { if (v.paused) v.play().catch(() => {}); }); }
+   document.addEventListener('touchstart', tocarVideos, { passive: true });

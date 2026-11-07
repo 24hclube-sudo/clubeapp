@@ -1,0 +1,41 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Gerando</title>
+<script src="painel-estudio/motor.js"></script>
+<script>
+// Desenha cada quadro em 4472x86, dobra para 2752x172 e manda para o servidor. Roda no Electron de painel-render.js.
+(async () => {
+  const job = new URLSearchParams(location.search).get('job');
+  const fim = async corpo => {
+    try { await fetch('/api/painel-estudio/fim?job=' + job, { method: 'POST', body: JSON.stringify(corpo || {}) }); } catch {}
+    document.title = 'fim';
+  };
+  try {
+    const r = await fetch('/api/painel-estudio/job/' + job + '/comp');
+    if (!r.ok) throw new Error('peça não encontrada');
+    const { comp, total, fps } = await r.json();
+    const catalogo = await fetch('painel-estudio/catalogo-videos.json').then(x => x.json());
+    const M = PainelMotor;
+    const motor = M.criar({ base: 'painel-estudio/', catalogo, urlProxy: id => fetch('/api/painel-estudio/proxy?id=' + encodeURIComponent(id)).then(x => x.json()).then(j => { if (!j.url) throw new Error(j.error); return j.url; }) });
+    await motor.preparar(comp);
+    const faixa = document.createElement('canvas'); faixa.width = M.W; faixa.height = M.H;
+    const g = faixa.getContext('2d');
+    const dobrado = document.createElement('canvas'); dobrado.width = 2752; dobrado.height = 172;
+    const gd = dobrado.getContext('2d');
+    gd.imageSmoothingEnabled = false;
+    const vista = { x0: 0, vw: M.W, es: 1 };
+    for (let n = 0; n < total; n++) {
+      const t = n / fps;
+      await motor.videosExatos(comp, t);
+      motor.desenhar(g, comp, t, vista);
+      M.dobrar(gd, faixa);
+      const blob = await new Promise(ok => dobrado.toBlob(ok, 'image/png'));
+      const resp = await fetch('/api/painel-estudio/quadro?job=' + job + '&n=' + n, { method: 'POST', body: blob });
+      if (!resp.ok) throw new Error('o servidor recusou o quadro ' + n);
+    }
+    await fim({});
+  } catch (e) {
+    await fim({ erro: String(e && e.message || e) });
+  }
+})();
+</script>

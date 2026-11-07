@@ -44,6 +44,8 @@ export async function criarBrilhinhos(gpu, urls) {
   return {
     // L: { cx, cy, z, meia, lw, lh, letra }. meia: metade da largura de referência do logo.
     quadro(dt, M, L) {
+      // a camada de personagens lê isto para ficar atrás do logo
+      window.__logoTela = { cx: L.cx, cy: L.cy, z: L.z, meia: L.meia, a: L.letra, b: L.letraB ?? L.letra, m: L.mix || 0 };
       if (M.disparou('brilhinhos', dt, 0.45)) {
         const pts = bordas[L.letra] || bordas[0];
         const quantos = 1 + Math.floor(Math.random() * 2);
@@ -110,7 +112,41 @@ fn metalDoLogo(x: f32) -> f32 {
   }
   return mix(L[7], L[0], (t - P[7]) / (P[0] + 1. - P[7]));
 }
-// codigo: unidade = acabamento (0 prata, 1 cromado, 2 canelado, 3 branco, 4 contorno, 5 gradiente metal); dezena = reação (1 equalizador, 2 onda)
+// Zinco galvanizado, como a chapa da referência: flores de cristal grandes, cada uma inclinada para um lado.
+// A luz que anda acende umas e apaga outras; dentro de cada flor há riscos finos de dendrito; e manchas escuras de oxidação, nubladas.
+fn florZinco(p: vec2f) -> vec4f {
+  let i = floor(p); let f = fract(p);
+  var m1 = 9.; var m2 = 9.; var id = vec2f(0.);
+  for (var y = -1; y <= 1; y++) { for (var x = -1; x <= 1; x++) {
+    let g = vec2f(f32(x), f32(y));
+    let o = vec2f(hash21(i + g + vec2f(3.7, 1.1)), hash21(i + g + vec2f(9.2, 4.4)));
+    let d = length(g + o - f);
+    if (d < m1) { m2 = m1; m1 = d; id = i + g; } else if (d < m2) { m2 = d; }
+  } }
+  return vec4f(hash21(id + vec2f(5., 9.)) - .5, hash21(id + vec2f(31., 2.)) - .5, hash21(id), m2 - m1);
+}
+fn zincoDoLogo(uv: vec2f, g: vec3f, cha: f32, Ve: vec3f, risco: f32, varre: f32, luz: f32) -> f32 {
+  let p = uv * vec2f(2048., 720.) / 46.;
+  let wq = vec2f(ruido2(p * .35), ruido2(p * .35 + vec2f(7., 3.))) - .5;
+  let fz = florZinco(p + wq * .9);
+  let Ng = normalize(vec3f(g.xy * cha + fz.xy * .34, -1.));
+  let r = reflect(Ve, Ng);
+  let y = r.y * 2.2 + (uv.y - .5) * .4;
+  var c = .44 + .36 * smoothstep(-.3, .6, y);
+  let faixa = r.x * 2. + r.y * 1.3 + (uv.x - .5) * 1.4 - varre;
+  c += exp(-faixa * faixa * 9.) * .5;
+  // cada flor tem a sua hora de acender, conforme a luz passa
+  let acende = smoothstep(.05, .45, fz.x * sin(varre * 2.2 + fz.z * 6.2832) + fz.y * .45 + .12);
+  c *= .74 + .34 * acende;
+  let ang = fz.z * 6.2832;
+  let pena = .5 + .5 * sin(dot(p, vec2f(cos(ang), sin(ang))) * 24. + ruido2(p * 3.) * 4.);
+  c *= .88 + .2 * pena;
+  c *= .9 + .1 * smoothstep(0., .07, fz.w);
+  let mancha = smoothstep(.45, .78, ruido2(p * .16 + vec2f(2., 5.)) * .6 + ruido2(p * .5) * .4);
+  c *= 1. - .34 * mancha;
+  return c * (.88 + .24 * risco) * (.8 + luz * .3) + cha * cha * .12;
+}
+// codigo: unidade = acabamento (0 prata, 1 cromado, 2 canelado, 3 branco, 4 contorno, 5 gradiente metal, 6 zinco); dezena = reação (1 equalizador, 2 onda)
 fn frenteLogo(d: f32, g: vec3f, uv: vec2f, w: vec3f, risco: f32, codigo: f32, spot: f32, varre: f32, luz: f32) -> f32 {
   let acab = codigo % 10.;
   let reage = floor(codigo / 10.);
@@ -140,7 +176,8 @@ fn frenteLogo(d: f32, g: vec3f, uv: vec2f, w: vec3f, risco: f32, codigo: f32, sp
   if (acab > 1.5 && acab < 2.5) { lum *= .68 + .44 * smoothstep(-.4, .4, sin(uv.x * 2048. / 7.)); }
   if (acab > 2.5 && acab < 3.5) { lum = .96 * (.8 + luz * .25); }
   if (acab > 3.5 && acab < 4.5) { lum = (1. - smoothstep(4., 11., -d)) * (.75 + luz * .4); }
-  if (acab > 4.5) { lum = metalDoLogo(uv.y * .9 + uv.x * .22) * (.8 + luz * .3); }
+  if (acab > 4.5 && acab < 5.5) { lum = metalDoLogo(uv.y * .9 + uv.x * .22) * (.8 + luz * .3); }
+  if (acab > 5.5 && acab < 6.5) { lum = zincoDoLogo(uv, g, cha, Ve, risco, varre, luz); }
   if (reage > .5 && reage < 1.5) { lum *= .3 + 1.25 * espectroEm(uv.x); }
   if (reage > 1.5) { let o = .5 + .5 * sin((uv.x * 3. - G.tempo * 1.4) * 6.2832); lum *= 1. - luz + luz * (.35 + 1.1 * o); }
   if (spot > .001) {
@@ -265,7 +302,7 @@ export function forcaContra(M) {
 }
 const ESTILOS = { halo: 1, aurora: 2, neon: 3 };
 export const estiloLuz = M => ESTILOS[M.modo('estiloLuz')] ?? 1;
-const ACABAMENTOS = { prata: 0, cromado: 1, canelado: 2, branco: 3, contorno: 4, metal: 5 };
+const ACABAMENTOS = { prata: 0, cromado: 1, canelado: 2, branco: 3, contorno: 4, metal: 5, zinco: 6 };
 const JEITOS = { equalizador: 1, onda: 2 };
 const TAMANHOS = { pequeno: 0.75, medio: 1, grande: 1.1 };
 // O logo no app: acabamento, tamanho e como reage ao som.

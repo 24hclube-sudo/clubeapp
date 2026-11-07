@@ -1,10 +1,11 @@
 // As quatro cenas do Céu 3D. Cada uma só diz onde ficam as caixas neste quadro, em metros, com o olho na origem:
 // x para a direita, y para cima, z para a parede do DJ. O teto do LED fica em y = HT e a parede em z = ZF.
-export const MODOS = ['concreto', 'teto', 'caixotoes', 'porticos'];
+import { comportas, trama } from './cenas-desliza.js';
+export const MODOS = ['concreto', 'teto', 'caixotoes', 'porticos', 'comportas', 'trama'];
 const sorte = (a = 1, b) => (b === undefined ? Math.random() * a : a + Math.random() * (b - a));
 
 export function criarCena(modo, api) {
-  return { concreto: concreto, teto: tetoInox, caixotoes: caixotoes, porticos: porticos }[modo](api);
+  return { concreto: concreto, teto: tetoInox, caixotoes: caixotoes, porticos: porticos, comportas, trama }[modo](api);
 }
 
 // fechado, abrindo, aberto, fechando: o mesmo roteiro nas duas cenas que abrem
@@ -12,6 +13,7 @@ function roteiro(parado, cena, { fechado = 8, aberto = 64 } = {}) {
   let estado = parado === 'aberto' ? 'aberto' : 'fechado', conta = 0;
   return {
     get estado() { return estado; },
+    fixar(e) { parado = e; estado = e; conta = 0; },
     batida() {
       if (parado) return;
       conta++;
@@ -59,6 +61,8 @@ function concreto(api) {
     velocidade: 0, lavar: 0.72, lavarSom: 0.45, estrelasTeto: 3800, estrelasParede: 0,
     ceuLuz: () => 1,
     estado: () => ({ estado: rt.estado, aberto: +(prox / soltas.length).toFixed(2) }),
+    // o teto de concreto do app (teto\camada.js) já cobriu tudo: por baixo, fica aberto e sem ciclo
+    abrirJa() { rt.fixar('aberto'); for (const p of soltas) { p.a = p.alvo = 1; } prox = soltas.length; },
     batida: () => rt.batida(),
     golpe(f) {
       if (rt.estado === 'abrindo') {
@@ -106,6 +110,7 @@ function tetoInox(api) {
     velocidade: 0, lavar: 0, lavarSom: 0, estrelasTeto: 3800, estrelasParede: 0,
     ceuLuz: () => 1,
     estado: () => ({ estado: rt.estado, aberto: +abre.toFixed(2) }),
+    abrirJa() { rt.fixar('aberto'); abre = alvo = 1; },
     batida: () => rt.batida(),
     golpe(f) {
       if (rt.estado === 'abrindo') alvo = Math.min(1, alvo + (0.7 + f * 0.4) / 30);

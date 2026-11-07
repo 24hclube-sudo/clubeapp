@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teste teto</title>
+<style>html,body{margin:0;height:100%;background:#000}body{background:linear-gradient(#024,#402)}</style>
+<script type="module">
+const q = new URLSearchParams(location.search);
+window.__tetoTeste = { estado: q.get('estado') || 'aberto', t: q.has('t') ? parseFloat(q.get('t')) : undefined };
+await import('./camada.js');
+</script>

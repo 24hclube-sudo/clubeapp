@@ -474,7 +474,7 @@ function quadro(agora) {
   const modoBooth = M.modo('booth');
   const spot = modoBooth === 'fixo' ? 0.75 : M.fonte('booth');
   const cromo = aj.codigo;
-  brilhinhos.quadro(dt, M, { cx: LOGO.cx, cy: LOGO.cy, z: zLogo, meia: LOGO.largura / 2 * aj.esc, lw: 2048 / 1720, lh: 720 / 1720, letra: L.a });
+  brilhinhos.quadro(dt, M, { cx: LOGO.cx, cy: LOGO.cy, z: zLogo, meia: LOGO.largura / 2 * aj.esc, lw: 2048 / 1720, lh: 720 / 1720, letra: L.a, letraB: L.b, mix: L.m });
   const contra = forcaContra(M);
   fC.set([0, spot, cromo, envFase,
     CENA.voo ? CENA.voo() : deriva, CENA.voo ? CENA.voo() : 0, halo, varre,

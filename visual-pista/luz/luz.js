@@ -100,6 +100,8 @@ function letreiros(dt) {
   const alvo = fase < 12 ? 0.42 + 0.9 * pulso : 0;
   luzNome += (alvo - luzNome) * (1 - Math.exp(-dt * (alvo > luzNome ? 24 : 1.6)));
   const Sc = tamanhoPara(el.clube, 900, 320) * (1 + pulso * 0.03), Sn = tamanhoPara(nome, 920, 860);
+  // para os personagens passarem atrás das letras (personagens\camada.js): logo plano, na própria parede
+  window.__logoTela = { cx: 0, cy: 0, z: 4.39, meia: el.clube.largura * Sc * 1.92 / 1032, a: 0, b: 0, m: 0, prof: 0, xc: 0, yc: 0 };
   fLT.set([516, CY, Sc, el.clube.i, 0.4 + 1.05 * Math.max(pulso, P[0] * 0.7), 0, 0, 0, 516, 2560, Sn, nome.i, luzNome, 0, 0, 0]);
   gpu.queue.writeBuffer(bufLT, 0, fLT);
 }

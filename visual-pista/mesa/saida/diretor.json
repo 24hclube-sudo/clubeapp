@@ -1,0 +1,13 @@
+{
+ "elementos": true,
+ "cenas": false,
+ "frequencia": "secao",
+ "grupos": [
+  "regencia",
+  "firmamento",
+  "espaco",
+  "marca",
+  "cinetica"
+ ],
+ "fumaca": true
+}

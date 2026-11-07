@@ -1,5 +1,13 @@
 /* Visuais do LED da pista (visuais-app.js) */
-#visuais-cartao { margin-bottom: 12px; }
+#visuais-cartao, #projecoes-cartao { margin-bottom: 12px; }
+#projecoes { min-width: 0; }
+.proj-nota { display: block; color: var(--muted); font-size: 13px; line-height: 1.4; margin-top: 6px; }
+.proj-colunas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.proj-colunas button { min-height: 64px; padding: 8px 12px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 12px; background: rgba(255, 255, 255, .06); color: var(--ink); font: inherit; font-weight: 700; text-align: left; overflow-wrap: anywhere; }
+.proj-colunas button.on { background: #fff; color: #000; border-color: #fff; }
+.proj-colunas button.troca { opacity: .55; }
+.vis-img.proj-img { aspect-ratio: 45 / 16; }
+#proj-apagar.confirmar { background: var(--warn); color: #000; }
 .vis-cartao { cursor: pointer; }
 .vis-cartao .sub { color: var(--muted); }
 .vis-previa { height: 64px; }
@@ -42,7 +50,7 @@
 .vis-flash-grade button.on { background: #fff; color: #000; border-color: #fff; }
 .vis-flash-grade .strobo { grid-column: 1 / -1; min-height: 72px; border-color: rgba(255, 255, 255, .55); }
 @media (min-width: 980px) {
-  body.em-visuais #detalhe { display: none !important; }
-  #visuais { max-width: 900px; }
+  body.em-visuais #detalhe, body.em-projecoes #detalhe { display: none !important; }
+  #visuais, #projecoes { max-width: 900px; }
   .vis-grade { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 }

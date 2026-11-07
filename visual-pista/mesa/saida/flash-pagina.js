@@ -22,13 +22,15 @@
   };
   window.__luzShow = {
     atras: 0, painel: 0,
-    comando(acao, nomes, strobo, hz, cor) {
+    comando(acao, nomes, strobo, hz, cor, forca) {
       const agora = Date.now();
       for (const n of nomes) {
+        if (n === 'fumaca') { if (window.__fumaca) window.__fumaca.comando(acao); continue; }
         const s = alvos[n];
         if (!s) continue;
         if (acao === 'liga') {
           if (hz > 0) s.periodo = 1000 / hz;
+          s.forca = forca > 0 ? forca / 100 : (forca === 0 ? 0 : 1);
           s.cor = strobo && cor ? '#' + cor : '#fff';
           if (!s.liga || s.strobo !== strobo) s.minimo = strobo ? agora + STROBO_MINIMO : 0;
           s.liga = true; s.strobo = strobo; s.ate = agora + SEM_PEDIDO;
@@ -41,18 +43,31 @@
   function passo() {
     const agora = Date.now();
     const a = nivel(alvos.atras, agora), p = nivel(alvos.painel, agora);
-    window.__luzShow.atras = Math.max(a, 0);
-    window.__luzShow.painel = Math.max(p, 0);
+    const fA = alvos.atras.forca ?? 1, fP = alvos.painel.forca ?? 1;
+    window.__luzShow.atras = Math.max(a, 0) * fA;
+    window.__luzShow.painel = Math.max(p, 0) * fP;
     // strobo do painel: a imagem normal e o negativo dela, um de cada vez
-    const cor = alvos.painel.cor || '#fff';
+    // a intensidade escurece a cor do negativo: fraca, o céu quase não acende e o logo segue claro
+    const base = (alvos.painel.cor || '#ffffff').replace('#fff', '#ffffff').slice(1).padEnd(6, 'f');
+    const cor = `rgb(${[0, 2, 4].map(i => Math.round(parseInt(base.slice(i, i + 2), 16) * fP)).join(',')})`;
     if (cor !== corT) { tudo.style.background = cor; corT = cor; }
     const op = Math.max(p, 0);
     if (op !== antesT) { tudo.style.opacity = op; antesT = op; }
-    const opP = window.__temContraluz ? 0 : Math.max(a, 0);
+    const opP = window.__temContraluz ? 0 : Math.max(a, 0) * fA;
     if (opP !== antesP) { parede.style.opacity = opP; antesP = opP; }
     requestAnimationFrame(passo);
   }
   requestAnimationFrame(passo);
   // personagens da marca: uma camada por cima de qualquer visual. Só carrega a malha quando o botão do app estiver ligado.
   import('/personagens/camada.js').catch(e => console.error('personagens: ' + e.message));
+  // Os elementos que o diretor automático pede agora. Valem por cima do que está no app, sem gravar nada: desligou, volta o que está lá.
+  window.__autoLed = v => { window.__autoLedValores = v; if (v && window.__REACOES) Object.assign(window.__REACOES.led, v); };
+  // camada de cor por cima de tudo. Endereço inteiro: as cenas do gerador moram em outra origem. Ver regencia\cor.js
+  import('http://127.0.0.1:' + (window.__portaSaida || 5212) + '/regencia/cor.js').catch(e => console.error('cor: ' + e.message));
+  // teto de concreto: fecha e abre o céu. Endereço inteiro, para valer também nas cenas do gerador. Ver teto\camada.js
+  import('http://127.0.0.1:' + (window.__portaSaida || 5212) + '/teto/camada.js').catch(e => console.error('teto: ' + e.message));
+  // fumaça virtual: nasce embaixo do booth e sobe. Ver fumaca\camada.js
+  import('/fumaca/camada.js').catch(e => console.error('fumaca: ' + e.message));
+  // passagens: meteoros, faixas de luz e o que mais atravessar o painel. Só abre a GPU quando ligadas. Ver passagens\camada.js
+  import('/passagens/camada.js').catch(e => console.error('passagens: ' + e.message));
 })();

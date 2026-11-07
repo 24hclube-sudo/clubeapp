@@ -137,6 +137,41 @@
     "thumb": "cenas/tv-akin.png"
   },
   {
+    "id": "tv-pq-vivo",
+    "nome": "Pista Quente · Akin animado",
+    "video": "tv-pq-vivo.mp4",
+    "thumb": "cenas/tvp-pq-vivo.png",
+    "preview": "cenas/tvp-pq-vivo.mp4"
+  },
+  {
+    "id": "tv-pq-cabecas",
+    "nome": "Pista Quente · Cabeças",
+    "video": "tv-pq-cabecas.mp4",
+    "thumb": "cenas/tvp-pq-cabecas.png",
+    "preview": "cenas/tvp-pq-cabecas.mp4"
+  },
+  {
+    "id": "tv-pq-letreiro",
+    "nome": "Pista Quente · Letreiro",
+    "video": "tv-pq-letreiro.mp4",
+    "thumb": "cenas/tvp-pq-letreiro.png",
+    "preview": "cenas/tvp-pq-letreiro.mp4"
+  },
+  {
+    "id": "tv-pq-palavras",
+    "nome": "Pista Quente · Palavras",
+    "video": "tv-pq-palavras.mp4",
+    "thumb": "cenas/tvp-pq-palavras.png",
+    "preview": "cenas/tvp-pq-palavras.mp4"
+  },
+  {
+    "id": "tv-pq-calor",
+    "nome": "Pista Quente · Calor",
+    "video": "tv-pq-calor.mp4",
+    "thumb": "cenas/tvp-pq-calor.png",
+    "preview": "cenas/tvp-pq-calor.mp4"
+  },
+  {
     "id": "apagar",
     "nome": "Apagar",
     "apagar": true

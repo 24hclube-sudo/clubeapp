@@ -13,6 +13,25 @@ const PASTA_VISUAL = path.join(__dirname, '..', '..');
 const PASTA_SAIDA_ANTIGA = path.join(PASTA_VISUAL, 'saida');
 const RADIO = 'C:\\apps\\radio-saida';
 const VISUAIS = {
+  'p-numeros': 'numeros/',
+  'p-logo': 'pedra/?modo=logo',
+  'p-campo': 'pedra/?modo=campo',
+  'p-estelas': 'pedra/?modo=estelas',
+  'p-corte': 'pedra/?modo=corte',
+  'p-lajes': 'pedra/?modo=lajes',
+  'p-degraus': 'pedra/?modo=degraus',
+  'z-logo': 'zinco/',
+  'r-feixes': 'regencia/?modo=feixes',
+  'r-astrolabio': 'regencia/?modo=astrolabio',
+  'r-mercurio': 'regencia/?modo=mercurio',
+  'r-micelio': 'regencia/?modo=micelio',
+  'r-enxame': 'regencia/?modo=enxame',
+  'r-nave': 'regencia/?modo=nave',
+  'r-eixo': 'regencia/?modo=eixo',
+  'r-losango': 'regencia/?modo=losango',
+  'r-cordas': 'regencia/?modo=cordas',
+  'r-lamina': 'regencia/?modo=lamina',
+  'r-portal': 'regencia/?modo=portal',
   derrete: 'pista-quente/derrete/',
   brinquedos: 'universo/?mundo=quente',
   ondas: 'pista-quente/ondas/',
@@ -58,6 +77,8 @@ const VISUAIS = {
   'teto-ceu': 'ceu/?modo=teto',
   'caixotoes': 'ceu/?modo=caixotoes',
   'porticos': 'ceu/?modo=porticos',
+  'comportas': 'ceu/?modo=comportas',
+  'trama': 'ceu/?modo=trama',
   'h3-olho': 'video/?v=h3-olho-1-painel.mp4',
   'h3-abrir': 'video/?v=h3-abrir-2-painel.mp4',
   universo: 'universo/',
@@ -99,6 +120,61 @@ let janela = null, janelaNova = null, visualNovo = null, python = null, saindo =
 let pendente = null, pendenteDesde = 0;
 
 const FLASH_PAGINA = fs.readFileSync(path.join(__dirname, 'flash-pagina.js'), 'utf8');
+// As baforadas recentes vão para a janela nova: a página refaz a fumaça até o ponto em que estava, e a troca de visual não some com ela.
+let fumacaRecente = [];
+function anotarFumaca(acao) {
+  const agora = Date.now();
+  fumacaRecente = fumacaRecente.filter(i => agora - i[1] < 30000);
+  const u = fumacaRecente[fumacaRecente.length - 1];
+  if (acao === 'liga') { if (u && agora <= u[1]) u[1] = Math.max(u[1], agora + 1500); else fumacaRecente.push([agora, agora + 1500]); }
+  else if (u && agora <= u[1]) u[1] = Math.max(u[0] + 2200, agora);
+}
+// ---------- Regência: o ouvido da faixa, o diretor automático e a camada de cor. Ver visual-pista\regencia\LEIA-ME.md ----------
+const { criarDiretor } = require(path.join(PASTA_VISUAL, 'regencia', 'diretor.cjs'));
+const ARQ_COR = path.join(__dirname, 'cor-camada.json');
+let corCamada = { ligada: false, cor: 'ff0040', cor2: '0040ff', modo: 'tingir', forca: 100, auto: 'fixa', giro: 6, tom: '' };
+try { corCamada = { ...corCamada, ...JSON.parse(fs.readFileSync(ARQ_COR, 'utf8')) }; } catch {}
+const guardarCor = () => { try { fs.writeFileSync(ARQ_COR, JSON.stringify(corCamada)); } catch {} };
+const nasPaginas = js => { for (const w of [janela, janelaNova]) if (w && !w.isDestroyed()) w.webContents.executeJavaScript(js).catch(() => {}); };
+const mandarCor = () => nasPaginas(`window.__corComando && window.__corComando(${JSON.stringify(corCamada)})`);
+function mudarCor(q) {
+  if (q.has('ligada')) corCamada.ligada = q.get('ligada') === '1';
+  for (const k of ['cor', 'cor2']) if (/^[0-9a-f]{6}$/i.test(q.get(k) || '')) corCamada[k] = q.get(k).toLowerCase();
+  if (['tingir', 'filtro', 'suave', 'duas'].includes(q.get('modo'))) corCamada.modo = q.get('modo');
+  if (['fixa', 'faixa', 'gira'].includes(q.get('auto'))) corCamada.auto = q.get('auto');
+  const num = (k, a, b) => { if (q.has(k) && Number.isFinite(+q.get(k))) corCamada[k] = Math.max(a, Math.min(b, +q.get(k))); };
+  num('forca', 0, 100); num('giro', 1, 60);
+  guardarCor();
+  mandarCor();
+}
+let autoLed = null;
+const mandarElementos = () => nasPaginas(`window.__autoLed && window.__autoLed(${JSON.stringify(autoLed)})`);
+let janelaOuvido = null;
+function abrirOuvido() {
+  const url = `http://127.0.0.1:${config.porta}/regencia/ouvido.html?audio=${encodeURIComponent(config.audio)}`;
+  const w = janelaOuvido = new BrowserWindow({ width: 320, height: 200, show: false, frame: false, webPreferences: { backgroundThrottling: false } });
+  w.webContents.setAudioMuted(true);
+  w.webContents.on('console-message', ev => { if (ev.level === 'error') log(`ouvido: ${ev.message}`); });
+  w.webContents.on('did-fail-load', () => { setTimeout(() => !w.isDestroyed() && w.loadURL(url), 5000); });
+  w.webContents.on('render-process-gone', (_e, d) => { log(`ouvido caiu (${d.reason}); abrindo de novo`); setTimeout(() => !w.isDestroyed() && w.loadURL(url), 2000); });
+  w.loadURL(url);
+}
+let diretor = null;
+function criarODiretor() {
+  diretor = criarDiretor({
+    pasta: __dirname, visuais: VISUAIS, log,
+    jaNoAr: () => visualAtual,
+    carregando: () => !!visualNovo && !(corte && corte.segurar),
+    trocar: (id, em, segurar) => trocarVisual(id, em, segurar),
+    aoElementos: pedido => { autoLed = pedido; mandarElementos(); },
+    aoFumaca: () => {
+      anotarFumaca('liga');
+      nasPaginas(`window.__luzShow && window.__luzShow.comando('liga', ['fumaca'])`);
+      setTimeout(() => { anotarFumaca('solta'); nasPaginas(`window.__luzShow && window.__luzShow.comando('solta', ['fumaca'])`); }, 2200);
+    },
+  });
+}
+
 const ARQ_LOG = path.join(__dirname, 'saida.log');
 try { if (fs.statSync(ARQ_LOG).size > 2e6) fs.writeFileSync(ARQ_LOG, ''); } catch {}
 function log(texto) { fs.appendFile(ARQ_LOG, `[${new Date().toLocaleString('pt-BR')}] ${texto}\n`, () => {}); }
@@ -289,9 +365,41 @@ function servir() {
       if (url.pathname === '/flash' && req.method === 'POST') {
         const acao = url.searchParams.get('acao') === 'liga' ? 'liga' : 'solta';
         const alvos = String(url.searchParams.get('alvos') || '').split(',');
-        const js = `window.__luzShow && window.__luzShow.comando(${JSON.stringify(acao)}, ${JSON.stringify(alvos)}, ${url.searchParams.get('strobo') === '1'}, ${Number(url.searchParams.get('hz')) || 0}, ${JSON.stringify(/^[0-9a-f]{6}$/i.test(url.searchParams.get('cor') || '') ? url.searchParams.get('cor') : '')})`;
+        if (alvos.includes('fumaca')) anotarFumaca(acao);
+        const js = `window.__luzShow && window.__luzShow.comando(${JSON.stringify(acao)}, ${JSON.stringify(alvos)}, ${url.searchParams.get('strobo') === '1'}, ${Number(url.searchParams.get('hz')) || 0}, ${JSON.stringify(/^[0-9a-f]{6}$/i.test(url.searchParams.get('cor') || '') ? url.searchParams.get('cor') : '')}, ${url.searchParams.has('forca') ? Number(url.searchParams.get('forca')) : 100})`;
         for (const w of [janela, janelaNova]) if (w && !w.isDestroyed()) w.webContents.executeJavaScript(js).catch(() => {});
         return responderJson(res, { ok: true });
+      }
+      if (url.pathname === '/diretor/analise' && req.method === 'POST') {
+        let corpo = '';
+        req.setEncoding('utf8');
+        req.on('data', d => { corpo += d; });
+        req.on('end', () => {
+          res.writeHead(204, CORS); res.end();
+          try {
+            const p = JSON.parse(corpo);
+            if (p.foto && diretor) {
+              diretor.aoFoto(p.foto, p.entrada);
+              if (p.foto.tom && p.foto.tom !== corCamada.tom) { corCamada.tom = p.foto.tom; mandarCor(); }
+            }
+            if (p.evento && diretor) diretor.aoEvento(p.evento);
+          } catch {}
+        });
+        return;
+      }
+      if (url.pathname === '/diretor') {
+        if (req.method === 'POST') {
+          const q = url.searchParams, novo = {};
+          for (const k of ['elementos', 'cenas', 'fumaca']) if (q.has(k)) novo[k] = q.get(k) === '1';
+          if (['musica', 'secao', 'frase'].includes(q.get('frequencia'))) novo.frequencia = q.get('frequencia');
+          if (q.has('grupos')) novo.grupos = q.get('grupos').split(',').filter(Boolean);
+          diretor.ajustar(novo);
+        }
+        return responderJson(res, diretor.estado());
+      }
+      if (url.pathname === '/cor') {
+        if (req.method === 'POST') mudarCor(url.searchParams);
+        return responderJson(res, corCamada);
       }
       if (url.pathname === '/led' && req.method === 'POST') {
         avisoLed = '';
@@ -301,6 +409,7 @@ function servir() {
           } else {
             const v = url.searchParams.get('visual');
             if (v && VISUAIS[v] === undefined) return responderJson(res, { ...estado(), aviso: `visual desconhecido: ${v}` }, 400);
+            if (v) diretor.manual();
             if (v && (v !== visualAtual || visualNovo)) trocarVisual(v);
             await porNoLed();
           }
@@ -315,7 +424,7 @@ function servir() {
       if (!arq.startsWith(PASTA_VISUAL) || arq.startsWith(__dirname) || arq.startsWith(PASTA_SAIDA_ANTIGA)) { res.writeHead(403); return res.end(); }
       fs.readFile(arq, (e, dados) => {
         if (e) { res.writeHead(404); return res.end(); }
-        res.writeHead(200, { 'Content-Type': TIPOS[path.extname(arq).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+        res.writeHead(200, { 'Content-Type': TIPOS[path.extname(arq).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'Access-Control-Allow-Origin': '*' });
         res.end(dados);
       });
     });
@@ -376,7 +485,7 @@ function criarJanela(url) {
     if (!e.texture) return;
     if (w === janela) enviarTextura(e.texture); else e.texture.release();
   });
-  w.webContents.on('dom-ready', () => { w.webContents.executeJavaScript(FLASH_PAGINA).catch(() => {}); });
+  w.webContents.on('dom-ready', () => { w.webContents.executeJavaScript(`window.__portaSaida = ${config.porta}; window.__corCamada = ${JSON.stringify(corCamada)}; window.__autoLedValores = ${JSON.stringify(autoLed)}; window.__fumacaPassado = ${JSON.stringify(fumacaRecente.filter(i => Date.now() - i[1] < 30000))};\n` + FLASH_PAGINA).catch(() => {}); });
   w.webContents.on('console-message', ev => { if (ev.level === 'error' && !ev.message.startsWith('Electron Security')) log(`página: ${ev.message}`); });
   w.webContents.on('did-fail-load', (_e, _c, desc) => { log(`não abriu o visual (${desc}); tentando em 5 s`); setTimeout(() => !w.isDestroyed() && w.loadURL(url), 5000); });
   w.webContents.on('render-process-gone', (_e, d) => { log(`página caiu (${d.reason}); recarregando`); setTimeout(() => !w.isDestroyed() && w.loadURL(url), 2000); });
@@ -386,33 +495,61 @@ function criarJanela(url) {
 function abrirVisual() { janela = criarJanela(endereco()); }
 
 // Troca sem tela preta: o próximo visual carrega numa segunda janela e só entra no Spout quando já está desenhando.
-function trocarVisual(id) {
+// em: hora marcada (o diretor marca o tempo 1). segurar: fica pronta por trás, em ritmo baixo, até alguém mandar cortar. id null: solta a que está segura.
+let corte = null;
+function trocarVisual(id, em = 0, segurar = false) {
+  if (id === null) {
+    if (janelaNova && !janelaNova.isDestroyed() && corte && corte.segurar) { janelaNova.destroy(); janelaNova = null; visualNovo = null; corte = null; }
+    return;
+  }
+  // já está carregando esta: só muda a hora do corte
+  if (id === visualNovo && janelaNova && !janelaNova.isDestroyed() && corte) { corte.em = em; corte.segurar = segurar; return; }
   if (janelaNova && !janelaNova.isDestroyed()) janelaNova.destroy();
   const w = janelaNova = criarJanela(endereco(id));
   visualNovo = id;
+  corte = { em, segurar, ate: segurar ? em : 0 };
   const inicio = Date.now();
   log(`carregando: ${id}`);
+  let prontaEm = 0;
+  const entrar = () => {
+    if (w !== janelaNova || w.isDestroyed()) return;
+    const velha = janela;
+    w.webContents.setFrameRate(config.fps);
+    janela = w; janelaNova = null; visualAtual = id; visualNovo = null; corte = null;
+    try { fs.writeFileSync(ARQ_ULTIMO, id); } catch {}
+    log(`no ar: ${id} (${Date.now() - inicio} ms depois de pedir)`);
+    // espera a última textura da janela velha voltar antes de fechar
+    setTimeout(() => { if (velha && !velha.isDestroyed()) velha.destroy(); }, 400);
+  };
+  const aguardar = () => {
+    if (w !== janelaNova || w.isDestroyed() || !corte) return;
+    const agora = Date.now();
+    if (corte.segurar) {
+      // o drop não veio a tempo: desiste e libera a placa
+      if (agora > corte.ate) { log(`${id} ficou pronta e o drop não veio; soltando`); w.destroy(); janelaNova = null; visualNovo = null; corte = null; if (diretor) diretor.soltou(); return; }
+      setTimeout(aguardar, 8);
+      return;
+    }
+    // meio segundo desenhando antes de entrar, a não ser que já esteja pronta há tempo
+    const quando = Math.max(prontaEm + 200, corte.em);
+    if (agora >= quando) return entrar();
+    setTimeout(aguardar, Math.min(Math.max(quando - agora - 4, 1), 50));
+  };
   const conferir = async () => {
     if (w !== janelaNova || w.isDestroyed()) return;
     let pronto = false;
     try { pronto = await w.webContents.executeJavaScript('!!(window.__estado || window.__painel)'); } catch {}
     if (w !== janelaNova || w.isDestroyed()) return;
     if (pronto) {
-      setTimeout(() => {
-        if (w !== janelaNova || w.isDestroyed()) return;
-        const velha = janela;
-        janela = w; janelaNova = null; visualAtual = id; visualNovo = null;
-        try { fs.writeFileSync(ARQ_ULTIMO, id); } catch {}
-        log(`no ar: ${id} (${Date.now() - inicio} ms para carregar)`);
-        // espera a última textura da janela velha voltar antes de fechar
-        setTimeout(() => { if (velha && !velha.isDestroyed()) velha.destroy(); }, 400);
-      }, 500);
+      prontaEm = Date.now();
+      if (corte && corte.segurar) w.webContents.setFrameRate(15);
+      aguardar();
       return;
     }
     if (Date.now() - inicio > 25000) {
       log(`${id} não ficou pronto em 25 s; continua o anterior`);
       if (!w.isDestroyed()) w.destroy();
-      janelaNova = null; visualNovo = null;
+      janelaNova = null; visualNovo = null; corte = null;
       return;
     }
     setTimeout(conferir, 150);
@@ -439,7 +576,9 @@ app.whenReady().then(async () => {
   try { await servir(); } catch (e) { log(`porta ${config.porta} ocupada (${e.code}); saindo`); return app.quit(); }
   log(`abrindo ${endereco()} em ${LARGURA}×${ALTURA} a ${config.fps} fps → Spout "${config.nome}"`);
   iniciarPython();
+  criarODiretor();
   abrirVisual();
+  abrirOuvido();
   montarBandeja();
   setInterval(() => {
     if (pendente && Date.now() - pendenteDesde > 1000) { log('o Python não confirmou a textura em 1 s; devolvendo'); devolverTextura(); }

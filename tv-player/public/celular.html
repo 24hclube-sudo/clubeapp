@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
+<script>if (window.parent !== window) { try { window.parent.location.hash = location.hash || '#/'; } catch {} location.replace('about:blank'); }</script>
 <script>
   // Fora do servidor (arquivo aberto direto / prévia "data:" do navegador do app):
   // imagens, miniaturas e logos passam a vir do servidor deste PC.
@@ -154,6 +155,19 @@
   .cena .x { position: absolute; top: 8px; left: 8px; z-index: 2; font-size: 11px; font-weight: 800; padding: 3px 8px;
     border-radius: 999px; background: rgba(0,0,0,.72); color: #fff; }
   .cena.enviando { opacity: .55; }
+  /* TVs: vários conteúdos em sequência */
+  .seq-barra { margin: 0 0 12px; }
+  .seq-barra .seq-abrir { width: 100%; padding: 13px; border-radius: 14px; background: var(--s1); color: var(--ink); font-weight: 700; font-size: 14px; border: 1px solid var(--line); }
+  .seq-barra .seq-linha { display: flex; gap: 8px; align-items: center; }
+  .seq-barra .seq-txt { flex: 1; font-size: 13px; color: var(--muted); line-height: 1.3; }
+  .seq-barra .seq-mini { padding: 10px 14px; border-radius: 999px; background: var(--s2); color: var(--ink); font-weight: 700; font-size: 13px; }
+  .seq-tocar { position: sticky; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 5; width: 100%; margin: 12px 0 0; padding: 16px; border-radius: 16px;
+    background: var(--accent); color: #fff; font-weight: 800; font-size: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+  .seq-tocar:disabled { background: var(--s3); color: var(--muted); box-shadow: none; }
+  .cena .num { position: absolute; left: 8px; bottom: 8px; z-index: 2; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 13px;
+    background: var(--accent); color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .cena.na-seq { outline-color: var(--accent); }
+  .grade.escolhendo .cena.apagar { opacity: .3; pointer-events: none; }
 
   /* cores */
   .quentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
@@ -245,6 +259,9 @@
     #aviso-previa { grid-column: 1 / -1; }
     #inicio { position: sticky; top: 72px; max-height: calc(100vh - 88px - var(--nav)); overflow-y: auto; padding-bottom: 20px; scrollbar-width: thin; }
     #inicio[hidden], #detalhe[hidden] { display: block !important; }
+    body.em-pagina #detalhe { display: none !important; }
+    body.em-pagina { padding-bottom: calc(var(--nav) + 20px + env(safe-area-inset-bottom)); }
+    #pagina-pc iframe { display: block; width: 100%; height: calc(100vh - 96px - var(--nav)); border: 0; border-radius: 16px; background: var(--bg); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
     #detalhe[hidden] > * { display: none; }
     body[data-secao="musica"] #inicio, body[data-secao="musica"] #detalhe,
     body[data-secao="radio"] #inicio, body[data-secao="radio"] #detalhe { display: none !important; }
@@ -337,6 +354,8 @@
   <!-- ANDAR: todos os aparelhos do andar escolhido na barra de baixo -->
   <section id="inicio" class="tela">
     <div id="visuais-cartao" hidden></div>
+    <div id="projecoes-cartao" hidden></div>
+    <div id="projecao-cartao" hidden></div>
     <div class="bloco linha-aj" id="som-cartao" style="padding:12px 14px;margin-bottom:12px" hidden>
       <div class="t"><b id="som-cartao-t">Música</b><small id="som-cartao-s"></small></div>
       <a class="bt-andar" id="som-cartao-bt" style="text-decoration:none">Trocar</a>
@@ -353,6 +372,9 @@
 
   <!-- VISUAIS DO LED da pista (visuais-app.js) -->
   <section id="visuais" class="tela" hidden></section>
+  <!-- PC: Estúdio e outras telas de página inteira, à direita do menu -->
+  <section id="pagina-pc" class="tela" hidden><iframe id="pagina-quadro" title="Ferramenta" allow="autoplay"></iframe></section>
+  <section id="projecoes" class="tela" hidden></section>
 
   <!-- PROGRAMAÇÃO: cores e efeitos do dia, anúncios (programacao-app.js) -->
   <section id="programacao" class="tela" hidden></section>
@@ -456,6 +478,8 @@
 <script src="ambiente.js"></script>
 <script src="programacao-app.js"></script>
 <script src="visuais-app.js"></script>
+<script src="projecoes-app.js"></script>
+<script src="projecao-app.js"></script>
 
 <script>
 (function () {
@@ -505,10 +529,14 @@
     if (z.cor) return z.cor.toLowerCase() === '#ffc465' ? 'Filamento' : z.cor.toLowerCase() === '#ffaf32' ? 'Âmbar' : z.cor.toLowerCase() === '#ffd6a1' ? 'Branco quente' : 'Cor fixa';
     if (z.cena === 'logo-cor') return 'Logo + cor';
     if (!z.cena) return 'Nada no ar';
+    if (z.cena === 'sequencia') return 'Sequência · ' + (z.sequencia || []).length + ' conteúdos';
     const c = (listas[listaDe(z)] || []).find(c => c.id === z.cena);
     return c ? c.nome : z.cena;
   }
-  function cenaAtual(z) { return (listas[listaDe(z)] || []).find(c => c.id === z.cena) || null; }
+  function cenaAtual(z) {
+    const id = z.cena === 'sequencia' ? (z.sequencia || [])[0] : z.cena; // sequência: mostra a 1ª
+    return (listas[listaDe(z)] || []).find(c => c.id === id) || null;
+  }
   // Cor que tinge o cartão (estilo Hue): cor fixa, fundo do logo ou tom neutro.
   function tinta(z) {
     if (z.prog && z.prog.ativa) { const c = z.prog.cores; return `linear-gradient(135deg, ${c[0]}aa, ${c[1]}66 55%, rgba(21,23,27,.9) 100%)`; }
@@ -781,6 +809,8 @@
     $('tela-musica').hidden = secao !== 'musica';
     $('tela-radio').hidden = secao !== 'radio';
     Visuais.mostrarNoAndar(secao === 'andar' && andar === '5');
+    Projecoes.mostrarNoAndar(false);
+    Projecao.mostrarNoAndar(secao === 'andar' && andar === '5');
     mostrarSomDoAndar();
     // A Música só carrega quando alguém abre e continua viva depois: quem está ouvindo não para ao trocar de seção.
     if (secao === 'musica' && !$('musica-quadro').src) $('musica-quadro').src = SERVIDOR + 'musica/';
@@ -806,6 +836,64 @@
     } catch { $('som-cartao-s').textContent = ''; }
   }
   setInterval(() => { if (!document.hidden) mostrarSomDoAndar(); }, 10000);
+  // No celular o Estúdio ocupa a página toda. No PC ele abre à direita e o menu da esquerda fica onde está.
+  const ANDAR_DA_ZONA = { 'fita:barras': '5', 'fita:sexto': '5', 'fita:terreo': '1', 'telas:led:1': '1' };
+  const Pagina = (() => {
+    const sec = $('pagina-pc'), quadro = $('pagina-quadro');
+    const SO_ZONA = /^estudio\.html\?z=[^&#]*$/;
+    let aberta = null, pronto = false;
+    quadro.addEventListener('load', () => { pronto = true; });
+    const pedida = () => {
+      const m = /^#\/pagina\/(.+)$/.exec(location.hash);
+      if (!m) return null;
+      let arq = ''; try { arq = decodeURIComponent(m[1]); } catch {}
+      return /^[a-z0-9-]+\.html([?#]|$)/i.test(arq) ? arq : null; // só páginas deste servidor
+    };
+    const zonaDe = arq => {
+      if (/^painel-estudio\.html/.test(arq)) return 'telas:led:1';
+      return /^estudio\.html/.test(arq) ? new URLSearchParams((arq.split('?')[1] || '').split('#')[0]).get('z') : null;
+    };
+    return {
+      pedida,
+      zonaPedida: () => { const a = pedida(); return a && zonaDe(a); },
+      ativa: () => !!pedida() && PC.matches,
+      zona: () => (aberta ? zonaDe(aberta) : null),
+      abrir(arq) {
+        if (!PC.matches) { location.href = SERVIDOR + arq; return; }
+        vibrar();
+        history.replaceState(null, '', '#/pagina/' + encodeURIComponent(arq));
+        rota();
+      },
+      rota() {
+        const arq = pedida();
+        if (arq && !PC.matches) { location.replace(SERVIDOR + arq); return true; }
+        document.body.classList.toggle('em-pagina', !!arq);
+        sec.hidden = !arq;
+        if (!arq) { if (aberta) { quadro.src = 'about:blank'; aberta = null; pronto = false; } return false; }
+        if (arq === aberta) return true;
+        if (aberta && pronto && SO_ZONA.test(aberta) && SO_ZONA.test(arq)) quadro.contentWindow.postMessage({ estudioZona: zonaDe(arq) }, location.origin);
+        else {
+          const [base, resto] = arq.split('#');
+          pronto = false;
+          quadro.src = SERVIDOR + base + (base.includes('?') ? '&' : '?') + 'embed=1' + (resto ? '#' + resto : '');
+        }
+        aberta = arq;
+        return true;
+      },
+    };
+  })();
+  const estudioDe = zid => 'estudio.html?z=' + encodeURIComponent(zid);
+  // No PC, qualquer link para outra tela deste servidor abre à direita.
+  document.addEventListener('click', e => {
+    if (!PC.matches || e.defaultPrevented || e.ctrlKey || e.metaKey || e.shiftKey || !e.target.closest) return;
+    const a = e.target.closest('a[href]');
+    if (!a || a.target === '_blank') return;
+    let u; try { u = new URL(a.href); } catch { return; }
+    const arq = u.pathname.slice(1) + u.search + u.hash;
+    if (u.origin !== new URL(SERVIDOR, location.href).origin || !/^[a-z0-9-]+\.html([?#]|$)/i.test(arq) || /^celular/.test(arq)) return;
+    e.preventDefault();
+    Pagina.abrir(arq);
+  });
   function rota() {
     const m = /^#\/z\/(.+)$/.exec(location.hash);
     const pedida = /^#\/(musica|radio)$/.exec(location.hash);
@@ -815,16 +903,17 @@
     if (pedida) secao = pedida[1];
     else if (pedidoAndar) { secao = 'andar'; andar = pedidoAndar[1]; guardar('clube-andar', andar); }
     else if (zAberta) { secao = 'andar'; andar = zAberta.andar; }
+    else if (Pagina.pedida()) { secao = 'andar'; const a = ANDAR_DA_ZONA[Pagina.zonaPedida()]; if (a) { andar = a; guardar('clube-andar', a); } }
     else if (location.hash === '#/programacao') secao = 'andar';
-    else if (location.hash === '#/visuais') { secao = 'andar'; andar = '5'; }
+    else if (location.hash === '#/visuais' || location.hash === '#/projecoes') { secao = 'andar'; andar = '5'; }
     else if (/^#\/(luzes|balcoes|telas)$/.test(location.hash)) secao = 'andar'; // endereços da organização antiga
     // No PC a tela da direita nunca fica vazia: no 5º ela abre nos visuais.
     if (PC.matches && secao === 'andar' && andar === '5' && !zonaAberta && (pedidoAndar || !location.hash)) history.replaceState(null, '', '#/visuais');
     mostrarSecao();
-    const emProg = Programacao.rota(), emVisuais = Visuais.rota();
-    if (emProg || emVisuais) {
+    const emProg = Programacao.rota(), emVisuais = Visuais.rota(), emProjecoes = Projecoes.rota(), emPagina = Pagina.rota();
+    if (emProg || emVisuais || emProjecoes || emPagina) {
       zonaAberta = null; montadas = ''; aba = null;
-      if (PC.matches) { renderInicio(); Object.keys(cartoes).forEach(id => cartoes[id].el.classList.remove('sel')); }
+      if (PC.matches) { renderInicio(); Object.keys(cartoes).forEach(id => cartoes[id].el.classList.toggle('sel', emPagina && id === Pagina.zona())); }
       return;
     }
     if (!temAparelhos()) {
@@ -835,7 +924,11 @@
       return;
     }
     // No PC não há tela de início separada: se nada estiver aberto, abre o 1º aparelho da seção.
-    if (PC.matches && !zonaAberta) { const z0 = zonasDaSecao()[0]; if (z0) { history.replaceState(null, '', '#/z/' + encodeURIComponent(z0.id)); zonaAberta = z0.id; } }
+    if (PC.matches && !zonaAberta) {
+      const z0 = zonasDaSecao()[0];
+      if (z0 && z0.tipo === 'fita') { history.replaceState(null, '', '#/pagina/' + encodeURIComponent(estudioDe(z0.id))); return rota(); }
+      if (z0) { history.replaceState(null, '', '#/z/' + encodeURIComponent(z0.id)); zonaAberta = z0.id; }
+    }
     $('inicio').hidden = !!zonaAberta; $('detalhe').hidden = !zonaAberta; $('bt-voltar').hidden = !zonaAberta;
     $('titulo').className = zonaAberta && !PC.matches ? 'titulo-det' : 'marca';
     if (!zonaAberta || PC.matches) $('titulo').textContent = 'CLUBE';
@@ -899,10 +992,13 @@
       toast(f.saida ? z.nome + ' desligada' : z.nome + ' ligada');
       return;
     }
-    if (ligado(z)) { guardar('clube-ultima-' + z.id, z.cena); enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'apagar' }); toast(z.nome + ' apagada'); }
+    if (ligado(z)) { guardar('clube-ultima-' + z.id, z.cena === 'sequencia' ? 'seq:' + (z.sequencia || []).join(',') : z.cena); enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'apagar' }); toast(z.nome + ' apagada'); }
     else {
       const lista = listas[listaDe(z)] || [];
       const volta = ler('clube-ultima-' + z.id);
+      if (volta && volta.indexOf('seq:') === 0) { // volta a sequência que estava no ar
+        enviar({ type: 'cena', andar: z.andar, zona: z.id, id: 'sequencia', sequencia: volta.slice(4).split(',') }); toast(z.nome + ': sequência'); return;
+      }
       const c = lista.find(c => c.id === volta && !c.apagar) || lista.find(c => !c.apagar);
       if (c) { enviar({ type: 'cena', andar: z.andar, zona: z.id, id: c.id }); toast(z.nome + ': ' + c.nome); }
     }
@@ -974,7 +1070,7 @@
           <div class="previa"></div><div class="brilho"></div>`;
         const chave = el.querySelector('.chave');
         chave.onclick = e => { e.stopPropagation(); alternar(zonaPorId(z.id), chave); };
-        el.onclick = () => abrir(z.id);
+        el.onclick = () => { if (z.tipo === 'fita') Pagina.abrir(estudioDe(z.id)); else if (z.id === 'telas:led:1') Pagina.abrir('painel-estudio.html'); else abrir(z.id); };
         const sl = criarSlider({ valor: brilhoDe(z), texto: textoBrilho(z), onChange: v => mudarBrilho(zonaPorId(z.id))(v) });
         el.querySelector('.brilho').appendChild(sl);
         c = cartoes[z.id] = { el, chave, sl, prev: el.querySelector('.previa'), previaChave: '' };
@@ -1164,7 +1260,7 @@
     const temCats = temRitmo(z);
     montarPaletas(z);
     // o gerador do painel tem também as cenas feitas para o áudio
-    const cats = listaDe(z) === 'gerador' || z.id === 'fita:barras' ? { ...CATS, audio: 'Áudio' } : CATS;
+    const cats = listaDe(z) === 'gerador' || z.tipo === 'fita' ? { ...CATS, audio: 'Áudio' } : CATS;
     let cat = temCats ? (ler('clube-cat-' + z.id) || 'calma') : '';
     if (temCats && !cats[cat]) cat = 'calma';
     $('cats').hidden = !temCats;
@@ -1184,16 +1280,17 @@
       linkReage.id = 'link-reage'; linkReage.href = SERVIDOR + 'reacoes.html'; linkReage.textContent = 'O que reage a quê';
       linkAudio.after(linkReage);
       const linkCriar = linkAudio.cloneNode();
-      linkCriar.id = 'link-criar'; linkCriar.href = SERVIDOR + 'criador-barras.html'; linkCriar.textContent = 'Criar animação: camadas, fundo e duck';
+      linkCriar.id = 'link-criar'; linkCriar.href = SERVIDOR + 'estudio.html?z=fita%3Abarras'; linkCriar.textContent = 'Abrir o Estúdio';
       linkCriar.style.opacity = '1'; linkCriar.style.fontWeight = '700';
       linkAudio.before(linkCriar);
     }
-    linkAudio.style.display = z.id === 'fita:barras' && cat === 'audio' ? 'block' : 'none';
+    linkAudio.style.display = z.tipo === 'fita' && cat === 'audio' ? 'block' : 'none';
     $('link-reage').style.display = linkAudio.style.display;
     $('link-criar').style.display = linkAudio.style.display;
+    $('link-criar').href = SERVIDOR + estudioDe(z.id);
     // Barras > Áudio: separadas pelo jeito de reagir ao som.
     const GRUPOS_AUDIO = { auto: 'Automático', minhas: 'Minhas', aceso: 'Sempre acesas', direcao: 'Direções', fogo: 'Fogo', fisica: 'Física', faixa: 'Por faixa', golpe: 'No golpe', batida: 'Na batida', calma: 'Calmas' };
-    const comGrupos = z.id === 'fita:barras' && cat === 'audio';
+    const comGrupos = z.tipo === 'fita' && cat === 'audio';
     let grupo = ler('clube-grupo-audio');
     if (!GRUPOS_AUDIO[grupo]) grupo = 'auto';
     let linhaGrupos = $('grupos-audio');
@@ -1209,7 +1306,7 @@
       Array.from(linhaGrupos.children).forEach(b => b.onclick = () => { guardar('clube-grupo-audio', b.dataset.g); vibrar(); montadas = ''; montarCenas(zonaPorId(zonaAberta)); });
     }
     const chave = z.id + '|' + listaDe(z) + '|' + cat + (comGrupos ? '|' + grupo : '');
-    const lista = (listas[listaDe(z)] || null) && listas[listaDe(z)].filter(c => !temCats || c.apagar || ((c.categoria || 'normal') === cat && (!comGrupos || c.grupo === grupo)));
+    const lista = (listas[listaDe(z)] || null) && listas[listaDe(z)].filter(c => (!c.estudio || c.id === z.cena) && (!temCats || c.apagar || ((c.categoria || 'normal') === cat && (!comGrupos || c.grupo === grupo)))); // peças do Estúdio do painel moram lá; aqui só a que está no ar
     if (!lista) { $('grade-cenas').innerHTML = '<div class="vazio">Carregando…</div>'; return; }
     if (montadas !== chave) {
       montadas = chave;
@@ -1238,11 +1335,18 @@
         }
         if (c.criada) { // modelo criado aqui: abre de novo no criador
           const x = document.createElement('span'); x.className = 'x'; x.textContent = 'Editar';
-          x.onclick = ev => { ev.stopPropagation(); location.href = SERVIDOR + 'criador-barras.html?id=' + encodeURIComponent(c.id); };
+          x.onclick = ev => { ev.stopPropagation(); Pagina.abrir(estudioDe(z.id) + '&id=' + encodeURIComponent(c.id)); };
           b.appendChild(x);
         }
         b.onclick = () => {
           const zz = zonaPorId(zonaAberta);
+          if (seq.modo && listaDe(zz) === 'tvs') { // escolhendo a sequência: toque marca/desmarca na ordem
+            if (c.apagar) return;
+            vibrar();
+            const k = seq.ids.indexOf(c.id);
+            if (k >= 0) seq.ids.splice(k, 1); else seq.ids.push(c.id);
+            return marcarSeq(zz);
+          }
           vibrar(); b.classList.add('enviando');
           if (enviar({ type: 'cena', andar: zz.andar, zona: zz.id, id: c.id })) toast(`${c.nome} → ${zz.nome}`);
           setTimeout(() => b.classList.remove('enviando'), 600);
@@ -1252,6 +1356,57 @@
       tocarVideos();
     }
     Array.from($('grade-cenas').children).forEach(b => b.classList.toggle('on', b.dataset.id === z.cena && !(z.prog && z.prog.ativa)));
+    marcarSeq(z);
+  }
+
+  // ---------- TVs: vários conteúdos em sequência ----------
+  // "Tocar vários em sequência" → toque nos conteúdos na ordem → "Tocar N em sequência".
+  // O servidor monta uma playlist igual em todas as TVs, em loop (sequencia-tv.js).
+  var seq = { modo: false, ids: [], zona: null };
+  function marcarSeq(z) {
+    let barra = $('barra-seq');
+    if (!barra) {
+      barra = document.createElement('div'); barra.id = 'barra-seq'; barra.className = 'seq-barra';
+      $('grade-cenas').before(barra);
+      const tocar = document.createElement('button'); tocar.id = 'seq-tocar'; tocar.className = 'seq-tocar';
+      $('grade-cenas').after(tocar);
+      tocar.onclick = () => {
+        const zz = zonaPorId(zonaAberta);
+        if (!zz || seq.ids.length < 2) return;
+        vibrar();
+        if (enviar({ type: 'cena', andar: zz.andar, zona: zz.id, id: 'sequencia', sequencia: seq.ids.slice() })) toast(`Sequência de ${seq.ids.length} → ${zz.nome}`);
+        seq.modo = false; marcarSeq(zz);
+      };
+    }
+    const ehTvs = listaDe(z) === 'tvs';
+    if (!ehTvs || seq.zona !== z.id) { seq.modo = false; seq.zona = z.id; }
+    const naSeq = z.cena === 'sequencia' && !(z.prog && z.prog.ativa) ? (z.sequencia || []) : [];
+    barra.style.display = ehTvs ? '' : 'none';
+    $('seq-tocar').style.display = ehTvs && seq.modo ? '' : 'none';
+    $('grade-cenas').classList.toggle('escolhendo', ehTvs && seq.modo);
+    if (ehTvs) {
+      if (!seq.modo) {
+        barra.innerHTML = `<button class="seq-abrir">${naSeq.length ? `Sequência no ar · ${naSeq.length} conteúdos · editar` : 'Tocar vários em sequência'}</button>`;
+        barra.firstChild.onclick = () => { vibrar(); seq.modo = true; seq.ids = naSeq.slice(); marcarSeq(zonaPorId(zonaAberta)); };
+      } else {
+        barra.innerHTML = `<div class="seq-linha"><div class="seq-txt">Toque nos conteúdos na ordem em que vão tocar. Repete do começo no fim.</div>
+          <button class="seq-mini" data-a="limpar">Limpar</button><button class="seq-mini" data-a="sair">Cancelar</button></div>`;
+        barra.querySelector('[data-a=limpar]').onclick = () => { vibrar(); seq.ids = []; marcarSeq(zonaPorId(zonaAberta)); };
+        barra.querySelector('[data-a=sair]').onclick = () => { vibrar(); seq.modo = false; marcarSeq(zonaPorId(zonaAberta)); };
+        const t = $('seq-tocar');
+        t.disabled = seq.ids.length < 2;
+        t.textContent = seq.ids.length < 2 ? 'Escolha pelo menos 2' : `Tocar ${seq.ids.length} em sequência`;
+      }
+    }
+    const ordem = ehTvs && seq.modo ? seq.ids : naSeq;
+    Array.from($('grade-cenas').children).forEach(b => {
+      const k = ordem.indexOf(b.dataset.id);
+      b.classList.toggle('na-seq', k >= 0);
+      let n = b.querySelector('.num');
+      if (k < 0) { if (n) n.remove(); return; }
+      if (!n) { n = document.createElement('span'); n.className = 'num'; (b.querySelector('.thumb') || b).appendChild(n); }
+      n.textContent = k + 1;
+    });
   }
   function tocarVideos() { document.querySelectorAll('.cena video').forEach(v => { if (v.paused) v.play().catch(() => {}); }); }
   document.addEventListener('touchstart', tocarVideos, { passive: true });
@@ -1398,13 +1553,17 @@
 
   Programacao.iniciar({ enviar, toast, vibrar, criarSlider, SERVIDOR, PC });
   Visuais.iniciar({ toast, vibrar, criarSlider, SERVIDOR, PC });
+  Projecoes.iniciar({ toast, vibrar, SERVIDOR, PC });
 
   // ---------- render geral ----------
   function render() {
     // Aparelho aberto por link: o andar dele só é conhecido quando o estado chega.
     const zAberta = zonaAberta && zonaPorId(zonaAberta);
     if (zAberta && (secao !== 'andar' || andar !== zAberta.andar)) { secao = 'andar'; andar = zAberta.andar; mostrarSecao(); }
-    if (Programacao.ativa() || Visuais.ativa()) { if (PC.matches) renderInicio(); return; }
+    if (Programacao.ativa() || Visuais.ativa() || Projecoes.ativa() || Pagina.ativa()) {
+      if (PC.matches) { renderInicio(); Object.keys(cartoes).forEach(id => cartoes[id].el.classList.toggle('sel', Pagina.ativa() && id === Pagina.zona())); }
+      return;
+    }
     if (!temAparelhos()) return;
     if (PC.matches) {
       if (!zonaAberta && zonasDaSecao()[0]) return rota(); // chegou o estado: abre o 1º aparelho

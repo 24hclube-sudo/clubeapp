@@ -242,6 +242,213 @@
     "duracao": 31.267
   },
   {
+    "id": "pe-cap-feixes",
+    "nome": "Feixes",
+    "video": "painel-pe-cap-feixes.mp4",
+    "thumb": "cenas/painel-pe-cap-feixes.png",
+    "preview": "cenas/painel-pe-cap-feixes.mp4",
+    "duracao": 48,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-astrolabio",
+    "nome": "Astrolábio",
+    "video": "painel-pe-cap-astrolabio.mp4",
+    "thumb": "cenas/painel-pe-cap-astrolabio.png",
+    "preview": "cenas/painel-pe-cap-astrolabio.mp4",
+    "duracao": 60,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-mercurio",
+    "nome": "Mercúrio",
+    "video": "painel-pe-cap-mercurio.mp4",
+    "thumb": "cenas/painel-pe-cap-mercurio.png",
+    "preview": "cenas/painel-pe-cap-mercurio.mp4",
+    "duracao": 48,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-micelio",
+    "nome": "Micélio",
+    "video": "painel-pe-cap-micelio.mp4",
+    "thumb": "cenas/painel-pe-cap-micelio.png",
+    "preview": "cenas/painel-pe-cap-micelio.mp4",
+    "duracao": 60,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-enxame",
+    "nome": "Enxame",
+    "video": "painel-pe-cap-enxame.mp4",
+    "thumb": "cenas/painel-pe-cap-enxame.png",
+    "preview": "cenas/painel-pe-cap-enxame.mp4",
+    "duracao": 54,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-colossos",
+    "nome": "Colossos",
+    "video": "painel-pe-cap-colossos.mp4",
+    "thumb": "cenas/painel-pe-cap-colossos.png",
+    "preview": "cenas/painel-pe-cap-colossos.mp4",
+    "duracao": 90,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-travessia",
+    "nome": "Travessia",
+    "video": "painel-pe-cap-travessia.mp4",
+    "thumb": "cenas/painel-pe-cap-travessia.png",
+    "preview": "cenas/painel-pe-cap-travessia.mp4",
+    "duracao": 60,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-instancia",
+    "nome": "Instância",
+    "video": "painel-pe-cap-instancia.mp4",
+    "thumb": "cenas/painel-pe-cap-instancia.png",
+    "preview": "cenas/painel-pe-cap-instancia.mp4",
+    "duracao": 54,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-grade",
+    "nome": "Grade de inox",
+    "video": "painel-pe-cap-grade.mp4",
+    "thumb": "cenas/painel-pe-cap-grade.png",
+    "preview": "cenas/painel-pe-cap-grade.mp4",
+    "duracao": 48,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-monolito",
+    "nome": "Monólito",
+    "video": "painel-pe-cap-monolito.mp4",
+    "thumb": "cenas/painel-pe-cap-monolito.png",
+    "preview": "cenas/painel-pe-cap-monolito.mp4",
+    "duracao": 40,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-via-lactea",
+    "nome": "Via Láctea",
+    "video": "painel-pe-cap-via-lactea.mp4",
+    "thumb": "cenas/painel-pe-cap-via-lactea.png",
+    "preview": "cenas/painel-pe-cap-via-lactea.mp4",
+    "duracao": 60,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-rastros",
+    "nome": "Rastros",
+    "video": "painel-pe-cap-rastros.mp4",
+    "thumb": "cenas/painel-pe-cap-rastros.png",
+    "preview": "cenas/painel-pe-cap-rastros.mp4",
+    "duracao": 45,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-aurora",
+    "nome": "Aurora",
+    "video": "painel-pe-cap-aurora.mp4",
+    "thumb": "cenas/painel-pe-cap-aurora.png",
+    "preview": "cenas/painel-pe-cap-aurora.mp4",
+    "duracao": 60,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-eclipse",
+    "nome": "Eclipse",
+    "video": "painel-pe-cap-eclipse.mp4",
+    "thumb": "cenas/painel-pe-cap-eclipse.png",
+    "preview": "cenas/painel-pe-cap-eclipse.mp4",
+    "duracao": 45,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-brise",
+    "nome": "Brise",
+    "video": "painel-pe-cap-brise.mp4",
+    "thumb": "cenas/painel-pe-cap-brise.png",
+    "preview": "cenas/painel-pe-cap-brise.mp4",
+    "duracao": 54,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-harpa",
+    "nome": "Harpa de cabos",
+    "video": "painel-pe-cap-harpa.mp4",
+    "thumb": "cenas/painel-pe-cap-harpa.png",
+    "preview": "cenas/painel-pe-cap-harpa.mp4",
+    "duracao": 48,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-agulhas",
+    "nome": "Agulhas",
+    "video": "painel-pe-cap-agulhas.mp4",
+    "thumb": "cenas/painel-pe-cap-agulhas.png",
+    "preview": "cenas/painel-pe-cap-agulhas.mp4",
+    "duracao": 45,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-concreto",
+    "nome": "Concreto abrindo",
+    "video": "painel-pe-cap-concreto.mp4",
+    "thumb": "cenas/painel-pe-cap-concreto.png",
+    "preview": "cenas/painel-pe-cap-concreto.mp4",
+    "duracao": 48,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-porticos",
+    "nome": "Pórticos",
+    "video": "painel-pe-cap-porticos.mp4",
+    "thumb": "cenas/painel-pe-cap-porticos.png",
+    "preview": "cenas/painel-pe-cap-porticos.mp4",
+    "duracao": 40,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-luz",
+    "nome": "Luz",
+    "video": "painel-pe-cap-luz.mp4",
+    "thumb": "cenas/painel-pe-cap-luz.png",
+    "preview": "cenas/painel-pe-cap-luz.mp4",
+    "duracao": 40,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-relevo",
+    "nome": "Chapa gravada",
+    "video": "painel-pe-cap-relevo.mp4",
+    "thumb": "cenas/painel-pe-cap-relevo.png",
+    "preview": "cenas/painel-pe-cap-relevo.mp4",
+    "duracao": 40,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-roda",
+    "nome": "Elenco em 360",
+    "video": "painel-pe-cap-roda.mp4",
+    "thumb": "cenas/painel-pe-cap-roda.png",
+    "preview": "cenas/painel-pe-cap-roda.mp4",
+    "duracao": 48,
+    "estudio": true
+  },
+  {
+    "id": "pe-cap-noite",
+    "nome": "A noite inteira",
+    "video": "painel-pe-cap-noite.mp4",
+    "thumb": "cenas/painel-pe-cap-noite.png",
+    "preview": "cenas/painel-pe-cap-noite.mp4",
+    "duracao": 180,
+    "estudio": true
+  },
+  {
     "id": "apagar",
     "nome": "Apagar",
     "apagar": true
